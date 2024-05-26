@@ -6,7 +6,6 @@ import { signUp } from './routes/auth/sign-up/sign-up';
 import { opt } from './routes/auth/otp/otp';
 import { logger } from './middleware/logger';
 import { recruitment } from './routes/recruitment';
-
 const app = new OpenAPIHono();
 
 //initailaize swagger

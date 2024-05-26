@@ -1,15 +1,16 @@
 import papr from '@/lib/database/papr';
 import { schema, types } from 'papr';
 
+const AnswerSchema = types.object({
+  answer: types.string(),
+  correct: types.boolean(),
+});
 const QuestionsSchema = types.object({
   question: types.string(),
   skill: types.string(),
   skill_level: types.string(),
   points: types.number(),
-  answers: types.array({
-    answer: types.string(),
-    correct: types.boolean(),
-  }),
+  answers: types.array(AnswerSchema),
 });
 
 const CasesSchema = schema(
@@ -32,5 +33,6 @@ const CasesSchema = schema(
 
 export type MCase = (typeof CasesSchema)[0];
 export type MQuestion = typeof QuestionsSchema;
+export type MAnswer = typeof AnswerSchema;
 
 export default papr.model('Cases', CasesSchema);
