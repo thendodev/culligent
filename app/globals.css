@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --cruto-green: #29b475;
+    --cruto-black: #16252d;
+    --cruto-purple: #685efc;
+    --cruto-red: #dc3545;
+    --cruto-yellow: #ffc107;
+    --cruto-cyan: #17a2b8;
+    --cruto-pale-green: #eaf8f2;
+    --cruto-pale-black: #343a40;
+    --cruto-white: #ffffff;
+    --cruto-pale-grey: #6c757d;
+    --cruto-off-white: #ced4da;
+    --cruto-whitish: #eaebec;
+
+    --cruto-input-rounded: 10px;
+    --cruto-button-rounded: 10px;
+
+    --cruto-text-sm: 0.8rem;
+    --cruto-text-md: 1rem;
+    --cruto-text-lg: 1.2rem;
+
+    --cruto-border: #e7eef3;
+    --cruto-radius: 10px;
+
+    --cruto-foreground: var(--cruto-white);
+    --cruto-background: #f6f8fb;
+
+    --cruto-text-grey: var(var(--cruto-pale-grey));
+    --cruto-text-black: var(var(--cruto-pale-black));
+    --cruto-text: #000;
+  }
+
+  .dark {
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    fontfamily: 'HelveticaNeue,Helvetica,Arial,sans-serif';
+  }
+}
