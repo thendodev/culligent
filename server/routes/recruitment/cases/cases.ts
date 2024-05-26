@@ -21,7 +21,7 @@ cases.openapi(createCaseRoute, async (c) => {
 
     const user = JSON.parse(token);
 
-    const newCase = { user: user._id, ...cases } as MCase;
+    const newCase = { user: user.email, ...cases } as MCase;
 
     const { success, message } = await createCaseService(newCase);
 
