@@ -28,10 +28,12 @@ type TSaveCaseProps = {
 };
 
 const SaveCase = ({ form }: TSaveCaseProps) => {
-  const onsubmit = async () => {
+  const onSubmit = async () => {
+    //get form from react forms
     const newCase = form.getValues();
+
+    //validate form
     const isValid = CaseSchema.safeParse(newCase);
-    console.log(newCase);
     if (!isValid.success) {
       return isValid.error.errors.map((error) =>
         toast({
@@ -58,10 +60,7 @@ const SaveCase = ({ form }: TSaveCaseProps) => {
         </SheetHeader>
         <div>
           <Form {...form}>
-            <form
-              className="grid gap-2 py-4"
-              onSubmit={form.handleSubmit(onsubmit)}
-            >
+            <form className="grid gap-2 py-4">
               <div>
                 <FormField
                   name="name"
@@ -114,12 +113,11 @@ const SaveCase = ({ form }: TSaveCaseProps) => {
                   )}
                 />
               </div>
-
-              <Button type="submit" onClick={onsubmit}>
-                Save changes
-              </Button>
             </form>
           </Form>
+          <Button type="submit" onClick={onSubmit}>
+            Save changes
+          </Button>
         </div>
       </SheetContent>
     </Sheet>

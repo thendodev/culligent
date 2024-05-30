@@ -14,10 +14,6 @@ type SideBarProps = {
 const SideBar = () => {
   return (
     <div className="sidebar border-[var(--cruto-black)] close">
-      <div className="logo-details">
-        <Image src={logo} alt="logo" width={30} height={30} color={'white'} />
-        <p>A.I</p>
-      </div>
       <ul id="nav-link" className="nav-links close">
         <li>
           <div id="icon-link" className="icon-link">
@@ -63,14 +59,14 @@ const SideBar = () => {
               <Link
                 href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.case_builder}`}
               >
-                Case builder
+                Create Case
               </Link>
             </li>
             <li>
               <Link href={`${ProjectRoutes.recruitment}`}>Case library</Link>
             </li>
             <li>
-              <Link href="">Custom cases</Link>
+              <Link href="">Shared cases</Link>
             </li>
           </ul>
         </li>
