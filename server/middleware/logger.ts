@@ -13,7 +13,7 @@ export const logger = createMiddleware(async (c, next) => {
   if (userToken) payload = decode(userToken);
 
   //save request info to the log
-  console.log('here');
+
   try {
     await Dbconnect();
     await ActivityLog.insertOne({

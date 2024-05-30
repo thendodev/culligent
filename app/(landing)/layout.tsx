@@ -5,12 +5,15 @@ import { Toaster } from '@/components/ui/toaster';
 import { useUserServer } from '@/lib/useUserServer';
 import { redirect } from 'next/navigation';
 import { ProjectRoutes } from '@/global/routes';
-
+import favi from '../../public/favicon_io/favicon.ico';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Recruto - Sign up',
+  title: 'Culligent - AI recruitment platform',
   description: 'Join the A.I recruitment revolution',
+  icons: {
+    icon: '../../public/favicon_io/favicon.ico',
+  },
 };
 
 export default async function RootLayout({

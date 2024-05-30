@@ -17,10 +17,12 @@ export const loginHandler = async (userData: TLogin): Promise<MUser | void> => {
       storeLoginCookiesUtil({ accessToken, user, refreshToken });
     return user;
   } catch (e) {
-    const { response } = e as AxiosError<any>;
+    const { response, message, ...err } = e as AxiosError<any>;
+    console.log(message);
+    console.log(err.status);
     toast({
       title: 'Error',
-      description: response?.data,
+      description: message,
     });
   }
 };

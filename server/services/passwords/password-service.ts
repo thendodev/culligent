@@ -27,7 +27,7 @@ export const verifyPasswordService = async ({
   password,
 }: TPasswordService) => {
   try {
-    const storedPassword = (await Passwords.findOne({ user })) as MPasswords;
+    const storedPassword = await Passwords.findOne({ user });
     if (!storedPassword) return false;
     //hash incoming password
     const hashPassword = await bcrypt.hash(password, storedPassword.salt);
