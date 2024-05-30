@@ -13,8 +13,8 @@ const inter = Work_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Recruto - AI recruitment platform',
-  description: 'Your A.I recruiter to find the perfect candidates',
+  title: 'Culligrant - AI Recruitment Platform',
+  description: 'A.I Recruitment Partner',
   icons: {
     icon: '../../public/favicon_io/favicon.ico',
   },

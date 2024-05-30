@@ -46,6 +46,7 @@
     height: 100%;
     padding: 30px 0 150px 0;
     overflow: auto;
+    margin-block: 6rem;
 
     &::-webkit-scrollbar {
       display: none;
