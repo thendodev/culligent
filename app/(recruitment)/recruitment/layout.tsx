@@ -15,6 +15,9 @@ const inter = Work_Sans({
 export const metadata: Metadata = {
   title: 'Recruto - AI recruitment platform',
   description: 'Your A.I recruiter to find the perfect candidates',
+  icons: {
+    icon: '../../public/favicon_io/favicon.ico',
+  },
 };
 
 export default async function RootLayout({

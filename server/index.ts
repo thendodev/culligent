@@ -36,6 +36,7 @@ app.get(
 );
 
 //register middleware
+
 app.use(logger);
 
 //authentification end points

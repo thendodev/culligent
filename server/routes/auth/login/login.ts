@@ -15,6 +15,7 @@ login.openapi(loginRoute, async ({ req, res, json }) => {
 
     //fetch user from database
     const { success, data, message } = await getUserService(email);
+
     if (!success || !data)
       throw new HTTPException(EStatusCode.BadRequest, { message });
 
@@ -42,8 +43,6 @@ login.openapi(loginRoute, async ({ req, res, json }) => {
     });
   } catch (e) {
     const { message } = e as Error;
-    return new HTTPException(EStatusCode.InternalServerError, {
-      message,
-    });
+    return json({ message: message });
   }
 });
