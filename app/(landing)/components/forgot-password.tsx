@@ -10,25 +10,19 @@ import {
 } from '@/components/ui/form';
 
 import { Input } from '@/components/ui/input';
-import { forgotPasswordHandler } from '@/handlers/handleAuth';
+import { createMagicLinkHandler } from '@/handlers/handleAuth';
+import { forgotPasswordSchema, TForgotPassword } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-
-const EmailSchema = z.object({
-  email: z.string().email('Invalid email address'),
-});
-
-type TEmail = z.infer<typeof EmailSchema>;
 
 const ForgotPassword = () => {
-  const form = useForm<TEmail>({
-    resolver: zodResolver(EmailSchema),
+  const form = useForm<TForgotPassword>({
+    resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit = async (data: TEmail) => {
+  const onSubmit = async (data: TForgotPassword) => {
     if (!data.email) return;
-    await forgotPasswordHandler(data.email);
+    await createMagicLinkHandler(data.email);
   };
 
   const isFormErrors = form.formState.isDirty && form.formState.isValid;
@@ -41,7 +35,7 @@ const ForgotPassword = () => {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormDescription className="p-1 border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] text-center">
+              <FormDescription className="p-1 border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] text-center text-sm">
                 An email will be sent to your email address for a one time login
               </FormDescription>
               <FormLabel>Email</FormLabel>

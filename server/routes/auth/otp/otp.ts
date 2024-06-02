@@ -1,6 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { otpPOST, otpPUT } from './route';
-import { Dbconnect, Dbdisconnect } from '@/lib/database/papr';
 import {
   createOtpService,
   verifyOtpService,
@@ -30,7 +29,7 @@ opt.openapi(otpPOST, async ({ req, json }) => {
 
     const { error } = await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
-      to: [`hh3orvppw@mozmail.com`],
+      to: [email],
       subject: 'Verify your email',
       react: OtpEmailTemplate({ ...data }),
     });

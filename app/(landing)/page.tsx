@@ -6,7 +6,7 @@ import culligent from '@/public/logo/logo.svg';
 export default async function Home() {
   return (
     <div className="w-full h-full inline-flex flex-col-reverse sm:flex-row justify-center items-center relative">
-      <div className="w-full h-full flex-1 flex flex-col justify-center align-middle items-center content-center bottom-0 left-0  bg-[var(--cruto-background)] rounded-t-[1.5rem] absolute sm:static">
+      <div className="w-full h-full flex-1 flex flex-col justify-center align-middle items-center content-center bottom-0 left-0  bg-[var(--cruto-background)] absolute sm:static">
         <div id="sign in form" className="w-[90%] lg:w-[45%] sm:w-[80%]">
           <div className="w-full flex gap-5 align-middle justify-center content-center flex-col h-fit">
             <UserAuthForm />

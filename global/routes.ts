@@ -7,6 +7,7 @@ export enum ProjectRoutes {
   case_builder = 'case-builder',
   sign_up = 'sign-up',
   otp_verify = 'otp',
+  magicLink = 'magic-link',
 
   //question builder
   multi_choice = `${case_builder}/multi-choice`,

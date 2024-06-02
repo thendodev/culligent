@@ -1,12 +1,24 @@
 import User from '@/models/User';
-import { TLogin } from '@/validations/auth';
+import { TForgotPassword, TLogin } from '@/validations/auth';
 import { generateTokens } from '@/server/helpers/tokens';
+import MagicLinks from '@/models/MagicLinks';
+import { generateRandomString } from '@/server/helpers/randoms';
+import ForgotPasswordEmail from '@/app/templates/forgot-password';
+import { getBaseUrl } from '@/global/config';
+import { envServer } from '@/global/envServer';
+import { Resend } from 'resend';
+import Profile from '@/models/Profile';
+import { ProjectRoutes } from '@/global/routes';
+import Otp from '@/models/Otp';
 
 enum EServiceResponse {
   successLogin = 'Login successful',
   missingDetails = 'Please fill in missing details',
   failedLogin = 'Invalid login details',
 }
+
+const resend = new Resend('re_LmJXmnwX_EcV2oY59Bk6fZHfEGTCGcvzN');
+
 export const loginService = async ({ password, email }: TLogin) => {
   try {
     if (!email || !password)
@@ -33,4 +45,110 @@ export const loginService = async ({ password, email }: TLogin) => {
   } catch (e) {
     return { success: false, message: 'internal error', data: null };
   }
+};
+
+export const createMagicLinkService = async (email: string) => {
+  if (!email)
+    return {
+      status: 400,
+      message: EServiceResponse.missingDetails,
+      data: null,
+    };
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return {
+      success: false,
+      message: EServiceResponse.failedLogin,
+      data: null,
+    };
+  }
+
+  console.log(email);
+
+  const profile = await Profile.findOne({ user: user.email });
+
+  const otp = generateRandomString();
+
+  const loginOtp = await MagicLinks.insertOne({ user: email, otp });
+
+  const magicLink =
+    getBaseUrl(envServer.NEXT_PUBLIC_ENVIRONMENT) +
+    `${ProjectRoutes.magicLink}/?email=${email}&otp=${loginOtp.otp}`;
+
+  console.log(magicLink);
+
+  const { error } = await resend.emails.send({
+    from: 'Acme <onboarding@resend.dev>',
+    to: [email],
+    subject: 'Magic Login',
+    react: ForgotPasswordEmail({
+      username: user.name,
+      userImage: profile?.user,
+      inviteLink: magicLink,
+    }),
+  });
+
+  if (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: 'internal error',
+      data: null,
+    };
+  }
+
+  return {
+    success: true,
+    message: 'login successful',
+    data: magicLink,
+  };
+};
+
+export const magicLinkService = async (email: string, otp: string) => {
+  if (!email || !Otp)
+    return {
+      status: 400,
+      message: EServiceResponse.missingDetails,
+      data: null,
+    };
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return {
+      success: false,
+      message: EServiceResponse.failedLogin,
+      data: null,
+    };
+  }
+
+  const loginOtp = await MagicLinks.findOne({
+    user: email,
+    otp,
+    expiresAt: { $gt: new Date() },
+    isExpired: false,
+  });
+  if (!loginOtp) {
+    return {
+      success: false,
+      message: EServiceResponse.failedLogin,
+      data: null,
+    };
+  }
+
+  const { refreshToken, accessToken } = await generateTokens(user);
+
+  if (!refreshToken && !accessToken) {
+    return {
+      success: false,
+      message: EServiceResponse.failedLogin,
+      data: null,
+    };
+  }
+
+  return {
+    success: true,
+    message: 'login successful',
+    data: { user, accessToken, refreshToken },
+  };
 };

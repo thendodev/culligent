@@ -65,6 +65,9 @@ dependencies:
   '@react-email/components':
     specifier: 0.0.16
     version: 0.0.16(@types/react@18.3.1)(react@18.3.1)
+  '@react-email/tailwind':
+    specifier: 0.0.18
+    version: 0.0.18(react@18.3.1)
   '@scalar/hono-api-reference':
     specifier: ^0.5.20
     version: 0.5.20(hono@4.3.2)(nanoid@5.0.7)(postcss@8.4.38)(typescript@5.4.5)(unified@11.0.4)(vue-sonner@1.1.2)(vue@3.4.26)(yjs@13.6.15)
@@ -2688,6 +2691,15 @@ packages:
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: 18.2.0
+    dependencies:
+      react: 18.3.1
+    dev: false
+
+  /@react-email/tailwind@0.0.18(react@18.3.1):
+    resolution: {integrity: sha512-ob8CXX/Pqq1U8YfL5OJTL48WJkixizyoXMMRYTiDLDN9LVLU7lSLtcK9kOD9CgFbO2yUPQr7/5+7gnQJ+cXa8Q==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^18.2.0
     dependencies:
       react: 18.3.1
     dev: false

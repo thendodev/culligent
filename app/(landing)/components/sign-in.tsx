@@ -16,7 +16,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 const SignIn = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const form = useForm<TLogin>({
     defaultValues: {
@@ -29,9 +28,7 @@ const SignIn = () => {
   const onSubmit = async (data: TLogin, e: any) => {
     if (!data.email || !data.password) return;
     e?.preventDefault();
-    setIsSubmitting(true);
     const user = await loginHandler(data);
-    setIsSubmitting(false);
     if (user && user.isVerified) {
       router.push(`${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`);
     }
@@ -76,11 +73,7 @@ const SignIn = () => {
           )}
         />
         <div className="mt-5">
-          <Button
-            type="submit"
-            isLoading={isSubmitting}
-            disabled={!isFormErrors}
-          >
+          <Button type="submit" disabled={!isFormErrors}>
             Log in
           </Button>
         </div>

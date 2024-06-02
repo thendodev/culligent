@@ -9,7 +9,8 @@ import { AxiosError } from 'axios';
 export enum EAuth {
   SIGN_IN = '/auth/login',
   SIGN_UP = 'SIGN_UP',
-  FORGOT_PASSWORD = '/auth/forgot-password',
+  CREATE_MAGIC_LINK = '/auth/create-magic-link',
+  MAGIC_LINK_LOGIN = '/auth/magic-link',
   OTP = 'OTP',
   LINKEDIN = '/auth/linkedin',
 }
@@ -34,15 +35,45 @@ export const loginHandler = async (userData: TLogin): Promise<MUser | void> => {
   }
 };
 
-export const forgotPasswordHandler = async (email: string): Promise<void> => {
+export const createMagicLinkHandler = async (email: string): Promise<void> => {
   try {
-    await publicRequest.post(EAuth.FORGOT_PASSWORD, {
+    await publicRequest.post(EAuth.CREATE_MAGIC_LINK, {
       email,
     });
     toast({
       title: 'Success',
       description: 'Email sent successfully',
     });
+  } catch (e) {
+    const { response } = e as AxiosError<any>;
+    toast({
+      title: 'Error',
+      description: response?.data,
+    });
+  }
+};
+export const loginMagicLinkHandler = async (
+  email: string,
+  otp: string,
+): Promise<MUser | void> => {
+  try {
+    const { data } = await publicRequest.post<TAuthResponse>(
+      EAuth.MAGIC_LINK_LOGIN,
+      {
+        email,
+        otp,
+      },
+    );
+    const { user, accessToken, refreshToken } = data;
+    if (user.isVerified)
+      storeLoginCookiesUtil({ accessToken, user, refreshToken });
+
+    toast({
+      title: 'Success',
+      description: 'Email sent successfully',
+    });
+
+    return user;
   } catch (e) {
     const { response } = e as AxiosError<any>;
     toast({
