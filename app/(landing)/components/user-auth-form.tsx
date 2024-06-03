@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import ForgotPassword from './forgot-password';
+import MagicLink from './magic-link';
 import SignIn from './sign-in';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -36,7 +36,7 @@ const UserAuthForm = () => {
         }}
         transition={{ duration: 0.3 }}
       >
-        <ForgotPassword />
+        <MagicLink />
       </motion.div>
       <div className="w-full flex gap-2 justify-center items-center text-center text-sm text-[color:var(--cruto-black)]">
         <Link className=" hover:text-[var(--cruto-green)]" href={'/sign-up'}>

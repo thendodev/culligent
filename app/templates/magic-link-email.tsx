@@ -29,7 +29,7 @@ type TForgotPasswordProps = {
 
 const baseUrl = getBaseUrl(envServer.NEXT_PUBLIC_ENVIRONMENT);
 
-export const ForgotPasswordEmail = ({
+export const MagicLinkEmail = ({
   username,
   userImage,
   inviteLink,
@@ -119,10 +119,10 @@ export const ForgotPasswordEmail = ({
   );
 };
 
-ForgotPasswordEmail.PreviewProps = {
+MagicLinkEmail.PreviewProps = {
   username: 'alanturing',
   userImage: `${baseUrl}/static/vercel-user.png`,
   teamImage: logo,
 } as TForgotPasswordProps;
 
-export default ForgotPasswordEmail;
+export default MagicLinkEmail;

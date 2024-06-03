@@ -1,9 +1,9 @@
 import User from '@/models/User';
-import { TForgotPassword, TLogin } from '@/validations/auth';
+import { TLogin } from '@/validations/auth';
 import { generateTokens } from '@/server/helpers/tokens';
 import MagicLinks from '@/models/MagicLinks';
 import { generateRandomString } from '@/server/helpers/randoms';
-import ForgotPasswordEmail from '@/app/templates/forgot-password';
+import MagicLinkEmail from '@/app/templates/magic-link-email';
 import { getBaseUrl } from '@/global/config';
 import { envServer } from '@/global/envServer';
 import { Resend } from 'resend';
@@ -17,7 +17,7 @@ enum EServiceResponse {
   failedLogin = 'Invalid login details',
 }
 
-const resend = new Resend('re_LmJXmnwX_EcV2oY59Bk6fZHfEGTCGcvzN');
+const resend = new Resend(envServer.MAGIC_LINK_RESEND);
 
 export const loginService = async ({ password, email }: TLogin) => {
   try {
@@ -80,9 +80,9 @@ export const createMagicLinkService = async (email: string) => {
 
   const { error } = await resend.emails.send({
     from: 'Acme <onboarding@resend.dev>',
-    to: [email],
+    to: email,
     subject: 'Magic Login',
-    react: ForgotPasswordEmail({
+    react: MagicLinkEmail({
       username: user.name,
       userImage: profile?.user,
       inviteLink: magicLink,

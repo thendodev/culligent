@@ -11,13 +11,13 @@ import {
 
 import { Input } from '@/components/ui/input';
 import { createMagicLinkHandler } from '@/handlers/handleAuth';
-import { forgotPasswordSchema, TForgotPassword } from '@/validations/auth';
+import { magicLinkSchema, TForgotPassword } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
 const ForgotPassword = () => {
   const form = useForm<TForgotPassword>({
-    resolver: zodResolver(forgotPasswordSchema),
+    resolver: zodResolver(magicLinkSchema),
   });
 
   const onSubmit = async (data: TForgotPassword) => {

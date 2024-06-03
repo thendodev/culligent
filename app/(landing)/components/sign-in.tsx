@@ -14,7 +14,7 @@ import { loginHandler } from '@/handlers/handleAuth';
 import { loginSchema, TLogin } from '@/validations/auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+
 const SignIn = () => {
   const router = useRouter();
   const form = useForm<TLogin>({

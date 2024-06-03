@@ -36,11 +36,11 @@ export const signUpSchema = z
     }
   });
 
-export const forgotPasswordSchema = z.object({
+export const magicLinkSchema = z.object({
   email: z.string().email('Invalid email address'),
 });
 
-export type TForgotPassword = z.infer<typeof forgotPasswordSchema>;
+export type TForgotPassword = z.infer<typeof magicLinkSchema>;
 
 export type TSignUp = z.infer<typeof signUpSchema>;
 

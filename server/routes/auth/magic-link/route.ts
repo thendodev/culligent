@@ -1,4 +1,4 @@
-import { forgotPasswordSchema, loginSchema } from '@/validations/auth';
+import { magicLinkSchema } from '@/validations/auth';
 import { createRoute, z } from '@hono/zod-openapi';
 
 export const createMagicLinkRoute = createRoute({
@@ -11,7 +11,7 @@ export const createMagicLinkRoute = createRoute({
       description: 'Request body',
       content: {
         'application/json': {
-          schema: forgotPasswordSchema.openapi('Login'),
+          schema: magicLinkSchema.openapi('Login'),
         },
       },
       required: true,
@@ -31,7 +31,7 @@ export const createMagicLinkRoute = createRoute({
 });
 
 export const magicLinkRoute = createRoute({
-  method: 'post',
+  method: 'put',
   path: '/api/auth/magic-link',
   tags: ['Auth'],
   summary: 'magic link login',
