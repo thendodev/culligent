@@ -41,7 +41,6 @@ export const createMagicLinkHandler = async (email: string): Promise<void> => {
       email,
     });
 
-    console.log(res.data);
     toast({
       title: 'Success',
       description: 'Email sent successfully',
