@@ -8,9 +8,10 @@ import { EStatusCode } from '@/global/config';
 import { HTTPException } from 'hono/http-exception';
 import { Resend } from 'resend';
 import OtpEmailTemplate from '@/app/templates/otp-email-template';
+import { envServer } from '@/global/envServer';
 
 export const opt = new OpenAPIHono();
-const resend = new Resend(process.env.RESEND_KEY);
+const resend = new Resend(envServer.OTP_RESEND);
 
 opt.openapi(otpPOST, async ({ req, json }) => {
   try {

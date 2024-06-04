@@ -46,7 +46,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="w-full mx-auto my-10 sm:border border-[var(--cruto-off-white)] rounded-[0.5rem] p-5">
+    <div className="mx-auto w-[90%] lg:w-[45%] sm:w-[80%] my-10 sm:border border-[var(--cruto-border)] bg-[var(--cruto-foreground)] rounded-[0.5rem] p-5">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -133,18 +133,16 @@ const SignUpForm = () => {
           />
 
           <div>
-            <Button className="bg-[color:var(--cruto-green)] mt-5 w-[100%] text-[color:var(--cruto-white)] hover:scale-95">
-              Sign Up
-            </Button>
+            <Button className="mt-2">Sign Up</Button>
           </div>
         </form>
       </Form>
       <div className="flex justify-center w-full my-4 mx-auto text-sm text-center">
         <Link
           href={'/'}
-          className="flex gap-2 text-[color:var(--cruto-green)] w-fit"
+          className="flex gap-2 hover:text-[color:var(--cruto-green)] w-fit"
         >
-          <ArrowLeftCircle /> Back to the login page
+          Back to the login page
         </Link>
       </div>
     </div>

@@ -35,7 +35,7 @@ const ForgotPassword = () => {
           control={form.control}
           render={({ field }) => (
             <FormItem>
-              <FormDescription className="p-1 border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] text-center text-sm">
+              <FormDescription className="p-1 mb-8 border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] text-center text-sm">
                 An email will be sent to your email address for a one time login
               </FormDescription>
               <FormLabel>Email</FormLabel>

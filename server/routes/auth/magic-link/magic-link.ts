@@ -4,6 +4,7 @@ import {
   createMagicLinkService,
   magicLinkService,
 } from '@/server/services/auth/auth-service';
+import { EStatusCode } from '@/global/config';
 
 export const magicLink = new OpenAPIHono();
 
@@ -14,7 +15,7 @@ magicLink.openapi(createMagicLinkRoute, async (c) => {
     if (!email) return c.json({ message: 'invalid' });
 
     const { data, success, message } = await createMagicLinkService(email);
-    if (!success || !data) return c.json({ message });
+    if (!success || !data) throw new Error(message);
 
     return c.json({ message: 'email sent' });
   } catch (e) {

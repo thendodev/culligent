@@ -1,19 +1,18 @@
 import UserAuthForm from './components/user-auth-form';
 import Image from 'next/image';
-import landingImg from '../../assets/Artificial intelligence-pana.svg';
 import culligent from '@/public/logo/logo.svg';
 
 export default async function Home() {
   return (
     <div className="w-full h-full inline-flex flex-col-reverse sm:flex-row justify-center items-center relative">
-      <div className="w-full h-full flex-1 flex flex-col justify-center align-middle items-center content-center bottom-0 left-0  bg-[var(--cruto-background)] absolute sm:static">
+      <div className="w-full h-full flex-1 flex flex-col justify-center align-middle items-center content-center bottom-0 left-0  bg-[var(--cruto-black)] absolute sm:static">
         <div id="sign in form" className="w-[90%] lg:w-[45%] sm:w-[80%]">
           <div className="w-full flex gap-5 align-middle justify-center content-center flex-col h-fit">
             <UserAuthForm />
           </div>
         </div>
       </div>
-      <div className="relative h-full w-full flex-1 sm:flex">
+      <div className="relative h-full w-full flex-1 sm:flex bg-[var(--cruto-background)]">
         {/* <Image
           src={landingImg}
           alt="landing page image"
@@ -23,9 +22,8 @@ export default async function Home() {
         <Image
           src={culligent}
           alt="logo"
-          fill
           objectFit="contain"
-          className="backdrop-filter backdrop-blur-[10px] w-full h-full"
+          className="m-auto"
         />
       </div>
     </div>

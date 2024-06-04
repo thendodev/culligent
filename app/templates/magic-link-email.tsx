@@ -44,12 +44,9 @@ export const MagicLinkEmail = ({
         <Body className="bg-white my-auto mx-auto font-sans px-2">
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
             <Section className="mt-[32px]">
-              <Image
-                src={culligent}
-                fill
-                objectFit="contain"
-                alt="Vercel"
-                className="my-0 mx-auto"
+              <Img
+                src={`${baseUrl}/public/logo/logo.svg`}
+                className="my-0 mx-auto absolute object-contain"
               />
             </Section>
 
@@ -78,9 +75,9 @@ export const MagicLinkEmail = ({
                   />
                 </Column>
                 <Column align="left">
-                  <Image
+                  <Img
                     className="rounded-full"
-                    src={logo}
+                    src={`${getBaseUrl}/public/favicon_io/android-chrome-192x192.png`}
                     width="64"
                     height="64"
                     alt="culligent logo"
@@ -118,11 +115,5 @@ export const MagicLinkEmail = ({
     </Html>
   );
 };
-
-MagicLinkEmail.PreviewProps = {
-  username: 'alanturing',
-  userImage: `${baseUrl}/static/vercel-user.png`,
-  teamImage: logo,
-} as TForgotPasswordProps;
 
 export default MagicLinkEmail;

@@ -37,9 +37,11 @@ export const loginHandler = async (userData: TLogin): Promise<MUser | void> => {
 
 export const createMagicLinkHandler = async (email: string): Promise<void> => {
   try {
-    await publicRequest.post(EAuth.CREATE_MAGIC_LINK, {
+    const res = await publicRequest.post(EAuth.CREATE_MAGIC_LINK, {
       email,
     });
+
+    console.log(res.data);
     toast({
       title: 'Success',
       description: 'Email sent successfully',

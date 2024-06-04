@@ -48,61 +48,60 @@ export const loginService = async ({ password, email }: TLogin) => {
 };
 
 export const createMagicLinkService = async (email: string) => {
-  if (!email)
-    return {
-      status: 400,
-      message: EServiceResponse.missingDetails,
-      data: null,
-    };
+  try {
+    if (!email)
+      return {
+        status: 400,
+        message: EServiceResponse.missingDetails,
+        data: null,
+      };
 
-  const user = await User.findOne({ email });
-  if (!user) {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return {
+        success: false,
+        message: EServiceResponse.failedLogin,
+        data: null,
+      };
+    }
+
+    const profile = await Profile.findOne({ user: user.email });
+
+    const otp = generateRandomString();
+
+    const loginOtp = await MagicLinks.insertOne({ user: email, otp });
+
+    const magicLink =
+      getBaseUrl(envServer.NEXT_PUBLIC_ENVIRONMENT) +
+      `${ProjectRoutes.magicLink}/?email=${email}&otp=${loginOtp.otp}`;
+
+    const { data, error } = await resend.emails.send({
+      from: 'Acme <onboarding@resend.dev>',
+      to: [email],
+      subject: 'Magic Login',
+      react: MagicLinkEmail({
+        username: user.name,
+        userImage: profile?.user,
+        inviteLink: magicLink,
+      }),
+    });
+
+    if (error) {
+      return {
+        success: false,
+        message: 'internal error',
+        data: null,
+      };
+    }
+
     return {
-      success: false,
-      message: EServiceResponse.failedLogin,
-      data: null,
+      success: true,
+      message: 'login successful',
+      data: magicLink,
     };
+  } catch (e) {
+    return { success: false, message: 'internal error', data: null };
   }
-
-  console.log(email);
-
-  const profile = await Profile.findOne({ user: user.email });
-
-  const otp = generateRandomString();
-
-  const loginOtp = await MagicLinks.insertOne({ user: email, otp });
-
-  const magicLink =
-    getBaseUrl(envServer.NEXT_PUBLIC_ENVIRONMENT) +
-    `${ProjectRoutes.magicLink}/?email=${email}&otp=${loginOtp.otp}`;
-
-  console.log(magicLink);
-
-  const { error } = await resend.emails.send({
-    from: 'Acme <onboarding@resend.dev>',
-    to: email,
-    subject: 'Magic Login',
-    react: MagicLinkEmail({
-      username: user.name,
-      userImage: profile?.user,
-      inviteLink: magicLink,
-    }),
-  });
-
-  if (error) {
-    console.log(error);
-    return {
-      success: false,
-      message: 'internal error',
-      data: null,
-    };
-  }
-
-  return {
-    success: true,
-    message: 'login successful',
-    data: magicLink,
-  };
 };
 
 export const magicLinkService = async (email: string, otp: string) => {
