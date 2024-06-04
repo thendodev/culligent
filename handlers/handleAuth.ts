@@ -58,7 +58,7 @@ export const loginMagicLinkHandler = async (
   otp: string,
 ): Promise<MUser | void> => {
   try {
-    const { data } = await publicRequest.post<TAuthResponse>(
+    const { data } = await publicRequest.put<TAuthResponse>(
       EAuth.MAGIC_LINK_LOGIN,
       {
         email,

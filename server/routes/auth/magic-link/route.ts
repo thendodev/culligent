@@ -42,7 +42,7 @@ export const magicLinkRoute = createRoute({
         'application/json': {
           schema: z
             .object({
-              email: z.string(),
+              user: z.string(),
               otp: z.string(),
             })
             .openapi('Login'),

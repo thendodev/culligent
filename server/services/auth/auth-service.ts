@@ -10,6 +10,8 @@ import { Resend } from 'resend';
 import Profile from '@/models/Profile';
 import { ProjectRoutes } from '@/global/routes';
 import Otp from '@/models/Otp';
+import { getEmail } from '@/server/helpers/email';
+import { ObjectId } from 'mongodb';
 
 enum EServiceResponse {
   successLogin = 'Login successful',
@@ -73,11 +75,13 @@ export const createMagicLinkService = async (email: string) => {
 
     const magicLink =
       getBaseUrl(envServer.NEXT_PUBLIC_ENVIRONMENT) +
-      `${ProjectRoutes.magicLink}/?email=${email}&otp=${loginOtp.otp}`;
+      `${ProjectRoutes.magicLink}/?user=${user._id}&otp=${loginOtp.otp}`;
+
+    const mailTo = getEmail(email);
 
     const { data, error } = await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
-      to: [email],
+      to: [mailTo],
       subject: 'Magic Login',
       react: MagicLinkEmail({
         username: user.name,
@@ -100,54 +104,60 @@ export const createMagicLinkService = async (email: string) => {
       data: magicLink,
     };
   } catch (e) {
+    console.log(e);
     return { success: false, message: 'internal error', data: null };
   }
 };
 
-export const magicLinkService = async (email: string, otp: string) => {
-  if (!email || !Otp)
-    return {
-      status: 400,
-      message: EServiceResponse.missingDetails,
-      data: null,
-    };
+export const magicLinkService = async (user: string, otp: string) => {
+  try {
+    if (!user || !Otp)
+      return {
+        status: 400,
+        message: EServiceResponse.missingDetails,
+        data: null,
+      };
 
-  const user = await User.findOne({ email });
-  if (!user) {
+    const isUser = await User.findOne({ _id: user as unknown as ObjectId });
+    if (!isUser) {
+      return {
+        success: false,
+        message: EServiceResponse.failedLogin,
+        data: null,
+      };
+    }
+
+    const loginOtp = await MagicLinks.findOne({
+      user: isUser.email,
+      otp,
+      expiresAt: { $gt: new Date() },
+      isExpired: false,
+    });
+    if (!loginOtp) {
+      return {
+        success: false,
+        message: EServiceResponse.failedLogin,
+        data: null,
+      };
+    }
+
+    const { refreshToken, accessToken } = await generateTokens(user);
+
+    if (!refreshToken && !accessToken) {
+      return {
+        success: false,
+        message: EServiceResponse.failedLogin,
+        data: null,
+      };
+    }
+
     return {
-      success: false,
-      message: EServiceResponse.failedLogin,
-      data: null,
+      success: true,
+      message: 'login successful',
+      data: { user, accessToken, refreshToken },
     };
+  } catch (e) {
+    console.log(e);
+    return { success: false, message: 'internal error', data: null };
   }
-
-  const loginOtp = await MagicLinks.findOne({
-    user: email,
-    otp,
-    expiresAt: { $gt: new Date() },
-    isExpired: false,
-  });
-  if (!loginOtp) {
-    return {
-      success: false,
-      message: EServiceResponse.failedLogin,
-      data: null,
-    };
-  }
-
-  const { refreshToken, accessToken } = await generateTokens(user);
-
-  if (!refreshToken && !accessToken) {
-    return {
-      success: false,
-      message: EServiceResponse.failedLogin,
-      data: null,
-    };
-  }
-
-  return {
-    success: true,
-    message: 'login successful',
-    data: { user, accessToken, refreshToken },
-  };
 };

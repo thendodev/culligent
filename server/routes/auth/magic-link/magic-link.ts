@@ -25,11 +25,11 @@ magicLink.openapi(createMagicLinkRoute, async (c) => {
 
 magicLink.openapi(magicLinkRoute, async (c) => {
   try {
-    const { email, otp } = c.req.valid('json');
+    const { user, otp } = c.req.valid('json');
 
-    if (!email || !otp) return c.json({ message: 'invalid' });
+    if (!user || !otp) return c.json({ message: 'invalid' });
 
-    const { data, success, message } = await magicLinkService(email, otp);
+    const { data, success, message } = await magicLinkService(user, otp);
     if (!success || !data) return c.json({ message });
 
     return c.json({

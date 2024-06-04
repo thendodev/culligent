@@ -9,6 +9,7 @@ import { HTTPException } from 'hono/http-exception';
 import { Resend } from 'resend';
 import OtpEmailTemplate from '@/app/templates/otp-email-template';
 import { envServer } from '@/global/envServer';
+import { getEmail } from '@/server/helpers/email';
 
 export const opt = new OpenAPIHono();
 const resend = new Resend(envServer.OTP_RESEND);
@@ -28,15 +29,16 @@ opt.openapi(otpPOST, async ({ req, json }) => {
         message,
       });
 
+    const mailTo = getEmail(email);
+
     const { error } = await resend.emails.send({
       from: 'Acme <onboarding@resend.dev>',
-      to: [email],
+      to: [mailTo],
       subject: 'Verify your email',
       react: OtpEmailTemplate({ ...data }),
     });
 
     if (error) {
-      console.log(error);
       throw new HTTPException(EStatusCode.InternalServerError, {
         message: 'internal error',
       });
