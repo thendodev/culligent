@@ -53,8 +53,8 @@ opt.openapi(otpPOST, async ({ req, json }) => {
 
 opt.openapi(otpPUT, async ({ req, json }) => {
   try {
-    const { email, otp } = await req.json();
-    const { success, message, code } = await verifyOtpService(email, otp);
+    const { user, otp } = await req.json();
+    const { success, message, code } = await verifyOtpService(user, otp);
     if (!success && code)
       throw new HTTPException(code, {
         message: message,

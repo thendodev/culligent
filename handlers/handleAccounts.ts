@@ -16,10 +16,10 @@ export const emailSignUphandler = async (newUser: TSignUp) => {
   }
 };
 
-export const resendOtpHandler = async (email: string) => {
+export const resendOtpHandler = async (user: string) => {
   try {
     await publicRequest.post('auth/otp', {
-      email: email,
+      user,
     });
     toast({
       title: 'OTP sent',
@@ -33,11 +33,11 @@ export const resendOtpHandler = async (email: string) => {
   }
 };
 
-export const verifyOtpHandler = async (otp: string, email: string) => {
+export const verifyOtpHandler = async (otp: string, user: string) => {
   try {
     await publicRequest.put<any>('auth/otp', {
-      otp: otp,
-      email: email,
+      otp,
+      user,
     });
     toast({
       title: 'OTP verified',

@@ -4,6 +4,7 @@ import User, { MUser } from '@/models/User';
 import { EUserServiceResponse } from './service.types';
 import { EStatusCode } from '@/global/config';
 import { TSignUp } from '@/validations/auth';
+import { ObjectId } from 'mongodb';
 
 export const createUserService = async ({
   email,
@@ -74,16 +75,15 @@ export const createOtpService = async (
 ): Promise<ApiResponse<MOtp>> => {
   try {
     const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
-    const user = await User.findOne({ email: id });
-    if (!user) throw new Error('User not found');
-    await Otp.updateMany(
-      { user: user._id },
-      {
-        $set: {
-          isExpired: true,
-        },
-      },
-    );
+    const user = await User.findById(id);
+    if (!user)
+      return {
+        success: false,
+        message: EUserServiceResponse.failedGetUser,
+        data: null,
+        code: EStatusCode.BadRequest,
+      };
+
     const otp = await Otp.insertOne({ user: user._id, otp: newOtp });
 
     if (!otp)
@@ -111,7 +111,7 @@ export const createOtpService = async (
 };
 
 export const verifyOtpService = async (
-  email: string,
+  user: ObjectId,
   otp: string,
 ): Promise<ApiResponse<boolean>> => {
   try {
@@ -123,7 +123,7 @@ export const verifyOtpService = async (
           $eq: otp,
         },
         expiresAt: {
-          $lte: new Date(currentDate),
+          $gte: new Date(currentDate),
         },
         isVerified: {
           $eq: false,
@@ -153,7 +153,7 @@ export const verifyOtpService = async (
     // if profile exists update status of profile
     const isUserUpdated = await User.findOneAndUpdate(
       {
-        email: email,
+        _id: user,
         isVerified: {
           $eq: false,
         },

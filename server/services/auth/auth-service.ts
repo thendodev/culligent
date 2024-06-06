@@ -126,8 +126,7 @@ export const magicLinkService = async (user: string, otp: string) => {
         data: null,
       };
     }
-
-    console.log(isUser);
+    const currentDate = new Date().toISOString();
 
     const loginOtp = await MagicLinks.findOneAndUpdate(
       {
@@ -135,7 +134,7 @@ export const magicLinkService = async (user: string, otp: string) => {
           $eq: otp,
         },
         expiresAt: {
-          $lte: new Date(),
+          $gte: new Date(currentDate),
         },
         isExpired: {
           $eq: false,
@@ -150,8 +149,6 @@ export const magicLinkService = async (user: string, otp: string) => {
         },
       },
     );
-
-    console.log(loginOtp);
 
     if (!loginOtp) {
       return {

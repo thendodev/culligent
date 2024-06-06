@@ -9,7 +9,7 @@ import { loginMagicLinkHandler } from '@/handlers/handleAuth';
 import { ProjectRoutes } from '@/global/routes';
 
 const OtpPage = () => {
-  const { email, otp } = useParams<{ email: string; otp: string }>();
+  const { user, otp } = useParams<{ user: string; otp: string }>();
 
   const router = useRouter();
 
@@ -17,18 +17,18 @@ const OtpPage = () => {
 
   useEffect(() => {
     const handleMagicLink = async () => {
-      const user = await loginMagicLinkHandler(otp, email);
-      if (!user) return router.push('/');
+      const data = await loginMagicLinkHandler(otp, user);
+      if (!data) return router.push('/');
 
-      if (user && !user.isVerified) {
-        router.push(`${ProjectRoutes.sign_up}/otp?email=${user.email}`);
+      if (data && !data.isVerified) {
+        router.push(`${ProjectRoutes.sign_up}/otp?user=${data._id}`);
       }
 
       router.push(`/`);
     };
 
     handleMagicLink();
-  }, [router, otp, email]);
+  }, [router, otp, user]);
 
   return (
     <div className="h-full w-full flex-1 sm:flex">

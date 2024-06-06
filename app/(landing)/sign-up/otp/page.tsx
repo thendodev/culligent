@@ -5,7 +5,7 @@ import EnterOtpPic from '@/assets/Enter-OTP-bro.svg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handleAccounts';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Suspense } from 'react';
 import {
   InputOTP,
@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/input-otp';
 
 const OtpPage = () => {
-  const { email, otp } = useParams<{ email: string; otp: string }>();
+  const { user, otp } = useParams<{ user: string; otp: string }>();
   const [resendTimer, setResendTimer] = React.useState(60);
   const [otpResend, setOtpResend] = React.useState(false);
   const [enterOtp, setEnterOtp] = React.useState(otp);
@@ -39,27 +39,27 @@ const OtpPage = () => {
 
   //send the otp to the user's email on load if we have an email in the url
   useEffect(() => {
-    if (!email) return;
+    if (!user) return;
     (async () => {
-      await resendOtpHandler(email);
+      await resendOtpHandler(user);
     })();
-  }, [email]);
+  }, [user]);
 
   const handleResendOtp = async () => {
-    if (!email) return;
-    await resendOtpHandler(email);
+    if (!user) return;
+    await resendOtpHandler(user);
     setOtpResend(true);
   };
 
   useEffect(() => {
-    const handleVerifyOtp = async ({ email, otp }: any) => {
-      const isSuccessful = await verifyOtpHandler(otp, email);
+    const handleVerifyOtp = async ({ user, otp }: any) => {
+      const isSuccessful = await verifyOtpHandler(otp, user);
       if (isSuccessful) return router.push('/');
     };
-    if (email && enterOtp?.length === 4) {
-      handleVerifyOtp({ email, otp: enterOtp });
+    if (user && enterOtp?.length === 4) {
+      handleVerifyOtp({ user, otp: enterOtp });
     }
-  }, [enterOtp, email, router]);
+  }, [enterOtp, user, router]);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>

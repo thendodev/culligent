@@ -40,7 +40,7 @@ export const otpPUT = createRoute({
         'application/json': {
           schema: z
             .object({
-              email: z.string(),
+              user: z.string(),
               otp: z.string(),
             })
             .openapi('VerfiyUser'),

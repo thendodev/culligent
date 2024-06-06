@@ -54,14 +54,14 @@ export const createMagicLinkHandler = async (email: string): Promise<void> => {
   }
 };
 export const loginMagicLinkHandler = async (
-  email: string,
+  id: string,
   otp: string,
 ): Promise<MUser | void> => {
   try {
     const { data } = await publicRequest.put<TAuthResponse>(
       EAuth.MAGIC_LINK_LOGIN,
       {
-        email,
+        user: id,
         otp,
       },
     );
