@@ -5,7 +5,7 @@ export const createMagicLinkRoute = createRoute({
   method: 'post',
   path: '/api/auth/create-magic-link',
   tags: ['Auth'],
-  summary: 'Forgot Password',
+  summary: 'Create magic link',
   request: {
     body: {
       description: 'Request body',
@@ -30,7 +30,7 @@ export const createMagicLinkRoute = createRoute({
   },
 });
 
-export const magicLinkRoute = createRoute({
+export const magicLinkLoginRoute = createRoute({
   method: 'put',
   path: '/api/auth/magic-link',
   tags: ['Auth'],

@@ -12,7 +12,7 @@ export default async function Home() {
           </div>
         </div>
       </div>
-      <div className="relative h-full w-full flex-1 sm:flex bg-[var(--cruto-background)]">
+      <div className="relative h-full w-full flex-1 sm:flex">
         {/* <Image
           src={landingImg}
           alt="landing page image"

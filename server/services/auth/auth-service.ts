@@ -11,7 +11,6 @@ import Profile from '@/models/Profile';
 import { ProjectRoutes } from '@/global/routes';
 import Otp from '@/models/Otp';
 import { getEmail } from '@/server/helpers/email';
-import { ObjectId } from 'mongodb';
 
 enum EServiceResponse {
   successLogin = 'Login successful',
@@ -118,7 +117,8 @@ export const magicLinkService = async (user: string, otp: string) => {
         data: null,
       };
 
-    const isUser = await User.findOne({ _id: user as unknown as ObjectId });
+    const isUser = await User.findById(user);
+
     if (!isUser) {
       return {
         success: false,
@@ -127,12 +127,32 @@ export const magicLinkService = async (user: string, otp: string) => {
       };
     }
 
-    const loginOtp = await MagicLinks.findOne({
-      user: isUser.email,
-      otp,
-      expiresAt: { $gt: new Date() },
-      isExpired: false,
-    });
+    console.log(isUser);
+
+    const loginOtp = await MagicLinks.findOneAndUpdate(
+      {
+        otp: {
+          $eq: otp,
+        },
+        expiresAt: {
+          $lte: new Date(),
+        },
+        isExpired: {
+          $eq: false,
+        },
+        user: {
+          $eq: isUser.email,
+        },
+      },
+      {
+        $set: {
+          isExpired: true,
+        },
+      },
+    );
+
+    console.log(loginOtp);
+
     if (!loginOtp) {
       return {
         success: false,
@@ -141,7 +161,7 @@ export const magicLinkService = async (user: string, otp: string) => {
       };
     }
 
-    const { refreshToken, accessToken } = await generateTokens(user);
+    const { refreshToken, accessToken } = await generateTokens(isUser);
 
     if (!refreshToken && !accessToken) {
       return {
@@ -154,7 +174,7 @@ export const magicLinkService = async (user: string, otp: string) => {
     return {
       success: true,
       message: 'login successful',
-      data: { user, accessToken, refreshToken },
+      data: { user: isUser, accessToken, refreshToken },
     };
   } catch (e) {
     console.log(e);

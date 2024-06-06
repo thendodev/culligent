@@ -1,5 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
-import { createMagicLinkRoute, magicLinkRoute } from './route';
+import { createMagicLinkRoute, magicLinkLoginRoute } from './route';
 import {
   createMagicLinkService,
   magicLinkService,
@@ -23,14 +23,14 @@ magicLink.openapi(createMagicLinkRoute, async (c) => {
   }
 });
 
-magicLink.openapi(magicLinkRoute, async (c) => {
+magicLink.openapi(magicLinkLoginRoute, async (c) => {
   try {
     const { user, otp } = c.req.valid('json');
 
-    if (!user || !otp) return c.json({ message: 'invalid' });
-
+    if (!user || !otp)
+      return c.json({ message: 'invalid' }, EStatusCode.BadRequest);
     const { data, success, message } = await magicLinkService(user, otp);
-    if (!success || !data) return c.json({ message });
+    if (!success || !data) return c.json({ message }, EStatusCode.BadRequest);
 
     return c.json({
       ...data,

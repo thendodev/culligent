@@ -24,7 +24,7 @@ const OtpPage = () => {
         router.push(`${ProjectRoutes.sign_up}/otp?email=${user.email}`);
       }
 
-      router.push(`${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`);
+      router.push(`/`);
     };
 
     handleMagicLink();
