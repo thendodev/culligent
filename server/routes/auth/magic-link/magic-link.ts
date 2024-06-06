@@ -26,7 +26,7 @@ magicLink.openapi(createMagicLinkRoute, async (c) => {
 magicLink.openapi(magicLinkLoginRoute, async (c) => {
   try {
     const { user, otp } = c.req.valid('json');
-
+    console.log(user, otp);
     if (!user || !otp)
       return c.json({ message: 'invalid' }, EStatusCode.BadRequest);
     const { data, success, message } = await magicLinkService(user, otp);

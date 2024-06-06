@@ -76,6 +76,7 @@ export const loginMagicLinkHandler = async (
 
     return user;
   } catch (e) {
+    console.log(e);
     const { response } = e as AxiosError<any>;
     toast({
       title: 'Error',

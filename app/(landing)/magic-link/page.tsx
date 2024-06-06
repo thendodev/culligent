@@ -2,14 +2,15 @@
 
 import React, { useEffect } from 'react';
 import Image from 'next/image';
-import { verifyOtpHandler } from '@/handlers/handleAccounts';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import culligent from '@/public/logo/logo.svg';
 import { loginMagicLinkHandler } from '@/handlers/handleAuth';
 import { ProjectRoutes } from '@/global/routes';
 
 const OtpPage = () => {
-  const { user, otp } = useParams<{ user: string; otp: string }>();
+  const params = useSearchParams();
+  const user = params.get('user');
+  const otp = params.get('otp');
 
   const router = useRouter();
 
@@ -17,8 +18,9 @@ const OtpPage = () => {
 
   useEffect(() => {
     const handleMagicLink = async () => {
-      const data = await loginMagicLinkHandler(otp, user);
-      if (!data) return router.push('/');
+      if (!user || !otp) return;
+      console.log(otp);
+      const data = await loginMagicLinkHandler(user, otp);
 
       if (data && !data.isVerified) {
         router.push(`${ProjectRoutes.sign_up}/otp?user=${data._id}`);

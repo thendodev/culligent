@@ -117,8 +117,10 @@ export const magicLinkService = async (user: string, otp: string) => {
         data: null,
       };
 
-    const isUser = await User.findById(user);
+    console.log(user, otp);
 
+    const isUser = await User.findById(user);
+    console.log(isUser);
     if (!isUser) {
       return {
         success: false,
@@ -127,7 +129,7 @@ export const magicLinkService = async (user: string, otp: string) => {
       };
     }
     const currentDate = new Date().toISOString();
-
+    console.log(otp);
     const loginOtp = await MagicLinks.findOneAndUpdate(
       {
         otp: {
@@ -149,6 +151,8 @@ export const magicLinkService = async (user: string, otp: string) => {
         },
       },
     );
+
+    console.log(loginOtp);
 
     if (!loginOtp) {
       return {
