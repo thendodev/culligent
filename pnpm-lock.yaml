@@ -108,7 +108,7 @@ dependencies:
     specifier: ^4.3.0
     version: 4.4.2
   input-otp:
-    specifier: ^1.2.3
+    specifier: ^1.2.4
     version: 1.2.4(react-dom@18.3.1)(react@18.3.1)
   js-cookie:
     specifier: ^3.0.5

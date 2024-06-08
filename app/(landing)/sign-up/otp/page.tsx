@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import EnterOtpPic from '@/assets/Enter-OTP-bro.svg';
+import culligent from '@/public/logo/logo.svg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handleAccounts';
@@ -63,7 +63,7 @@ const OtpPage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div className="w-full h-full flex flex-col-reverse sm:flex-row sm:items-center relative sm:static">
-        <div className="w-full  h-[48%] flex flex-col gap-2 justify-center items-center content-center bg-[var(--cruto-white)] rounded-t-[1rem]">
+        <div className="w-full  h-full flex flex-col gap-2 justify-center items-center content-center bg-[var(--cruto-black)] ">
           <InputOTP maxLength={4} onChange={(value) => setEnterOtp(value)}>
             <InputOTPGroup>
               <InputOTPSlot index={0} />
@@ -75,16 +75,17 @@ const OtpPage = () => {
 
           <Button
             variant="ghost"
-            className="text-sm text-[var(--cruto-green)] hover:text-[var(--cruto-black)]"
+            className="text-sm hover:text-[var(--cruto-green)] text-[var(--cruto-text-light)]"
             onClick={handleResendOtp}
+            disabled={otpResend}
           >
-            Resend OTP
+            Resend
             {otpResend &&
               `(${new Date(resendTimer * 1000).toISOString().substr(14, 5)})`}
           </Button>
         </div>
         <div className="absolute sm:static top-[0%] z-[-1]  w-full h-[60%] sm:h-full flex justify-center items-center content-center">
-          <Image src={EnterOtpPic} alt="Enter OTP" objectFit="contain" />
+          <Image src={culligent} alt="Enter OTP" objectFit="contain" />
         </div>
       </div>
     </Suspense>

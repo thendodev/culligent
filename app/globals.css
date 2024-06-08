@@ -34,6 +34,7 @@
     --cruto-text-grey: var(var(--cruto-pale-grey));
     --cruto-text-black: var(var(--cruto-pale-black));
     --cruto-text: #000;
+    --cruto-text-light: #fff;
   }
 
   .dark {
