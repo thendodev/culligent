@@ -1,4 +1,5 @@
 import { toast } from '@/components/ui/use-toast';
+import { ClientErrorResponse } from '@/global/response.types';
 import { TAuthResponse } from '@/global/types';
 import { storeLoginCookiesUtil } from '@/lib/cookiesUtil';
 import { publicRequest } from '@/lib/requests';
@@ -26,11 +27,11 @@ export const loginHandler = async (userData: TLogin): Promise<MUser | void> => {
       storeLoginCookiesUtil({ accessToken, user, refreshToken });
     return user;
   } catch (e) {
-    const { response, message, ...err } = e as AxiosError<any>;
+    const { response } = e as AxiosError<ClientErrorResponse>;
 
     toast({
       title: 'Error',
-      description: message,
+      description: response?.data.message,
     });
   }
 };
@@ -46,10 +47,10 @@ export const createMagicLinkHandler = async (email: string): Promise<void> => {
       description: 'Email sent successfully',
     });
   } catch (e) {
-    const { response } = e as AxiosError<any>;
+    const { response } = e as AxiosError<ClientErrorResponse>;
     toast({
       title: 'Error',
-      description: response?.data,
+      description: response?.data.message,
     });
   }
 };
@@ -66,21 +67,20 @@ export const loginMagicLinkHandler = async (
       },
     );
     const { user, accessToken, refreshToken } = data;
-    if (user.isVerified)
-      storeLoginCookiesUtil({ accessToken, user, refreshToken });
+    if (!user.isVerified) throw new Error('User not verified');
+    storeLoginCookiesUtil({ accessToken, user, refreshToken });
 
     toast({
       title: 'Success',
-      description: 'Email sent successfully',
+      description: 'Login successful',
     });
 
     return user;
   } catch (e) {
-    console.log(e);
-    const { response } = e as AxiosError<any>;
+    const { response } = e as AxiosError<ClientErrorResponse>;
     toast({
       title: 'Error',
-      description: response?.data,
+      description: response?.data.message,
     });
   }
 };
@@ -94,10 +94,10 @@ export const linkedinHandler = async (): Promise<MUser | void> => {
       storeLoginCookiesUtil({ accessToken, user, refreshToken });
     return user;
   } catch (e) {
-    const { response } = e as AxiosError<any>;
+    const { response } = e as AxiosError<ClientErrorResponse>;
     toast({
       title: 'Error',
-      description: response?.data,
+      description: response?.data.message,
     });
   }
 };

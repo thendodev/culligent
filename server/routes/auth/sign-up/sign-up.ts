@@ -10,34 +10,39 @@ export const signUp = new OpenAPIHono();
 
 signUp.openapi(signUpRoute, async ({ res, req, json }) => {
   try {
-    if (!req.valid('json'))
-      throw new HTTPException(EStatusCode.BadRequest, {
-        message: 'invalid json',
-      });
-
     const { email, password, surname, name } = req.valid('json');
-
+    if (!email || !password || !surname || !name)
+      return json({ message: 'invalid request' }, EStatusCode.BadRequest);
     //create a new user
-    const { success, data, message } = await createUserService({
+    const { success, data, message, code } = await createUserService({
       email,
       password,
       surname,
       name,
     });
     if (!success || !data)
-      throw new HTTPException(EStatusCode.BadRequest, {
-        message,
-      });
+      return json(
+        {
+          message,
+        },
+        code,
+      );
 
     //create a password for the user
     const isPassword = await createPasswordService({
       user: data._id,
       password: password,
     });
-    if (!isPassword)
-      throw new HTTPException(500, { message: 'password not created' });
+
+    //if password is not created, return error
+    if (!isPassword.success)
+      json({ message: isPassword.message }, isPassword.code);
+
     return json(data);
   } catch (e) {
-    return json({}, EStatusCode.InternalServerError);
+    return json(
+      { message: 'internal server error' },
+      EStatusCode.InternalServerError,
+    );
   }
 });

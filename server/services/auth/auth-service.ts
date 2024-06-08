@@ -4,13 +4,14 @@ import { generateTokens } from '@/server/helpers/tokens';
 import MagicLinks from '@/models/MagicLinks';
 import { generateRandomString } from '@/server/helpers/randoms';
 import MagicLinkEmail from '@/app/templates/magic-link-email';
-import { getBaseUrl } from '@/global/config';
+import { EStatusCode, getBaseUrl } from '@/global/config';
 import { envServer } from '@/global/envServer';
 import { Resend } from 'resend';
 import Profile from '@/models/Profile';
 import { ProjectRoutes } from '@/global/routes';
 import Otp from '@/models/Otp';
 import { getEmail } from '@/server/helpers/email';
+import { ApiResponse } from '@/global/response.types';
 
 enum EServiceResponse {
   successLogin = 'Login successful',
@@ -108,77 +109,79 @@ export const createMagicLinkService = async (email: string) => {
   }
 };
 
-export const magicLinkService = async (user: string, otp: string) => {
-  try {
-    if (!user || !Otp)
-      return {
-        status: 400,
-        message: EServiceResponse.missingDetails,
-        data: null,
-      };
-
-    console.log(user, otp);
-
-    const isUser = await User.findById(user);
-    console.log(isUser);
-    if (!isUser) {
-      return {
-        success: false,
-        message: EServiceResponse.failedLogin,
-        data: null,
-      };
-    }
-    const currentDate = new Date().toISOString();
-    console.log(otp);
-    const loginOtp = await MagicLinks.findOneAndUpdate(
-      {
-        otp: {
-          $eq: otp,
-        },
-        expiresAt: {
-          $gte: new Date(currentDate),
-        },
-        isExpired: {
-          $eq: false,
-        },
-        user: {
-          $eq: isUser.email,
-        },
-      },
-      {
-        $set: {
-          isExpired: true,
-        },
-      },
-    );
-
-    console.log(loginOtp);
-
-    if (!loginOtp) {
-      return {
-        success: false,
-        message: EServiceResponse.failedLogin,
-        data: null,
-      };
-    }
-
-    const { refreshToken, accessToken } = await generateTokens(isUser);
-
-    if (!refreshToken && !accessToken) {
-      return {
-        success: false,
-        message: EServiceResponse.failedLogin,
-        data: null,
-      };
-    }
-
+export const magicLinkService = async (
+  user: string,
+  otp: string,
+): Promise<ApiResponse<any>> => {
+  //through 400 error if args are not available
+  if (!user || !Otp)
     return {
-      success: true,
-      message: 'login successful',
-      data: { user: isUser, accessToken, refreshToken },
+      success: false,
+      message: EServiceResponse.missingDetails,
+      data: null,
+      code: EStatusCode.BadRequest,
     };
-  } catch (e) {
-    console.log(e);
-    return { success: false, message: 'internal error', data: null };
+
+  //find user by id
+  const isUser = await User.findById(user);
+  if (!isUser) {
+    return {
+      success: false,
+      message: EServiceResponse.failedLogin,
+      data: null,
+      code: EStatusCode.NotFound,
+    };
   }
+  //find otp that is owned by user, and is not expired, update it to expire and return otp object
+  const currentDate = new Date().toISOString();
+  const loginOtp = await MagicLinks.findOneAndUpdate(
+    {
+      otp: {
+        $eq: otp,
+      },
+      expiresAt: {
+        $gte: new Date(currentDate),
+      },
+      isExpired: {
+        $eq: false,
+      },
+      user: {
+        $eq: isUser.email,
+      },
+    },
+    {
+      $set: {
+        isExpired: true,
+      },
+    },
+  );
+
+  //return error 400 if otp is not available
+
+  if (!loginOtp) {
+    return {
+      success: false,
+      message: "Otp is either expired or doesn't exist",
+      data: null,
+      code: EStatusCode.NotFound,
+    };
+  }
+
+  const { refreshToken, accessToken } = await generateTokens(isUser);
+
+  if (!refreshToken && !accessToken) {
+    return {
+      success: false,
+      message: EServiceResponse.failedLogin,
+      data: null,
+      code: EStatusCode.Ok,
+    };
+  }
+
+  return {
+    success: true,
+    message: 'login successful',
+    data: { user: isUser, accessToken, refreshToken },
+    code: EStatusCode.Ok,
+  };
 };

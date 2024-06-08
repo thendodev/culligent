@@ -1,4 +1,3 @@
-import { loginSchema } from '@/validations/auth';
 import { createRoute, z } from '@hono/zod-openapi';
 
 export const otpPOST = createRoute({
@@ -13,7 +12,7 @@ export const otpPOST = createRoute({
         'application/json': {
           schema: z
             .object({
-              email: z.string().email(),
+              user: z.string(),
             })
             .openapi('SendOtp'),
         },

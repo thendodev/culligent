@@ -1,21 +1,24 @@
 import { toast } from '@/components/ui/use-toast';
+import { ClientErrorResponse } from '@/global/response.types';
 import { publicRequest } from '@/lib/requests';
+import { MUser } from '@/models/User';
 import { TSignUp } from '@/validations/auth';
+import { AxiosError } from 'axios';
 
 export const emailSignUphandler = async (newUser: TSignUp) => {
   try {
-    const { data } = await publicRequest.post('auth/sign-up/', {
+    const { data } = await publicRequest.post<MUser>('auth/sign-up/', {
       ...newUser,
     });
     return data;
   } catch (e) {
+    const { response } = e as AxiosError<ClientErrorResponse>;
     toast({
       title: 'Error',
-      description: 'Please check your login credentials',
+      description: response?.data.message,
     });
   }
 };
-
 export const resendOtpHandler = async (user: string) => {
   try {
     await publicRequest.post('auth/otp', {
@@ -26,9 +29,11 @@ export const resendOtpHandler = async (user: string) => {
       description: 'Please check your email inbox or spam folder',
     });
   } catch (e) {
+    const { response } = e as AxiosError<ClientErrorResponse>;
+
     toast({
       title: 'Error',
-      description: 'Please try again or contact support',
+      description: response?.data.message,
     });
   }
 };
@@ -45,10 +50,10 @@ export const verifyOtpHandler = async (otp: string, user: string) => {
     });
     return true;
   } catch (e) {
-    console.log(e);
+    const { response } = e as AxiosError<ClientErrorResponse>;
     toast({
       title: 'Error',
-      description: 'Please try again or contact support',
+      description: response?.data.message,
     });
   }
 };

@@ -25,19 +25,25 @@ magicLink.openapi(createMagicLinkRoute, async (c) => {
 
 magicLink.openapi(magicLinkLoginRoute, async (c) => {
   try {
+    //validate the incoming json body
     const { user, otp } = c.req.valid('json');
-    console.log(user, otp);
+    //if the validation fails, return the error message
     if (!user || !otp)
       return c.json({ message: 'invalid' }, EStatusCode.BadRequest);
-    const { data, success, message } = await magicLinkService(user, otp);
-    if (!success || !data) return c.json({ message }, EStatusCode.BadRequest);
+    //call magic link service
+    const { data, success, message, code } = await magicLinkService(user, otp);
+    //if the service fails, return the error message
+    if (!success || !data) return c.json({ message }, code);
 
     return c.json({
       ...data,
     });
   } catch (e) {
-    return c.json({
-      message: 'internal error',
-    });
+    return c.json(
+      {
+        message: 'internal error',
+      },
+      EStatusCode.InternalServerError,
+    );
   }
 });

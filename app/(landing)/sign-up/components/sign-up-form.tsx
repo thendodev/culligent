@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { emailSignUphandler } from '@/handlers/handleAccounts';
 import Link from 'next/link';
-import { ArrowLeftCircle } from 'lucide-react';
 import { ProjectRoutes } from '@/global/routes';
 import { TSignUp, signUpSchema } from '@/validations/auth';
 
@@ -40,7 +39,7 @@ const SignUpForm = () => {
     const user = await emailSignUphandler(data);
     if (user) {
       router.push(
-        `${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?email=${user.email}`,
+        `${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?user=${user._id}`,
       );
     }
   };
@@ -102,7 +101,12 @@ const SignUpForm = () => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password (complex password)</FormLabel>
+                <FormLabel>
+                  Password{' '}
+                  <p className="text-[0.6rem] text-[var(--cruto-pale-grey)]">
+                    (uppercase, lowercase, number and special characters)
+                  </p>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Password" {...field} type="password" />
                 </FormControl>

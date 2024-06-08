@@ -4,7 +4,7 @@ import { types, schema } from 'papr';
 const fiveMinutesFromNow = new Date(new Date().getTime() + 5 * 60000);
 const OtpSchema = schema(
   {
-    user: types.objectId({ required: true }),
+    user: types.string({ required: true }),
     otp: types.string({ required: true }),
     isVerified: types.boolean({ required: true }),
     isExpired: types.boolean({ required: true }),

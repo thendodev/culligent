@@ -5,7 +5,7 @@ import EnterOtpPic from '@/assets/Enter-OTP-bro.svg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handleAccounts';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import {
   InputOTP,
@@ -13,8 +13,14 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp';
 
+type TOtpProps = {
+  user?: string;
+  otp?: string;
+};
+
 const OtpPage = () => {
-  const { user, otp } = useParams<{ user: string; otp: string }>();
+  const otp = useSearchParams().get('otp');
+  const user = useSearchParams().get('user');
   const [resendTimer, setResendTimer] = React.useState(60);
   const [otpResend, setOtpResend] = React.useState(false);
   const [enterOtp, setEnterOtp] = React.useState(otp);
@@ -46,6 +52,7 @@ const OtpPage = () => {
   }, [user]);
 
   const handleResendOtp = async () => {
+    console.log('resend otp');
     if (!user) return;
     await resendOtpHandler(user);
     setOtpResend(true);
