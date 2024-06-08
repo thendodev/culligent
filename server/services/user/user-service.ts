@@ -91,7 +91,7 @@ export const createOtpService = async (
       code: EStatusCode.BadRequest,
     };
 
-  const otp = await Otp.insertOne({ user: user.email, otp: newOtp });
+  const otp = await Otp.insertOne({ user: user._id, otp: newOtp });
 
   if (!otp)
     return {
@@ -110,8 +110,6 @@ export const createOtpService = async (
     react: OtpEmailTemplate({ ...otp }),
   });
 
-  console.log(error);
-
   if (error)
     return {
       success: false,
@@ -129,81 +127,72 @@ export const createOtpService = async (
 };
 
 export const verifyOtpService = async (
-  user: ObjectId,
+  user: string,
   otp: string,
 ): Promise<ApiResponse<boolean>> => {
-  try {
-    //find and compare stored otp with incoming otp
-    const currentDate = new Date().toISOString();
-    const isOtpUpdated = await Otp.findOneAndUpdate(
-      {
-        otp: {
-          $eq: otp,
-        },
-        expiresAt: {
-          $gte: new Date(currentDate),
-        },
-        isVerified: {
-          $eq: false,
-        },
-        isExpired: {
-          $eq: false,
-        },
+  //find and compare stored otp with incoming otp
+  const currentDate = new Date().toISOString();
+  const isOtpUpdated = await Otp.findOneAndUpdate(
+    {
+      otp: {
+        $eq: otp,
       },
-      {
-        $set: {
-          isVerified: true,
-          isExpired: true,
-        },
+
+      expiresAt: {
+        $gte: new Date(currentDate),
       },
-    );
 
-    if (!isOtpUpdated)
-      return {
-        success: false,
-        message: EUserServiceResponse.failedVerifyOtp,
-        data: null,
-        code: EStatusCode.BadRequest,
-      };
-
-    //TODO: break this off into a seperate service so we can redirect already verified users back to the login page
-
-    // if profile exists update status of profile
-    const isUserUpdated = await User.findOneAndUpdate(
-      {
-        _id: user,
-        isVerified: {
-          $eq: false,
-        },
+      isExpired: {
+        $eq: false,
       },
-      {
-        $set: {
-          isVerified: true,
-        },
+    },
+    {
+      $set: {
+        isExpired: true,
       },
-    );
+    },
+  );
 
-    if (!isUserUpdated) {
-      return {
-        success: false,
-        message: EUserServiceResponse.failedVerifyOtp,
-        data: null,
-        code: EStatusCode.BadRequest,
-      };
-    }
-
-    return {
-      success: true,
-      message: EUserServiceResponse.successVerifyOtp,
-      data: true,
-      code: 200,
-    };
-  } catch (e) {
+  if (!isOtpUpdated)
     return {
       success: false,
-      message: EUserServiceResponse.Error,
+      message: 'Either the otp is expired or invalid',
       data: null,
-      code: 500,
+      code: EStatusCode.BadRequest,
+    };
+
+  //TODO: break this off into a seperate service so we can redirect already verified users back to the login page
+
+  // if profile exists update status of profile
+  const isUserUpdated = await User.findOneAndUpdate(
+    {
+      _id: {
+        $eq: new ObjectId(user),
+      },
+      isVerified: {
+        $eq: false,
+      },
+    },
+    {
+      $set: {
+        isVerified: true,
+      },
+    },
+  );
+
+  if (!isUserUpdated) {
+    return {
+      success: false,
+      message: "User doesn't exist",
+      data: null,
+      code: EStatusCode.BadRequest,
     };
   }
+
+  return {
+    success: true,
+    message: "User's otp verified",
+    data: true,
+    code: EStatusCode.Ok,
+  };
 };

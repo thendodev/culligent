@@ -5,18 +5,13 @@ import EnterOtpPic from '@/assets/Enter-OTP-bro.svg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handleAccounts';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
-
-type TOtpProps = {
-  user?: string;
-  otp?: string;
-};
 
 const OtpPage = () => {
   const otp = useSearchParams().get('otp');
@@ -45,14 +40,11 @@ const OtpPage = () => {
 
   //send the otp to the user's email on load if we have an email in the url
   useEffect(() => {
-    if (!user) return;
-    (async () => {
-      await resendOtpHandler(user);
-    })();
-  }, [user]);
+    if (!user || otp) return;
+    resendOtpHandler(user);
+  }, [user, otp]);
 
   const handleResendOtp = async () => {
-    console.log('resend otp');
     if (!user) return;
     await resendOtpHandler(user);
     setOtpResend(true);
@@ -72,10 +64,6 @@ const OtpPage = () => {
     <Suspense fallback={<div>Loading...</div>}>
       <div className="w-full h-full flex flex-col-reverse sm:flex-row sm:items-center relative sm:static">
         <div className="w-full  h-[48%] flex flex-col gap-2 justify-center items-center content-center bg-[var(--cruto-white)] rounded-t-[1rem]">
-          <span className="text-sm text-[var(--cruto-green)]">
-            Hey enter that OTP, yes ?
-          </span>
-
           <InputOTP maxLength={4} onChange={(value) => setEnterOtp(value)}>
             <InputOTPGroup>
               <InputOTPSlot index={0} />
@@ -95,7 +83,7 @@ const OtpPage = () => {
               `(${new Date(resendTimer * 1000).toISOString().substr(14, 5)})`}
           </Button>
         </div>
-        <div className="absolute sm:static top-[0%] z-[-1]  w-full h-[60%] sm:h-full bg-[var(--cruto-green)] flex justify-center items-center content-center">
+        <div className="absolute sm:static top-[0%] z-[-1]  w-full h-[60%] sm:h-full flex justify-center items-center content-center">
           <Image src={EnterOtpPic} alt="Enter OTP" objectFit="contain" />
         </div>
       </div>

@@ -27,8 +27,9 @@ opt.openapi(otpPOST, async ({ req, json }) => {
 opt.openapi(otpPUT, async ({ req, json }) => {
   try {
     const { user, otp } = await req.json();
+    console.log(user, otp);
     const { success, message, code } = await verifyOtpService(user, otp);
-    if (!success && code)
+    if (!success)
       return json(
         {
           message,
