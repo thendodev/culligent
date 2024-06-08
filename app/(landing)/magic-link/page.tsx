@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import culligent from '@/public/logo/logo.svg';
@@ -32,15 +32,17 @@ const OtpPage = () => {
   }, [router, otp, user]);
 
   return (
-    <div className="h-full w-full flex-1 sm:flex">
-      <Image
-        src={culligent}
-        alt="logo"
-        fill
-        objectFit="contain"
-        className="backdrop-filter backdrop-blur-[10px] w-full h-full"
-      />
-    </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="h-full w-full flex-1 sm:flex">
+        <Image
+          src={culligent}
+          alt="logo"
+          fill
+          objectFit="contain"
+          className="backdrop-filter backdrop-blur-[10px] w-full h-full"
+        />
+      </div>
+    </Suspense>
   );
 };
 
