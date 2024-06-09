@@ -2,15 +2,13 @@
 
 import React, { Suspense, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import culligent from '@/public/logo/logo.svg';
 import { loginMagicLinkHandler } from '@/handlers/handleAuth';
 import { ProjectRoutes } from '@/global/routes';
 
 const OtpPage = () => {
-  const params = useSearchParams();
-  const user = params.get('user');
-  const otp = params.get('otp');
+  const { user, otp } = useParams<{ user: string; otp: string }>();
 
   const router = useRouter();
 

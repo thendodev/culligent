@@ -5,8 +5,7 @@ import culligent from '@/public/logo/logo.svg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handleAccounts';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import {
   InputOTP,
   InputOTPGroup,
@@ -14,13 +13,11 @@ import {
 } from '@/components/ui/input-otp';
 
 const OtpPage = () => {
-  const otp = useSearchParams().get('otp');
-  const user = useSearchParams().get('user');
+  const router = useRouter();
+  const { otp, user } = useParams<{ user: string; otp: string }>();
   const [resendTimer, setResendTimer] = React.useState(60);
   const [otpResend, setOtpResend] = React.useState(false);
   const [enterOtp, setEnterOtp] = React.useState(otp);
-
-  const router = useRouter();
 
   useEffect(() => {
     //set up up timer for otp resend
@@ -61,34 +58,32 @@ const OtpPage = () => {
   }, [enterOtp, user, router]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="w-full h-full flex flex-col-reverse sm:flex-row sm:items-center relative sm:static">
-        <div className="w-full  h-full flex flex-col gap-2 justify-center items-center content-center bg-[var(--cruto-black)] ">
-          <InputOTP maxLength={4} onChange={(value) => setEnterOtp(value)}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-            </InputOTPGroup>
-          </InputOTP>
+    <div className="w-full h-full flex flex-col-reverse sm:flex-row sm:items-center relative sm:static">
+      <div className="w-full  h-full flex flex-col gap-2 justify-center items-center content-center bg-[var(--cruto-black)] ">
+        <InputOTP maxLength={4} onChange={(value) => setEnterOtp(value)}>
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+          </InputOTPGroup>
+        </InputOTP>
 
-          <Button
-            variant="ghost"
-            className="text-sm hover:text-[var(--cruto-green)] text-[var(--cruto-text-light)]"
-            onClick={handleResendOtp}
-            disabled={otpResend}
-          >
-            Resend
-            {otpResend &&
-              `(${new Date(resendTimer * 1000).toISOString().substr(14, 5)})`}
-          </Button>
-        </div>
-        <div className="absolute sm:static top-[0%] z-[-1]  w-full h-[60%] sm:h-full flex justify-center items-center content-center">
-          <Image src={culligent} alt="Enter OTP" objectFit="contain" />
-        </div>
+        <Button
+          variant="ghost"
+          className="text-sm hover:text-[var(--cruto-green)] text-[var(--cruto-text-light)]"
+          onClick={handleResendOtp}
+          disabled={otpResend}
+        >
+          Resend
+          {otpResend &&
+            `(${new Date(resendTimer * 1000).toISOString().substr(14, 5)})`}
+        </Button>
       </div>
-    </Suspense>
+      <div className="absolute sm:static top-[0%] z-[-1]  w-full h-[60%] sm:h-full flex justify-center items-center content-center">
+        <Image src={culligent} alt="Enter OTP" objectFit="contain" />
+      </div>
+    </div>
   );
 };
 
