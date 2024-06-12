@@ -3,8 +3,6 @@ import Link from 'next/link';
 import React from 'react';
 import './sidebar.css';
 import { UserProps } from '@/models/User.types';
-import logo from '@/assets/bot.svg';
-import Image from 'next/image';
 import { ProjectRoutes } from '@/global/routes';
 
 type SideBarProps = {
@@ -63,7 +61,11 @@ const SideBar = () => {
               </Link>
             </li>
             <li>
-              <Link href={`${ProjectRoutes.recruitment}`}>Case library</Link>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.cases}`}
+              >
+                Case library
+              </Link>
             </li>
             <li>
               <Link href="">Shared cases</Link>

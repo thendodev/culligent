@@ -1,6 +1,7 @@
 import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
 import Cases, { MCase } from '@/models/Cases';
+import { ObjectId } from 'mongodb';
 
 export const createCaseService = async (
   cases: MCase,
@@ -18,6 +19,59 @@ export const createCaseService = async (
     data: null,
     success: true,
     message: 'Case created successfully',
+    code: EStatusCode.Ok,
+  };
+};
+
+export const getCasesService = async (
+  user: string,
+): Promise<ApiResponse<MCase[]>> => {
+  const cases = await Cases.find({
+    user,
+    isFeatured: {
+      $eq: true,
+    },
+  });
+
+  if (!cases) {
+    return {
+      data: null,
+      success: false,
+      message: 'Cases not found',
+      code: EStatusCode.NotFound,
+    };
+  }
+
+  return {
+    data: cases,
+    success: true,
+    message: 'Cases found successfully',
+    code: EStatusCode.Ok,
+  };
+};
+
+export const getSingleCaseService = async (
+  user: string,
+  caseId: string,
+): Promise<ApiResponse<MCase>> => {
+  const caseFound = await Cases.findOne({
+    user,
+    _id: new ObjectId(caseId),
+  });
+
+  if (!caseFound) {
+    return {
+      data: null,
+      success: false,
+      message: 'Case not found',
+      code: EStatusCode.NotFound,
+    };
+  }
+
+  return {
+    data: caseFound,
+    success: true,
+    message: 'Case found successfully',
     code: EStatusCode.Ok,
   };
 };

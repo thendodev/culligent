@@ -5,11 +5,12 @@ export enum ProjectRoutes {
   profile = 'profile',
   settings = 'settings',
   case_builder = 'case-builder',
+  cases = 'cases',
   sign_up = 'sign-up',
   otp_verify = 'otp',
   magicLink = 'magic-link',
 
-  //question builder
+  //deprecated
   multi_choice = `${case_builder}/multi-choice`,
   single_choice = `${case_builder}/single-choice`,
   open_ended = `${case_builder}/open-ended`,

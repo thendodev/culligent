@@ -1,5 +1,11 @@
 import { envPublic } from './envClient';
 
+export enum ETimeFormat {
+  dayFirst = 'dd/mm/yyyy',
+  dayFirstWithTime = 'dd/mm/yyyy:hh:mm',
+  monthFirst = 'mm/dd/yyyy',
+  monthFirstWithTime = 'mm/dd/yyyy:hh:mm',
+}
 export enum EUserCookies {
   token = 'cruto-access-token',
   user = 'cruto-user',
