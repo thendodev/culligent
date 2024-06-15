@@ -9,16 +9,15 @@ export type CaseTableProps = {
   createdAt: Date;
   questions: number;
   status: string;
-  data: MCase;
-};
+} & MCase;
 
 export const caseTableColumns: ColumnDef<CaseTableProps>[] = [
   {
-    header: 'Name',
+    header: 'Case',
     accessorKey: 'name',
   },
   {
-    header: 'Created At',
+    header: 'Date Created',
     accessorKey: 'createdAt',
   },
   {
@@ -34,8 +33,9 @@ export const caseTableColumns: ColumnDef<CaseTableProps>[] = [
     accessorKey: 'status',
   },
   {
-    header: 'Action',
-    accessorKey: 'action',
-    cell: ({ row }) => CellActions(row.original),
+    accessorKey: 'actions',
+    cell: ({ row }) => {
+      return <CellActions data={row.original} />;
+    },
   },
 ];

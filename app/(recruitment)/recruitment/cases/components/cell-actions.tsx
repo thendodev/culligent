@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
-import { FlipVertical } from 'lucide-react';
+import React from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,17 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+
 import { Button } from '@/components/ui/button';
 import { Copy, Edit, MoreHorizontal, Trash, WorkflowIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
@@ -27,13 +16,13 @@ import { toast } from '@/components/ui/use-toast';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { MCase } from '@/models/Cases';
-import AlertModal from '@/components/modules/alert-modal';
+import { ProjectRoutes } from '@/global/routes';
 
 interface CellActionProps {
   data: MCase;
 }
 
-const CellActions: React.FC<CellActionProps> = ({ data }) => {
+const CellActions = ({ data }: CellActionProps) => {
   const router = useRouter();
   const params = useParams();
 
@@ -74,31 +63,17 @@ const CellActions: React.FC<CellActionProps> = ({ data }) => {
             <Copy className="mr-2 h-4 w-4" /> Copy id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/${params.storeId}/case/${data._id}`)}
+            onClick={() =>
+              router.push(
+                `/${ProjectRoutes.recruitment}/${ProjectRoutes.cases}/${data?._id}`,
+              )
+            }
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost">Delete</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete case</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to delete this case?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={onDelete}>
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </DropdownMenuItem>
+            <Trash className="mr-2 h-4 w-4" /> Delete
+          </DropdownMenuItem>{' '}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

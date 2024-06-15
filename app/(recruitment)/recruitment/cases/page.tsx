@@ -16,6 +16,7 @@ const Cases = () => {
     };
     getCases();
   }, []);
+
   return (
     <PageWrapper
       title={'Case library'}

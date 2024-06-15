@@ -44,7 +44,9 @@ cases.openapi(createCaseRoute, async (c) => {
 cases.openapi(getCaseRoute, async (c) => {
   try {
     //validate json body
-    const { id } = c.req.param();
+    const id = c.req.param('id');
+    console.log(id);
+
     if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
 
     //get user token
@@ -64,13 +66,17 @@ cases.openapi(getCaseRoute, async (c) => {
     //return error if case not found
     if (!success || !data) return c.json({ message }, code);
 
-    return c.json({ ...data }, EStatusCode.Ok);
+    return c.json(data, EStatusCode.Ok);
   } catch (e) {
-    return c.json({ message: 'Internal server error' }, EStatusCode.BadRequest);
+    return c.json(
+      { message: 'Internal server error' },
+      EStatusCode.InternalServerError,
+    );
   }
 });
 
 cases.openapi(getCasesRoute, async (c) => {
+  console.log('get cases');
   try {
     //get user token
     const token = getCookie(c, EUserCookies.user);
@@ -87,7 +93,7 @@ cases.openapi(getCasesRoute, async (c) => {
     //return error if case not found
     if (!success || !data) return c.json({ message }, code);
 
-    return c.json({ ...data }, EStatusCode.Ok);
+    return c.json(data, EStatusCode.Ok);
   } catch (e) {
     return c.json({ message: 'Internal server error' }, EStatusCode.BadRequest);
   }
