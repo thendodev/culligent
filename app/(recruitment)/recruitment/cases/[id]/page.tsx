@@ -11,6 +11,7 @@ import { getBaseUrl } from '@/global/config';
 import { envPublic } from '@/global/envClient';
 import { Copy } from 'lucide-react';
 import CaseDetails from '../components/case-details';
+import { toast } from '@/components/ui/use-toast';
 
 type TCaseProps = {
   data: MCase;
@@ -30,34 +31,43 @@ const Case = () => {
     getCase();
   }, [id]);
 
+  const onCopy = () => {
+    navigator.clipboard.writeText(`${url}showroom/${editCase?._id}`);
+    toast({ title: 'Copy case link', description: 'case link copied' });
+  };
+
   return (
     <PageWrapper title={editCase?.name ?? ''} description={''}>
-      <div
-        id="header"
-        className="w-full flex justify-between align-middle items-center"
-      >
-        <span className="">{editCase?.name}</span>
-        <div className="w-fit flex items-center gap-2">
-          <span>Case link:</span>
-          <div className="flex align-middle items-center border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] bg-[var(--curto-foreground)] px-2">
-            <Input
-              className="border-none"
-              value={`${url}showroom/${editCase?._id}`}
-            />
+      <div className="flex flex-col gap-4">
+        <div
+          id="header"
+          className="w-full flex justify-end align-middle items-center gap-6"
+        >
+          <div className="w-fit flex items-center gap-2">
+            <span className="text-[var(--cruto-text-grey)]">Case link:</span>
+            <div className="flex align-middle items-center border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] bg-[var(--curto-foreground)] px-2">
+              <Input
+                className="border-none"
+                value={`${url}showroom/${editCase?._id}`}
+              />
 
-            <Copy />
+              <Copy
+                onClick={onCopy}
+                className="h-4 w-4 hover:text-[var(--cruto-green)] hover:cursor-pointer"
+              />
+            </div>
           </div>
         </div>
+        <CaseDetails
+          name={editCase?.name}
+          description={editCase?.description}
+          status={editCase?.isFeatured}
+          questions={editCase?.questions}
+          duration={editCase?.duration}
+          createdAt={editCase?.createdAt}
+          updatedAt={editCase?.updatedAt}
+        />
       </div>
-      <CaseDetails
-        name={editCase?.name}
-        description={editCase?.description}
-        status={editCase?.isFeatured}
-        questions={editCase?.questions}
-        duration={editCase?.duration}
-        createdAt={editCase?.createdAt}
-        updatedAt={editCase?.updatedAt}
-      />
     </PageWrapper>
   );
 };
