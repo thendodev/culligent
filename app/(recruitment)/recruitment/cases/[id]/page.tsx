@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { getBaseUrl } from '@/global/config';
 import { envPublic } from '@/global/envClient';
 import { Copy } from 'lucide-react';
+import CaseDetails from '../components/case-details';
 
 type TCaseProps = {
   data: MCase;
@@ -48,6 +49,15 @@ const Case = () => {
           </div>
         </div>
       </div>
+      <CaseDetails
+        name={editCase?.name}
+        description={editCase?.description}
+        status={editCase?.isFeatured}
+        questions={editCase?.questions}
+        duration={editCase?.duration}
+        createdAt={editCase?.createdAt}
+        updatedAt={editCase?.updatedAt}
+      />
     </PageWrapper>
   );
 };

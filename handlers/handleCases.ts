@@ -51,9 +51,8 @@ export const getCasesHandler = async () => {
 
 export const getCaseHandler = async (id: string) => {
   try {
-    const { data } = await privateRequest.get(`${ECaseRoutes.CASES}/?id=${id}`);
+    const { data } = await privateRequest.get(`${ECaseRoutes.CASES}/${id}`);
 
-    //remap data to match the case column schema
     return {
       ...data,
       createdAt: new Date(data.createdAt).toLocaleDateString('en-us', {

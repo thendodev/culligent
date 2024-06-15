@@ -45,7 +45,6 @@ cases.openapi(getCaseRoute, async (c) => {
   try {
     //validate json body
     const id = c.req.param('id');
-    console.log(id);
 
     if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
 
@@ -59,8 +58,8 @@ cases.openapi(getCaseRoute, async (c) => {
 
     //get case
     const { data, success, message, code } = await getSingleCaseService(
+      user._id.toString(),
       id,
-      user.email,
     );
 
     //return error if case not found
@@ -76,7 +75,6 @@ cases.openapi(getCaseRoute, async (c) => {
 });
 
 cases.openapi(getCasesRoute, async (c) => {
-  console.log('get cases');
   try {
     //get user token
     const token = getCookie(c, EUserCookies.user);
