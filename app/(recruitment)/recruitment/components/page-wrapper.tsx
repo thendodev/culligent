@@ -30,7 +30,7 @@ const PageWrapper = ({ description, children }: PageWrapperProps) => {
           {description.toLocaleUpperCase()}
         </p>
       </BreadCrumbs>
-      <div className="mt-[60px] p-5 w-full h-full overflow-auto">
+      <div className="mt-[60px] p-5 px-12 w-full h-full overflow-auto">
         {children}
       </div>
     </div>

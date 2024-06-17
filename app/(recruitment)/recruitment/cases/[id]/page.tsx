@@ -12,6 +12,7 @@ import { envPublic } from '@/global/envClient';
 import { Copy } from 'lucide-react';
 import CaseDetails from '../components/case-details';
 import { toast } from '@/components/ui/use-toast';
+import Questions from '../components/questions';
 
 type TCaseProps = {
   data: MCase;
@@ -66,7 +67,9 @@ const Case = () => {
           duration={editCase?.duration}
           createdAt={editCase?.createdAt}
           updatedAt={editCase?.updatedAt}
+          id={editCase?._id.toString()}
         />
+        <Questions questions={editCase?.questions} />
       </div>
     </PageWrapper>
   );
