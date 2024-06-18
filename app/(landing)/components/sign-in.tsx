@@ -91,7 +91,7 @@ const SignIn = () => {
           )}
         />
         <div className="mt-5">
-          <Button type="submit" disabled={!isFormErrors}>
+          <Button type="submit" className="w-full" disabled={!isFormErrors}>
             Log in
           </Button>
         </div>

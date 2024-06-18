@@ -38,7 +38,7 @@ const CaseDetails = ({
         <span className="text-2xl">{name}</span>
         <Switch disabled checked={status} />
       </div>
-      <span className="text-center  text-[var(--cruto-text-grey)]">
+      <span className="text-center  text-[var(--cruto-text-grey)] px-16">
         {description}
       </span>
 

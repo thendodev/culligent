@@ -2,7 +2,14 @@
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { MQuestion } from '@/models/Cases';
-import { MoreVertical, Search, SpellCheck, SpellCheck2 } from 'lucide-react';
+import {
+  Check,
+  MoreVertical,
+  Search,
+  SpellCheck,
+  SpellCheck2,
+  X,
+} from 'lucide-react';
 import React from 'react';
 
 type TQuestionsProps = {
@@ -39,13 +46,13 @@ const Questions = ({ questions }: TQuestionsProps) => {
                 {question?.skill_level}
               </span>
             </div>
-            <div className="flex w-full justify-between">
+            <div className="flex flex-col w-full justify-between gap-4">
               {question?.answers?.map((answer) => (
-                <div key={answer.answer}>
+                <div key={answer.answer} className="flex gap-2">
                   {answer.correct ? (
-                    <SpellCheck className="text-[var(--cruto-green)]" />
+                    <Check className="text-[var(--cruto-green)]" />
                   ) : (
-                    <SpellCheck2 className="text-[var(--cruto-red)]" />
+                    <X className="text-[var(--cruto-red)]" />
                   )}
                   <span className="text-xl">{answer.answer}</span>
                 </div>

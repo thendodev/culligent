@@ -58,7 +58,7 @@ cases.openapi(getCaseRoute, async (c) => {
 
     //get case
     const { data, success, message, code } = await getSingleCaseService(
-      user._id.toString(),
+      user.email,
       id,
     );
 
@@ -85,9 +85,7 @@ cases.openapi(getCasesRoute, async (c) => {
     const user = JSON.parse(token) as MUser;
 
     //get case
-    const { data, success, message, code } = await getCasesService(
-      user._id.toString(),
-    );
+    const { data, success, message, code } = await getCasesService(user.email);
     //return error if case not found
     if (!success || !data) return c.json({ message }, code);
 

@@ -98,9 +98,11 @@ const SingleChoice = ({ form, question, handleSave }: TSingleChoiceProps) => {
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Skill level</SelectLabel>
-                            <SelectItem value="2">Senior</SelectItem>
-                            <SelectItem value="1">Intermediary</SelectItem>
-                            <SelectItem value="0">Beginner</SelectItem>
+                            <SelectItem value="Senior">Senior</SelectItem>
+                            <SelectItem value="Intermediary">
+                              Intermediary
+                            </SelectItem>
+                            <SelectItem value="Beginner">Beginner</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
