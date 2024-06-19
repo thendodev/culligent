@@ -13,7 +13,7 @@ import {
 import { AlignLeft, Check, ListChecks } from 'lucide-react';
 import OptionCard from './option-card';
 import QuestionView from './question-view';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import SingleChoice from '../single-choice/SingleChoice';
 import OpenEnded from '../open-ended/OpenEnded';
 import MultiChoice from '../multi-choice/MultiChoice';
@@ -21,11 +21,28 @@ import { toast } from '@/components/ui/use-toast';
 import { QuestionViewSkeleton } from './question-view-skeleton';
 import SaveCase from './save-case';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useParams } from 'next/navigation';
+import { getCaseHandler } from '@/handlers/handleCases';
 
-const CaseDetails = () => {
+type TCaseProps = {
+  id?: string | null;
+};
+
+const CaseDetails = ({ id }: TCaseProps) => {
+  const [editCase, setEditCase] = useState(null);
+
+  useEffect(() => {
+    if (!id) return;
+    const getCase = async () => {
+      const data = await getCaseHandler(id as string);
+      setEditCase(data);
+    };
+    getCase();
+  }, [id]);
+
   const form = useForm<TCase>({
     resolver: zodResolver(CaseSchema),
-    defaultValues: {
+    defaultValues: editCase ?? {
       name: '',
       description: '',
       duration: -1,

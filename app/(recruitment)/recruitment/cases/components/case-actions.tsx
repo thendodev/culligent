@@ -19,6 +19,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { MCase } from '@/models/Cases';
+import { ProjectRoutes } from '@/global/routes';
 
 type TCaseActionsProps = {
   id?: string;
@@ -64,7 +65,13 @@ const CaseActions = ({ id }: TCaseActionsProps) => {
           <DropdownMenuItem onClick={onCopy}>
             <Copy className="mr-2 h-4 w-4" /> Copy id
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(
+                `/${ProjectRoutes.recruitment}/${ProjectRoutes.case_builder}/${id}`,
+              )
+            }
+          >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
           <DropdownMenuItem>

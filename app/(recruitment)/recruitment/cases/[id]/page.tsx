@@ -39,7 +39,7 @@ const Case = () => {
 
   return (
     <PageWrapper title={editCase?.name ?? ''} description={''}>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 relative">
         <div
           id="header"
           className="w-full flex justify-end align-middle items-center gap-6"
