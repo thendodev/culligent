@@ -8,7 +8,8 @@ import {
 import { getCookie } from 'hono/cookie';
 import { EStatusCode, EUserCookies } from '@/global/config';
 import { MCase } from '@/models/Cases';
-import { MUser } from '@/models/User';
+import { ObjectId } from 'mongodb';
+import { TUser } from '@/server/types';
 
 export const cases = new OpenAPIHono();
 
@@ -26,7 +27,7 @@ cases.openapi(createCaseRoute, async (c) => {
     //get user from token
     const user = JSON.parse(token);
 
-    const newCase = { user: user.email, ...cases } as MCase;
+    const newCase = { user: new ObjectId(user._id), ...cases } as MCase;
 
     const { success, message } = await createCaseService(newCase);
 
@@ -34,39 +35,7 @@ cases.openapi(createCaseRoute, async (c) => {
 
     return c.json({ message: 'ok' });
   } catch (e) {
-    return c.json(
-      { message: 'Internal server error' },
-      EStatusCode.InternalServerError,
-    );
-  }
-});
-
-cases.openapi(getCaseRoute, async (c) => {
-  try {
-    //validate json body
-    const id = c.req.param('id');
-
-    if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
-
-    //get user token
-    const token = getCookie(c, EUserCookies.user);
-
-    //return error if no user token is found
-    if (!token) return c.json({ message: 'no token' }, EStatusCode.BadRequest);
-    //get user from token
-    const user = JSON.parse(token) as MUser;
-
-    //get case
-    const { data, success, message, code } = await getSingleCaseService(
-      user.email,
-      id,
-    );
-
-    //return error if case not found
-    if (!success || !data) return c.json({ message }, code);
-
-    return c.json(data, EStatusCode.Ok);
-  } catch (e) {
+    console.log(e);
     return c.json(
       { message: 'Internal server error' },
       EStatusCode.InternalServerError,
@@ -82,15 +51,49 @@ cases.openapi(getCasesRoute, async (c) => {
     //return error if no user token is found
     if (!token) return c.json({ message: 'no token' }, EStatusCode.BadRequest);
     //get user from token
-    const user = JSON.parse(token) as MUser;
+    const user = JSON.parse(token);
 
     //get case
-    const { data, success, message, code } = await getCasesService(user.email);
+    const { data, success, message, code } = await getCasesService(
+      user._id.toString(),
+    );
     //return error if case not found
     if (!success || !data) return c.json({ message }, code);
 
     return c.json(data, EStatusCode.Ok);
   } catch (e) {
     return c.json({ message: 'Internal server error' }, EStatusCode.BadRequest);
+  }
+});
+
+cases.openapi(getCaseRoute, async (c) => {
+  try {
+    //validate json body
+    const id = c.req.param('id');
+
+    if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
+    //get user token
+    const token = getCookie(c, EUserCookies.user);
+
+    //return error if no user token is found
+    if (!token) return c.json({ message: 'no token' }, EStatusCode.BadRequest);
+    //get user from token
+    const user = JSON.parse(token) as TUser;
+
+    //get case
+    const { data, success, message, code } = await getSingleCaseService(
+      user._id,
+      id,
+    );
+
+    //return error if case not found
+    if (!success || !data) return c.json({ message }, code);
+
+    return c.json(data, EStatusCode.Ok);
+  } catch (e) {
+    return c.json(
+      { message: 'Internal server error' },
+      EStatusCode.InternalServerError,
+    );
   }
 });

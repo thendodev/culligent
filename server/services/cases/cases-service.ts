@@ -27,7 +27,7 @@ export const getCasesService = async (
   user: string,
 ): Promise<ApiResponse<MCase[]>> => {
   const cases = await Cases.find({
-    user,
+    user: new ObjectId(user),
     isFeatured: {
       $eq: true,
     },
@@ -55,7 +55,7 @@ export const getSingleCaseService = async (
   caseId: string,
 ): Promise<ApiResponse<MCase>> => {
   const caseFound = await Cases.findOne({
-    user,
+    user: new ObjectId(user),
     _id: new ObjectId(caseId),
   });
 

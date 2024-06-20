@@ -69,6 +69,5 @@ export const getCaseHandler = async (id: string) => {
       title: 'Error',
       description: response?.data.message,
     });
-    return [];
   }
 };

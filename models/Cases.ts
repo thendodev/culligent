@@ -18,7 +18,7 @@ const CasesSchema = schema(
     name: types.string({ required: true }),
     description: types.string({ required: true }),
     duration: types.number({ required: true }),
-    user: types.string({ required: true }),
+    user: types.objectId({ required: true }),
     questions: types.array(QuestionsSchema),
     isFeatured: types.boolean(),
   },

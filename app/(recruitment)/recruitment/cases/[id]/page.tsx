@@ -67,7 +67,7 @@ const Case = () => {
           duration={editCase?.duration}
           createdAt={editCase?.createdAt}
           updatedAt={editCase?.updatedAt}
-          id={editCase?.user}
+          id={editCase?._id.toString()}
         />
         <Questions questions={editCase?.questions} />
       </div>

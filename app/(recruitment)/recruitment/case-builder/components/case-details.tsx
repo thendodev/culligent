@@ -23,6 +23,7 @@ import SaveCase from './save-case';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useParams } from 'next/navigation';
 import { getCaseHandler } from '@/handlers/handleCases';
+import { MCase } from '@/models/Cases';
 
 type TCaseProps = {
   id?: string | null;
@@ -45,7 +46,13 @@ const CaseDetails = ({ id }: TCaseProps) => {
     defaultValues: editCase ?? {
       name: '',
       description: '',
-      duration: -1,
+      duration: 0,
+      questions: [],
+    },
+    values: editCase ?? {
+      name: '',
+      description: '',
+      duration: 0,
       questions: [],
     },
   });
