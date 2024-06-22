@@ -1,6 +1,8 @@
 import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
 import Cases, { MCase } from '@/models/Cases';
+import { TCase } from '@/validations/cases';
+import { use } from 'chai';
 import { ObjectId } from 'mongodb';
 
 export const createCaseService = async (
@@ -72,6 +74,41 @@ export const getSingleCaseService = async (
     data: caseFound,
     success: true,
     message: 'Case found successfully',
+    code: EStatusCode.Ok,
+  };
+};
+
+export const updateCaseService = async (
+  user: string,
+  caseId: string,
+  data: Partial<TCase>,
+): Promise<ApiResponse<MCase>> => {
+  const updatedCase = await Cases.findOneAndUpdate(
+    {
+      _id: new ObjectId(caseId),
+      user: new ObjectId(user),
+    },
+    {
+      $set: data,
+    },
+    {
+      returnDocument: 'after',
+    },
+  );
+
+  if (!updatedCase) {
+    return {
+      data: null,
+      success: false,
+      message: 'Case not found',
+      code: EStatusCode.NotFound,
+    };
+  }
+
+  return {
+    data: updatedCase,
+    success: true,
+    message: 'Case updated successfully',
     code: EStatusCode.Ok,
   };
 };

@@ -11,6 +11,12 @@ const QuestionsSchema = types.object({
   skill_level: types.string(),
   points: types.number(),
   answers: types.array(AnswerSchema),
+  type: types.string(),
+});
+
+const SharedWithSchema = types.object({
+  user: types.objectId({ required: true }),
+  role: types.string({ required: true }),
 });
 
 const CasesSchema = schema(
@@ -20,6 +26,7 @@ const CasesSchema = schema(
     duration: types.number({ required: true }),
     user: types.objectId({ required: true }),
     questions: types.array(QuestionsSchema),
+    sharedWith: types.array(SharedWithSchema),
     isFeatured: types.boolean(),
   },
   {

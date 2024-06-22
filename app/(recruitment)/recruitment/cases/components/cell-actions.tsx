@@ -10,7 +10,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { Button } from '@/components/ui/button';
-import { Copy, Edit, MoreHorizontal, Trash, WorkflowIcon } from 'lucide-react';
+import {
+  Copy,
+  Edit,
+  Eye,
+  MoreHorizontal,
+  Trash,
+  WorkflowIcon,
+} from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
 import { useParams, useRouter } from 'next/navigation';
@@ -66,6 +73,15 @@ const CellActions = ({ data }: CellActionProps) => {
             onClick={() =>
               router.push(
                 `/${ProjectRoutes.recruitment}/${ProjectRoutes.cases}/${data?._id}`,
+              )
+            }
+          >
+            <Eye className="mr-2 h-4 w-4" /> View
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(
+                `/${ProjectRoutes.recruitment}/${ProjectRoutes.case_builder}/${data?._id}`,
               )
             }
           >

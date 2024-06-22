@@ -5,17 +5,17 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
-import { MoveQuestion } from './move-question-popup';
-import { useState } from 'react';
+import {
+  ArrowBigDownDash,
+  ArrowBigUpDash,
+  ArrowRightLeft,
+  Edit,
+  MoreHorizontal,
+  Trash,
+} from 'lucide-react';
 
 type QuestionDropdownProps = {
   question: number;
@@ -23,6 +23,7 @@ type QuestionDropdownProps = {
   handleShiftQuestionToEnd: () => void;
   handleShiftQuestionToFront: () => void;
   deleteQuestion: () => void;
+  updateQuestion: () => void;
 };
 export function QuestionDropdown({
   question,
@@ -30,6 +31,7 @@ export function QuestionDropdown({
   handleShiftQuestionToEnd,
   handleShiftQuestionToFront,
   deleteQuestion,
+  updateQuestion,
 }: QuestionDropdownProps) {
   return (
     <DropdownMenu>
@@ -42,14 +44,25 @@ export function QuestionDropdown({
         <DropdownMenuLabel>Question {question}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={handleMoveQuestion}>move</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleMoveQuestion}>
+            <ArrowRightLeft className="mr-2 h-4 w-4" />
+            move
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={handleShiftQuestionToEnd}>
+            <ArrowBigDownDash className="mr-2 h-4 w-4" />
             shift to end
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleShiftQuestionToFront}>
+            <ArrowBigUpDash className="mr-2 h-4 w-4" />
             shift to front
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={deleteQuestion}>delete</DropdownMenuItem>
+          <DropdownMenuItem onClick={updateQuestion}>
+            <Edit className="mr-2 h-4 w-4" /> Update
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={deleteQuestion}>
+            <Trash className="mr-2 h-4 w-4" />
+            delete
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

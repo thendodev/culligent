@@ -71,3 +71,16 @@ export const getCaseHandler = async (id: string) => {
     });
   }
 };
+
+export const updateCaseHandler = async (id: string, updatedCase: TCase) => {
+  try {
+    await privateRequest.put(`${ECaseRoutes.CASES}/${id}`, updatedCase);
+    toast({ title: 'Case', description: 'Case updated' });
+  } catch (e) {
+    const { response } = e as AxiosError<ClientErrorResponse>;
+    toast({
+      title: 'Error',
+      description: response?.data.message,
+    });
+  }
+};

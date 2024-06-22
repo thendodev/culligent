@@ -9,10 +9,8 @@ import {
 import { Input } from '@/components/ui/input';
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -21,13 +19,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { UseFormReturn } from 'react-hook-form';
 import { CaseSchema, TCase } from '../../../../../validations/cases';
 import { toast } from '@/components/ui/use-toast';
-import { createCaseHandler } from '@/handlers/handleCases';
+import { createCaseHandler, updateCaseHandler } from '@/handlers/handleCases';
+import { Toggle } from '@/components/ui/toggle';
+import { Switch } from '@/components/ui/switch';
 
 type TSaveCaseProps = {
   form: UseFormReturn<TCase>;
+  id?: string | null;
 };
 
-const SaveCase = ({ form }: TSaveCaseProps) => {
+const SaveCase = ({ form, id }: TSaveCaseProps) => {
   const onSubmit = async () => {
     //get form from react forms
     const newCase = form.getValues();
@@ -42,20 +43,33 @@ const SaveCase = ({ form }: TSaveCaseProps) => {
         }),
       );
     }
-    await createCaseHandler(newCase);
+
+    !id
+      ? await createCaseHandler(newCase)
+      : await updateCaseHandler(id, newCase);
   };
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="ml-auto">Save Case</Button>
+        <Button className="ml-auto">
+          {!id ? <span>Save Case </span> : <span>Update Case</span>}
+        </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Save Case</SheetTitle>
+          <SheetTitle>
+            {' '}
+            {!id ? <span>Save Case </span> : <span>Update Case</span>}
+          </SheetTitle>
           <SheetDescription>
-            Almost done !, Add the final case details and click save to publish
-            it.
+            {!id ? (
+              <span>Add the case details and click save to publish it</span>
+            ) : (
+              <span>
+                Update necessary case details and click save to publish it
+              </span>
+            )}
           </SheetDescription>
         </SheetHeader>
         <div>
@@ -79,7 +93,7 @@ const SaveCase = ({ form }: TSaveCaseProps) => {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-2 items-center gap-4">
+              <div>
                 <FormField
                   name="duration"
                   control={form.control}
@@ -88,6 +102,20 @@ const SaveCase = ({ form }: TSaveCaseProps) => {
                       <FormLabel>Duration</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Ex. 10" name="name" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div>
+                <FormField
+                  name="description"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="w-[100%] flex flex-col ">
+                      <FormLabel>Is Published</FormLabel>
+                      <FormControl>
+                        <Switch {...field} defaultChecked={true} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -115,8 +143,9 @@ const SaveCase = ({ form }: TSaveCaseProps) => {
               </div>
             </form>
           </Form>
+
           <Button type="submit" onClick={onSubmit}>
-            Save changes
+            {!id ? <span>Save Case </span> : <span>Update Case</span>}
           </Button>
         </div>
       </SheetContent>

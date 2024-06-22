@@ -77,3 +77,35 @@ export const getCasesRoute = createRoute({
     },
   },
 });
+
+export const updateCaseRoute = createRoute({
+  method: 'put',
+  path: '/:id',
+  tags: ['Case'],
+  summary: 'Create a new case',
+  request: {
+    body: {
+      description: 'Request body',
+      content: {
+        'application/json': {
+          schema: CaseSchema.openapi('Cases'),
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    200: {
+      description: 'Success',
+    },
+  },
+  400: {
+    description: 'Bad Request',
+  },
+  404: {
+    description: 'Not Found',
+  },
+  500: {
+    description: 'Internal Server Error',
+  },
+});

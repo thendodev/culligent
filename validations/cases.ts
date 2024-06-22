@@ -2,6 +2,7 @@ import z from 'zod';
 
 export const QuestionSchema = z.object({
   question: z.string().min(1).max(1000),
+  type: z.string().min(1).max(100),
   skill: z.string().min(1).max(100),
   skill_level: z.string().min(1).max(100),
   points: z.string().transform((i) => parseInt(i)),

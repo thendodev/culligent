@@ -1,9 +1,15 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
-import { createCaseRoute, getCaseRoute, getCasesRoute } from './route';
+import {
+  createCaseRoute,
+  getCaseRoute,
+  getCasesRoute,
+  updateCaseRoute,
+} from './route';
 import {
   createCaseService,
   getCasesService,
   getSingleCaseService,
+  updateCaseService,
 } from '@/server/services/cases/cases-service';
 import { getCookie } from 'hono/cookie';
 import { EStatusCode, EUserCookies } from '@/global/config';
@@ -95,5 +101,38 @@ cases.openapi(getCaseRoute, async (c) => {
       { message: 'Internal server error' },
       EStatusCode.InternalServerError,
     );
+  }
+});
+
+cases.openapi(updateCaseRoute, async (c) => {
+  try {
+    //validate json body
+    const updatedCase = c.req.valid('json');
+    const id = c.req.param('id');
+
+    if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
+    if (!updatedCase)
+      return c.json(
+        { message: 'Case doesnt meet validation requirements' },
+        EStatusCode.BadRequest,
+      );
+
+    const token = getCookie(c, EUserCookies.user);
+    if (!token)
+      return c.json({ message: 'No access' }, EStatusCode.Unauthorized);
+
+    const user = JSON.parse(token) as TUser;
+
+    const { data, success, message, code } = await updateCaseService(
+      user._id,
+      id,
+      updatedCase,
+    );
+
+    if (!success) return c.json({ message }, code);
+
+    return c.json(data, EStatusCode.Ok);
+  } catch (e) {
+    return c.json({ message: 'Internal server error' }, EStatusCode.BadRequest);
   }
 });

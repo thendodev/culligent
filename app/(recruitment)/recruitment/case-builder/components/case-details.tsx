@@ -21,9 +21,7 @@ import { toast } from '@/components/ui/use-toast';
 import { QuestionViewSkeleton } from './question-view-skeleton';
 import SaveCase from './save-case';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useParams } from 'next/navigation';
 import { getCaseHandler } from '@/handlers/handleCases';
-import { MCase } from '@/models/Cases';
 
 type TCaseProps = {
   id?: string | null;
@@ -84,14 +82,15 @@ const CaseDetails = ({ id }: TCaseProps) => {
   );
   const [jumpTo, setJumpTo] = useState(0);
 
-  const onNewOption = (option: string) => {
+  const onNewOption = (option: string, questionIndex?: number) => {
+    questionIndex = questionIndex ?? fieldArray.fields.length;
     switch (option) {
       case 'Single Choice':
         setOption(
           <SingleChoice
             form={form}
-            question={fieldArray.fields.length}
-            key={fieldArray.fields.length}
+            question={questionIndex}
+            key={questionIndex}
             handleSave={handleSave}
           />,
         );
@@ -100,8 +99,8 @@ const CaseDetails = ({ id }: TCaseProps) => {
         setOption(
           <OpenEnded
             form={form}
-            question={fieldArray.fields.length}
-            key={fieldArray.fields.length}
+            question={questionIndex}
+            key={questionIndex}
             handleSave={handleSave}
           />,
         );
@@ -110,8 +109,8 @@ const CaseDetails = ({ id }: TCaseProps) => {
         setOption(
           <MultiChoice
             form={form}
-            question={fieldArray.fields.length}
-            key={fieldArray.fields.length}
+            question={questionIndex}
+            key={questionIndex}
             handleSave={handleSave}
           />,
         );
@@ -120,9 +119,9 @@ const CaseDetails = ({ id }: TCaseProps) => {
         setOption(
           <SingleChoice
             form={form}
-            question={fieldArray.fields.length}
+            question={questionIndex}
             handleSave={handleSave}
-            key={fieldArray.fields.length}
+            key={questionIndex}
           />,
         );
     }
@@ -167,7 +166,7 @@ const CaseDetails = ({ id }: TCaseProps) => {
         {option}
       </div>
       <div className="flex flex-col gap-5 w-[45%] h-full">
-        <SaveCase form={form} />
+        <SaveCase form={form} id={id} />
 
         <div className="ml-auto flex justify-between items-center bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border-[var(--cruto-border)] border">
           <Button
@@ -186,6 +185,7 @@ const CaseDetails = ({ id }: TCaseProps) => {
                 fieldArray={fieldArray}
                 id={index}
                 deleteQuestion={deletQuestion}
+                updateQuestion={onNewOption}
                 form={form}
                 question={fieldArray.fields[index] as any}
               />

@@ -1,10 +1,8 @@
 'use client';
-import { ChevronRight, ChevronUpCircle, Home } from 'lucide-react';
+import { ChevronRight, Home } from 'lucide-react';
 import Link from 'next/link';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import React, { ReactNode } from 'react';
-import { Separator } from './separator';
-import { title } from 'process';
 
 type BreadCrumbsProps = {
   homeElement: string;
@@ -16,6 +14,7 @@ const BreadCrumbs = ({ homeElement, homeUrl, children }: BreadCrumbsProps) => {
   const paths = usePathname();
   const crumbs = paths.split('/').filter((p) => p);
   let href = `/${crumbs.join('/')}`;
+  console.log(href);
 
   return (
     <div
@@ -44,9 +43,7 @@ const BreadCrumbs = ({ homeElement, homeUrl, children }: BreadCrumbsProps) => {
               <ChevronRight size={15} />
               <li className={itemClasses + ' ' + linkItem}>
                 <Link href={href}>
-                  {index === crumbs.length - 1
-                    ? link.toLocaleUpperCase()
-                    : link}
+                  {index === crumbs.length - 1 ? link : link}
                 </Link>
               </li>
             </React.Fragment>
