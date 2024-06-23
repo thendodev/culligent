@@ -19,24 +19,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, SaveAll } from 'lucide-react';
+import { Plus, SaveAll, Trash } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
-import { SkillsCombobox } from '../components/skills-combobox';
-import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { SkillsCombobox } from './skills-combobox';
 import { TCase } from '@/validations/cases';
+import { TQuestionProps } from '../types';
 
-interface TMultiChoiceProps {
-  form: UseFormReturn<TCase>;
-  question: number;
-  handleSave: (index: number) => void;
-}
-const MultiChoice = ({ form, question, handleSave }: TMultiChoiceProps) => {
-  const { fields, append } = useFieldArray({
+type TSingleChoiceProps = {} & TQuestionProps;
+const SingleChoice = ({
+  form,
+  question,
+  handleSave,
+  type,
+}: TSingleChoiceProps) => {
+  const { fields, append, replace } = useFieldArray({
     control: form?.control,
     name: `questions.${question}.answers`,
   });
+
+  const handleCorrectAnswer = (id: string) => {
+    const updatedAnswers = fields.map((answer, i) => {
+      if (id === answer.id) {
+        return {
+          ...answer,
+          correct: true,
+        };
+      }
+      return { ...answer, correct: false };
+    });
+    replace(updatedAnswers);
+  };
 
   return (
     <Form {...form}>
@@ -62,7 +77,7 @@ const MultiChoice = ({ form, question, handleSave }: TMultiChoiceProps) => {
               <Button
                 variant="ghost"
                 type="button"
-                onClick={() => handleSave(question)}
+                onClick={() => handleSave(question, type)}
               >
                 <SaveAll size={20} />
               </Button>
@@ -85,9 +100,11 @@ const MultiChoice = ({ form, question, handleSave }: TMultiChoiceProps) => {
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Skill level</SelectLabel>
-                            <SelectItem value="2">Senior</SelectItem>
-                            <SelectItem value="1">Intermediary</SelectItem>
-                            <SelectItem value="0">Beginner</SelectItem>
+                            <SelectItem value="Senior">Senior</SelectItem>
+                            <SelectItem value="Intermediary">
+                              Intermediary
+                            </SelectItem>
+                            <SelectItem value="Beginner">Beginner</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -147,43 +164,50 @@ const MultiChoice = ({ form, question, handleSave }: TMultiChoiceProps) => {
               </Button>
             </div>
             <div className="w-full">
-              {fields.map(({ id }, index) => {
-                return (
-                  <div key={id} className="w-full h-fit flex  items-center">
-                    <FormField
-                      name={`questions.${question}.answers.${index}.correct`}
-                      control={form.control}
-                      render={({ field }) => (
-                        <FormItem className="mr-5">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormMessage>
-                            {form.formState.errors.name?.message || ''}
-                          </FormMessage>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      name={`questions.${question}.answers.${index}.answer`}
-                      control={form.control}
-                      render={({ field }) => (
-                        <FormItem className="w-[90%] m-2">
-                          <FormControl>
-                            <Textarea {...field} placeholder="Case name" />
-                          </FormControl>
-                          <FormMessage>
-                            {form.formState.errors.name?.message || ''}
-                          </FormMessage>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                );
-              })}
+              <RadioGroup onValueChange={handleCorrectAnswer}>
+                {fields.map(({ id }, index) => {
+                  return (
+                    <div
+                      key={id}
+                      className="w-full flex flex-row content-center items-center"
+                    >
+                      <FormField
+                        name={`questions.${question}.answers.${index}.correct`}
+                        control={form.control}
+                        render={({ field }) => (
+                          <FormItem className="mr-5">
+                            <FormControl>
+                              <RadioGroupItem
+                                checked={field.value}
+                                value={id}
+                                id={id}
+                              />
+                            </FormControl>
+                            <FormMessage>
+                              {form.formState.errors.name?.message || ''}
+                            </FormMessage>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        name={`questions.${question}.answers.${index}.answer`}
+                        control={form.control}
+                        render={({ field }) => (
+                          <FormItem className="w-[90%] mr-2">
+                            <FormLabel>Answer</FormLabel>
+                            <FormControl>
+                              <Textarea {...field} placeholder="Case name" />
+                            </FormControl>
+                            <FormMessage>
+                              {form.formState.errors.name?.message || ''}
+                            </FormMessage>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  );
+                })}
+              </RadioGroup>
             </div>
           </div>
         </div>
@@ -192,4 +216,4 @@ const MultiChoice = ({ form, question, handleSave }: TMultiChoiceProps) => {
   );
 };
 
-export default MultiChoice;
+export default SingleChoice;

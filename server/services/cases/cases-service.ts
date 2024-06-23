@@ -30,8 +30,8 @@ export const getCasesService = async (
 ): Promise<ApiResponse<MCase[]>> => {
   const cases = await Cases.find({
     user: new ObjectId(user),
-    isFeatured: {
-      $eq: true,
+    isArchived: {
+      $eq: false,
     },
   });
 
@@ -59,6 +59,9 @@ export const getSingleCaseService = async (
   const caseFound = await Cases.findOne({
     user: new ObjectId(user),
     _id: new ObjectId(caseId),
+    isArchived: {
+      $eq: false,
+    },
   });
 
   if (!caseFound) {
@@ -87,6 +90,9 @@ export const updateCaseService = async (
     {
       _id: new ObjectId(caseId),
       user: new ObjectId(user),
+      isArchived: {
+        $eq: false,
+      },
     },
     {
       $set: data,
@@ -109,6 +115,44 @@ export const updateCaseService = async (
     data: updatedCase,
     success: true,
     message: 'Case updated successfully',
+    code: EStatusCode.Ok,
+  };
+};
+export const deleteCaseService = async (
+  user: string,
+  caseId: string,
+): Promise<ApiResponse<MCase>> => {
+  const updatedCase = await Cases.findOneAndUpdate(
+    {
+      _id: new ObjectId(caseId),
+      user: new ObjectId(user),
+      isArchived: {
+        $eq: false,
+      },
+    },
+    {
+      $set: {
+        isArchived: true,
+      },
+    },
+    {
+      returnDocument: 'after',
+    },
+  );
+
+  if (!updatedCase) {
+    return {
+      data: null,
+      success: false,
+      message: 'Sorry, Something went wrong',
+      code: EStatusCode.NotFound,
+    };
+  }
+
+  return {
+    data: null,
+    success: true,
+    message: 'Case deleted successfully',
     code: EStatusCode.Ok,
   };
 };

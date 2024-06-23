@@ -14,10 +14,6 @@ import CaseDetails from '../components/case-details';
 import { toast } from '@/components/ui/use-toast';
 import Questions from '../components/questions';
 
-type TCaseProps = {
-  data: MCase;
-};
-
 const url = getBaseUrl(envPublic.NEXT_PUBLIC_ENVIRONMENT);
 
 const Case = () => {
@@ -36,6 +32,8 @@ const Case = () => {
     navigator.clipboard.writeText(`${url}showroom/${editCase?._id}`);
     toast({ title: 'Copy case link', description: 'case link copied' });
   };
+
+  console.log(editCase);
 
   return (
     <PageWrapper title={editCase?.name ?? ''} description={''}>

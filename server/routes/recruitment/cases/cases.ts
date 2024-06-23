@@ -1,12 +1,14 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import {
   createCaseRoute,
+  deleteCaseRoute,
   getCaseRoute,
   getCasesRoute,
   updateCaseRoute,
 } from './route';
 import {
   createCaseService,
+  deleteCaseService,
   getCasesService,
   getSingleCaseService,
   updateCaseService,
@@ -127,6 +129,31 @@ cases.openapi(updateCaseRoute, async (c) => {
       user._id,
       id,
       updatedCase,
+    );
+
+    if (!success) return c.json({ message }, code);
+
+    return c.json(data, EStatusCode.Ok);
+  } catch (e) {
+    return c.json({ message: 'Internal server error' }, EStatusCode.BadRequest);
+  }
+});
+cases.openapi(deleteCaseRoute, async (c) => {
+  try {
+    //validate json body
+    const id = c.req.query('id');
+
+    if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
+
+    const token = getCookie(c, EUserCookies.user);
+    if (!token)
+      return c.json({ message: 'No access' }, EStatusCode.Unauthorized);
+
+    const user = JSON.parse(token) as TUser;
+
+    const { data, success, message, code } = await deleteCaseService(
+      user._id,
+      id,
     );
 
     if (!success) return c.json({ message }, code);

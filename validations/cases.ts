@@ -2,7 +2,7 @@ import z from 'zod';
 
 export const QuestionSchema = z.object({
   question: z.string().min(1).max(1000),
-  type: z.string().min(1).max(100),
+  type: z.string().min(1).max(100).optional(),
   skill: z.string().min(1).max(100),
   skill_level: z.string().min(1).max(100),
   points: z.string().transform((i) => parseInt(i)),
@@ -19,6 +19,7 @@ export const CaseSchema = z.object({
   duration: z.string().transform((i) => parseFloat(i)),
   description: z.string().min(1).max(1000),
   questions: QuestionSchema.array(),
+  isFeatured: z.boolean().default(true),
 });
 
 export type TCase = z.infer<typeof CaseSchema>;

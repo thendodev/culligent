@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import {
   AlertDialog,
@@ -8,36 +9,34 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from '../../../../../components/ui/button';
+import { useAlert, closeAlert } from '@/app/state/alert-state';
 
-type TAlertModalProps = {
-  title: string;
-  description: string;
-  action: () => void;
-  trigger: React.ReactNode | string;
-};
+const AlertModal = () => {
+  const { title, description, action, isOpen } = useAlert((state) => ({
+    title: state.title,
+    description: state.description,
+    action: state.action,
+    isOpen: state.isOpen,
+  }));
 
-const AlertModal = ({
-  title,
-  description,
-  action,
-  trigger,
-}: TAlertModalProps) => {
+  const handleAction = () => {
+    action();
+    closeAlert();
+  };
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="ghost">{trigger}</Button>
-      </AlertDialogTrigger>
+    <AlertDialog open={isOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={action}>Continue</AlertDialogAction>
+          <AlertDialogCancel onClick={() => closeAlert()}>
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={handleAction}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -84,3 +84,15 @@ export const updateCaseHandler = async (id: string, updatedCase: TCase) => {
     });
   }
 };
+export const deleteCaseHandler = async (id: string) => {
+  try {
+    await privateRequest.put(`${ECaseRoutes.CASES}/?id=${id}`, {});
+    toast({ title: 'Case', description: 'Case updated' });
+  } catch (e) {
+    const { response } = e as AxiosError<ClientErrorResponse>;
+    toast({
+      title: 'Error',
+      description: response?.data.message,
+    });
+  }
+};

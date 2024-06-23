@@ -28,11 +28,13 @@ const CasesSchema = schema(
     questions: types.array(QuestionsSchema),
     sharedWith: types.array(SharedWithSchema),
     isFeatured: types.boolean(),
+    isArchived: types.boolean(),
   },
   {
     timestamps: true,
     defaults: {
       isFeatured: true,
+      isArchived: false,
     },
   },
 );

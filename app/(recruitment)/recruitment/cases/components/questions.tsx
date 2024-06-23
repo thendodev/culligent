@@ -12,6 +12,8 @@ type TQuestionsProps = {
 const Questions = ({ questions }: TQuestionsProps) => {
   const [filteredQuestions, setFilteredQuestions] = useState(questions);
 
+  console.log(questions);
+
   const deepSearch = (search: string) => {
     const searchTerm = search.toLowerCase();
 
@@ -45,7 +47,11 @@ const Questions = ({ questions }: TQuestionsProps) => {
         </div>
       </div>
       {questions?.map((question, index) => {
-        if (!filteredQuestions?.includes(question)) return;
+        if (
+          !filteredQuestions?.includes(question) &&
+          !filteredQuestions?.length
+        )
+          return;
         return (
           <div
             className="w-full h-full flex bg-[var(--cruto-foreground)] border border-[var(--cruto-border)] rounded-[var(--cruto-radius)]"

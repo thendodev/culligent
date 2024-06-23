@@ -19,37 +19,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, SaveAll, Trash } from 'lucide-react';
+import { SaveAll } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { UseFormReturn, useFieldArray } from 'react-hook-form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useFieldArray } from 'react-hook-form';
 import { SkillsCombobox } from '../components/skills-combobox';
-import { TCase } from '@/validations/cases';
+import { TQuestionProps } from '../types';
 
-type TSingleChoiceProps = {
-  form: UseFormReturn<TCase>;
-  question: number;
-  handleSave: (index: number) => void;
-};
-const SingleChoice = ({ form, question, handleSave }: TSingleChoiceProps) => {
-  const { fields, append, replace } = useFieldArray({
+type TOpenEndedProps = {} & TQuestionProps;
+const OpenEnded = ({ form, question, handleSave, type }: TOpenEndedProps) => {
+  const { fields, append } = useFieldArray({
     control: form?.control,
     name: `questions.${question}.answers`,
   });
-
-  const handleCorrectAnswer = (id: string) => {
-    const updatedAnswers = fields.map((answer, i) => {
-      if (id === answer.id) {
-        return {
-          ...answer,
-          correct: true,
-        };
-      }
-      return { ...answer, correct: false };
-    });
-    replace(updatedAnswers);
-  };
 
   return (
     <Form {...form}>
@@ -75,7 +57,7 @@ const SingleChoice = ({ form, question, handleSave }: TSingleChoiceProps) => {
               <Button
                 variant="ghost"
                 type="button"
-                onClick={() => handleSave(question)}
+                onClick={() => handleSave(question, type)}
               >
                 <SaveAll size={20} />
               </Button>
@@ -98,11 +80,9 @@ const SingleChoice = ({ form, question, handleSave }: TSingleChoiceProps) => {
                         <SelectContent>
                           <SelectGroup>
                             <SelectLabel>Skill level</SelectLabel>
-                            <SelectItem value="Senior">Senior</SelectItem>
-                            <SelectItem value="Intermediary">
-                              Intermediary
-                            </SelectItem>
-                            <SelectItem value="Beginner">Beginner</SelectItem>
+                            <SelectItem value="2">Senior</SelectItem>
+                            <SelectItem value="1">Intermediary</SelectItem>
+                            <SelectItem value="0">Beginner</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -151,62 +131,6 @@ const SingleChoice = ({ form, question, handleSave }: TSingleChoiceProps) => {
                 </FormItem>
               )}
             />
-            <div className="w-full flex flex-row mt-2 justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                className="hover:scale-105 hover:border-[color:var(--cruto-green)]"
-                onClick={() => append({ answer: '', correct: false })}
-              >
-                <Plus size={20} /> Add answer
-              </Button>
-            </div>
-            <div className="w-full">
-              <RadioGroup onValueChange={handleCorrectAnswer}>
-                {fields.map(({ id }, index) => {
-                  return (
-                    <div
-                      key={id}
-                      className="w-full flex flex-row content-center items-center"
-                    >
-                      <FormField
-                        name={`questions.${question}.answers.${index}.correct`}
-                        control={form.control}
-                        render={({ field }) => (
-                          <FormItem className="mr-5">
-                            <FormControl>
-                              <RadioGroupItem
-                                checked={field.value}
-                                value={id}
-                                id={id}
-                              />
-                            </FormControl>
-                            <FormMessage>
-                              {form.formState.errors.name?.message || ''}
-                            </FormMessage>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        name={`questions.${question}.answers.${index}.answer`}
-                        control={form.control}
-                        render={({ field }) => (
-                          <FormItem className="w-[90%] mr-2">
-                            <FormLabel>Answer</FormLabel>
-                            <FormControl>
-                              <Textarea {...field} placeholder="Case name" />
-                            </FormControl>
-                            <FormMessage>
-                              {form.formState.errors.name?.message || ''}
-                            </FormMessage>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  );
-                })}
-              </RadioGroup>
-            </div>
           </div>
         </div>
       </form>
@@ -214,4 +138,4 @@ const SingleChoice = ({ form, question, handleSave }: TSingleChoiceProps) => {
   );
 };
 
-export default SingleChoice;
+export default OpenEnded;

@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { useUserServer } from '@/lib/useUserServer';
 import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/layout/nav-bar';
+import AlertModal from '@/components/modules/alert-modal';
 const inter = Work_Sans({
   style: ['normal'],
   weight: '400',
@@ -37,6 +38,7 @@ export default async function RootLayout({
           <div className="w-[calc(100%-80px)] h-full mx-auto flex flex-col">
             <NavBar />
             <Toaster />
+            <AlertModal />
             {children}
           </div>
         </div>

@@ -109,13 +109,17 @@ const SaveCase = ({ form, id }: TSaveCaseProps) => {
               </div>
               <div>
                 <FormField
-                  name="description"
+                  name="isFeatured"
                   control={form.control}
                   render={({ field }) => (
-                    <FormItem className="w-[100%] flex flex-col ">
-                      <FormLabel>Is Published</FormLabel>
+                    <FormItem className="w-[100%] flex flex-col">
+                      <FormLabel>Published</FormLabel>
                       <FormControl>
-                        <Switch {...field} defaultChecked={true} />
+                        <Switch
+                          onCheckedChange={field.onChange}
+                          defaultChecked={true}
+                          checked={field.value}
+                        />
                       </FormControl>
                     </FormItem>
                   )}

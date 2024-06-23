@@ -109,3 +109,23 @@ export const updateCaseRoute = createRoute({
     description: 'Internal Server Error',
   },
 });
+export const deleteCaseRoute = createRoute({
+  method: 'put',
+  path: '/',
+  tags: ['Case'],
+  summary: 'Delete case',
+  responses: {
+    200: {
+      description: 'Success',
+    },
+  },
+  400: {
+    description: 'Bad Request',
+  },
+  404: {
+    description: 'Not Found',
+  },
+  500: {
+    description: 'Internal Server Error',
+  },
+});

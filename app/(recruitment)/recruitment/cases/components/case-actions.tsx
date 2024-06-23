@@ -10,16 +10,17 @@ import { Button } from '@/components/ui/button';
 import {
   Copy,
   Edit,
-  MoreHorizontal,
   MoreVertical,
+  Share,
   Trash,
   WorkflowIcon,
 } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
-import { MCase } from '@/models/Cases';
 import { ProjectRoutes } from '@/global/routes';
+import { deleteCaseHandler } from '@/handlers/handleCases';
+import { openAlert } from '@/app/state/alert-state';
 
 type TCaseActionsProps = {
   id?: string;
@@ -27,7 +28,6 @@ type TCaseActionsProps = {
 
 const CaseActions = ({ id }: TCaseActionsProps) => {
   const router = useRouter();
-  const params = useParams();
 
   const onCopy = () => {
     if (!id) return;
@@ -35,17 +35,16 @@ const CaseActions = ({ id }: TCaseActionsProps) => {
     toast({ title: 'Copy ID', description: 'id copied' });
   };
 
+  const onOpenAlert = () =>
+    openAlert({
+      title: 'Delete Case',
+      description: 'Are you sure you want to delete this case?',
+      action: onDelete,
+    });
+
   const onDelete = async () => {
-    try {
-      router.refresh();
-      router.push(`/${params.storeId}/billboards/`);
-      toast({ title: 'Request Success', description: 'Billboard Deleted' });
-    } catch (e) {
-      toast({
-        title: 'Request Failure',
-        description: 'Error, Something happened',
-      });
-    }
+    if (!id) return;
+    deleteCaseHandler(id);
   };
 
   return (
@@ -74,9 +73,12 @@ const CaseActions = ({ id }: TCaseActionsProps) => {
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={onOpenAlert}>
             <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>{' '}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={onDelete}>
+            <Share className="mr-2 h-4 w-4" /> Share with
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -14,15 +14,20 @@ import { AlignLeft, Check, ListChecks } from 'lucide-react';
 import OptionCard from './option-card';
 import QuestionView from './question-view';
 import { ReactNode, useEffect, useState } from 'react';
-import SingleChoice from '../single-choice/SingleChoice';
-import OpenEnded from '../open-ended/OpenEnded';
-import MultiChoice from '../multi-choice/MultiChoice';
+import SingleChoice from './SingleChoice';
+import OpenEnded from './OpenEnded';
+import MultiChoice from './MultiChoice';
 import { toast } from '@/components/ui/use-toast';
 import { QuestionViewSkeleton } from './question-view-skeleton';
 import SaveCase from './save-case';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getCaseHandler } from '@/handlers/handleCases';
 
+export enum QuestionType {
+  SingleChoice = 'Single Choice',
+  OpenEnded = 'Open Ended',
+  MultiChoice = 'Multiple Choice',
+}
 type TCaseProps = {
   id?: string | null;
 };
@@ -52,6 +57,7 @@ const CaseDetails = ({ id }: TCaseProps) => {
       description: '',
       duration: 0,
       questions: [],
+      isFeatured: true,
     },
   });
 
@@ -60,7 +66,7 @@ const CaseDetails = ({ id }: TCaseProps) => {
     name: `questions`,
   });
 
-  const handleSave = (questionIndex: number) => {
+  const handleSave = (questionIndex: number, type: QuestionType) => {
     const isValid = QuestionSchema.safeParse(
       form.getValues(`questions.${questionIndex}`),
     );
@@ -74,44 +80,55 @@ const CaseDetails = ({ id }: TCaseProps) => {
     }
     fieldArray.update(questionIndex, {
       ...form.getValues(`questions.${questionIndex}`),
+      type: type,
     });
   };
 
   const [option, setOption] = useState<ReactNode>(
-    <SingleChoice form={form} question={0} handleSave={handleSave} key={0} />,
+    <SingleChoice
+      type={QuestionType.SingleChoice}
+      form={form}
+      question={0}
+      handleSave={handleSave}
+      key={0}
+    />,
   );
   const [jumpTo, setJumpTo] = useState(0);
 
   const onNewOption = (option: string, questionIndex?: number) => {
     questionIndex = questionIndex ?? fieldArray.fields.length;
+
     switch (option) {
-      case 'Single Choice':
+      case QuestionType.SingleChoice:
         setOption(
           <SingleChoice
             form={form}
             question={questionIndex}
             key={questionIndex}
             handleSave={handleSave}
+            type={QuestionType.SingleChoice}
           />,
         );
         break;
-      case 'Open Ended':
+      case QuestionType.OpenEnded:
         setOption(
           <OpenEnded
             form={form}
             question={questionIndex}
             key={questionIndex}
             handleSave={handleSave}
+            type={QuestionType.OpenEnded}
           />,
         );
         break;
-      case 'Multiple Choice':
+      case QuestionType.MultiChoice:
         setOption(
           <MultiChoice
             form={form}
             question={questionIndex}
             key={questionIndex}
             handleSave={handleSave}
+            type={QuestionType.MultiChoice}
           />,
         );
         break;
@@ -122,6 +139,7 @@ const CaseDetails = ({ id }: TCaseProps) => {
             question={questionIndex}
             handleSave={handleSave}
             key={questionIndex}
+            type={QuestionType.SingleChoice}
           />,
         );
     }

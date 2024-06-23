@@ -19,19 +19,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { SaveAll } from 'lucide-react';
+import { Plus, SaveAll } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { UseFormReturn, useFieldArray } from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
 import { SkillsCombobox } from '../components/skills-combobox';
-import { TCase } from '@/validations/cases';
+import { Checkbox } from '@/components/ui/checkbox';
+import { TQuestionProps } from '../types';
 
-type TOpenEndedProps = {
-  form: UseFormReturn<TCase>;
-  question: number;
-  handleSave: (index: number) => void;
-};
-const OpenEnded = ({ form, question, handleSave }: TOpenEndedProps) => {
+type TMultiChoiceProps = {} & TQuestionProps;
+const MultiChoice = ({
+  form,
+  question,
+  handleSave,
+  type,
+}: TMultiChoiceProps) => {
   const { fields, append } = useFieldArray({
     control: form?.control,
     name: `questions.${question}.answers`,
@@ -61,7 +63,7 @@ const OpenEnded = ({ form, question, handleSave }: TOpenEndedProps) => {
               <Button
                 variant="ghost"
                 type="button"
-                onClick={() => handleSave(question)}
+                onClick={() => handleSave(question, type)}
               >
                 <SaveAll size={20} />
               </Button>
@@ -135,6 +137,55 @@ const OpenEnded = ({ form, question, handleSave }: TOpenEndedProps) => {
                 </FormItem>
               )}
             />
+            <div className="w-full flex flex-row mt-2 justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                className="hover:scale-105 hover:border-[color:var(--cruto-green)]"
+                onClick={() => append({ answer: '', correct: false })}
+              >
+                <Plus size={20} /> Add answer
+              </Button>
+            </div>
+            <div className="w-full">
+              {fields.map(({ id }, index) => {
+                return (
+                  <div key={id} className="w-full h-fit flex  items-center">
+                    <FormField
+                      name={`questions.${question}.answers.${index}.correct`}
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem className="mr-5">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage>
+                            {form.formState.errors.name?.message || ''}
+                          </FormMessage>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      name={`questions.${question}.answers.${index}.answer`}
+                      control={form.control}
+                      render={({ field }) => (
+                        <FormItem className="w-[90%] m-2">
+                          <FormControl>
+                            <Textarea {...field} placeholder="Case name" />
+                          </FormControl>
+                          <FormMessage>
+                            {form.formState.errors.name?.message || ''}
+                          </FormMessage>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </form>
@@ -142,4 +193,4 @@ const OpenEnded = ({ form, question, handleSave }: TOpenEndedProps) => {
   );
 };
 
-export default OpenEnded;
+export default MultiChoice;
