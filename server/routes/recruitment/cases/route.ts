@@ -129,3 +129,50 @@ export const deleteCaseRoute = createRoute({
     description: 'Internal Server Error',
   },
 });
+export const shareCaseRoute = createRoute({
+  method: 'put',
+  path: '/share/ :userId/:caseId',
+  tags: ['Case'],
+  summary: 'Share case',
+  responses: {
+    200: {
+      description: 'Success',
+    },
+  },
+  400: {
+    description: 'Bad Request',
+  },
+  404: {
+    description: 'Not Found',
+  },
+  500: {
+    description: 'Internal Server Error',
+  },
+});
+
+export const getUsersRoute = createRoute({
+  method: 'get',
+  path: '/share',
+  tags: ['Case'],
+  summary: 'Fetch single user cases',
+  responses: {
+    200: {
+      description: 'Success',
+      content: {
+        'application/json': {
+          schema: CaseSchema.openapi('Cases'),
+        },
+      },
+    },
+
+    400: {
+      description: 'Bad Request',
+    },
+    404: {
+      description: 'Not Found',
+    },
+    500: {
+      description: 'Internal Server Error',
+    },
+  },
+});

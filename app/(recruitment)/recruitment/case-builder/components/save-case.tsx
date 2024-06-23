@@ -38,7 +38,7 @@ const SaveCase = ({ form, id }: TSaveCaseProps) => {
     if (!isValid.success) {
       return isValid.error.errors.map((error) =>
         toast({
-          title: error.path[0] as string,
+          title: error.path.join(', ') as string,
           description: error.message,
         }),
       );

@@ -28,11 +28,6 @@ import { TQuestionProps } from '../types';
 
 type TOpenEndedProps = {} & TQuestionProps;
 const OpenEnded = ({ form, question, handleSave, type }: TOpenEndedProps) => {
-  const { fields, append } = useFieldArray({
-    control: form?.control,
-    name: `questions.${question}.answers`,
-  });
-
   return (
     <Form {...form}>
       <form className="h-full space-y-10 overflow-hidden bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border-[var(--cruto-border)] border">
@@ -55,11 +50,11 @@ const OpenEnded = ({ form, question, handleSave, type }: TOpenEndedProps) => {
                 )}
               />
               <Button
-                variant="ghost"
+                variant="outline"
                 type="button"
                 onClick={() => handleSave(question, type)}
               >
-                <SaveAll size={20} />
+                Save
               </Button>
             </div>
             <div className="flex-1 flex flex-col sm:flex-row justify-between content-center">

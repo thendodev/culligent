@@ -12,8 +12,6 @@ type TQuestionsProps = {
 const Questions = ({ questions }: TQuestionsProps) => {
   const [filteredQuestions, setFilteredQuestions] = useState(questions);
 
-  console.log(questions);
-
   const deepSearch = (search: string) => {
     const searchTerm = search.toLowerCase();
 
@@ -47,10 +45,7 @@ const Questions = ({ questions }: TQuestionsProps) => {
         </div>
       </div>
       {questions?.map((question, index) => {
-        if (
-          !filteredQuestions?.includes(question) &&
-          !filteredQuestions?.length
-        )
+        if (!filteredQuestions?.includes(question) && filteredQuestions?.length)
           return;
         return (
           <div

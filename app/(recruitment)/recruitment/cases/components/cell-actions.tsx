@@ -38,20 +38,6 @@ const CellActions = ({ data }: CellActionProps) => {
     toast({ title: 'Copy ID', description: 'id copied' });
   };
 
-  const onDelete = async () => {
-    try {
-      await axios.delete(`/api/${params.storeId}/billboards/${params.id}`);
-      router.refresh();
-      router.push(`/${params.storeId}/billboards/`);
-      toast({ title: 'Request Success', description: 'Billboard Deleted' });
-    } catch (e) {
-      toast({
-        title: 'Request Failure',
-        description: 'Error, Something happened',
-      });
-    }
-  };
-
   return (
     <div>
       <DropdownMenu>

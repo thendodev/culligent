@@ -12,7 +12,7 @@ type TQuestionProps = {
   fieldArray: any;
   id: number;
   deleteQuestion: (index: number) => void;
-  updateQuestion: (index: number) => void;
+  updateQuestion: (option: string, index: number) => void;
 
   question: TQuestion;
 };
@@ -81,7 +81,7 @@ const QuestionView = ({
             handleShiftQuestionToFront={handleShiftQuestionToFront}
             handleShiftQuestionToEnd={handleShiftQuestionToEnd}
             deleteQuestion={() => deleteQuestion(id)}
-            updateQuestion={() => updateQuestion(id)}
+            updateQuestion={() => updateQuestion(question.type, id)}
           />
         </div>
 

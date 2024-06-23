@@ -70,7 +70,10 @@ const CaseDetails = ({ id }: TCaseProps) => {
     const isValid = QuestionSchema.safeParse(
       form.getValues(`questions.${questionIndex}`),
     );
-    if (!isValid.success) {
+    const isTypeError =
+      form.getValues(`questions.${questionIndex}`).type !== type;
+
+    if (!isValid.success && isValid.error.errors.length > 1 && !isTypeError) {
       return isValid.error.errors.map((error) =>
         toast({
           title: error.path[0] as string,
@@ -95,7 +98,7 @@ const CaseDetails = ({ id }: TCaseProps) => {
   );
   const [jumpTo, setJumpTo] = useState(0);
 
-  const onNewOption = (questionIndex?: number) => {
+  const onNewOption = (option: string, questionIndex?: number) => {
     questionIndex = questionIndex ?? fieldArray.fields.length;
 
     switch (option) {

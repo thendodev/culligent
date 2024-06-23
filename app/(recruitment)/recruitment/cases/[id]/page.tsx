@@ -33,8 +33,6 @@ const Case = () => {
     toast({ title: 'Copy case link', description: 'case link copied' });
   };
 
-  console.log(editCase);
-
   return (
     <PageWrapper title={editCase?.name ?? ''} description={''}>
       <div className="flex flex-col gap-4 relative">

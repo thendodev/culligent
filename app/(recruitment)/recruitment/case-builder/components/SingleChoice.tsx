@@ -75,11 +75,11 @@ const SingleChoice = ({
                 )}
               />
               <Button
-                variant="ghost"
+                variant="outline"
                 type="button"
                 onClick={() => handleSave(question, type)}
               >
-                <SaveAll size={20} />
+                Save
               </Button>
             </div>
             <div className="flex-1 flex flex-col sm:flex-row justify-between content-center">

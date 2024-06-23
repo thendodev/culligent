@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useAlert, closeAlert } from '@/app/state/alert-state';
+import { useAlert, close } from '@/app/state/alert-state';
 
 const AlertModal = () => {
   const { title, description, action, isOpen } = useAlert((state) => ({
@@ -22,7 +22,7 @@ const AlertModal = () => {
 
   const handleAction = () => {
     action();
-    closeAlert();
+    close();
   };
 
   return (
@@ -33,9 +33,7 @@ const AlertModal = () => {
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => closeAlert()}>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel onClick={() => close()}>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={handleAction}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

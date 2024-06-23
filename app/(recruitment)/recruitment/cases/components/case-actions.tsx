@@ -20,7 +20,7 @@ import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { ProjectRoutes } from '@/global/routes';
 import { deleteCaseHandler } from '@/handlers/handleCases';
-import { openAlert } from '@/app/state/alert-state';
+import { alert } from '@/app/state/alert-state';
 
 type TCaseActionsProps = {
   id?: string;
@@ -36,7 +36,7 @@ const CaseActions = ({ id }: TCaseActionsProps) => {
   };
 
   const onOpenAlert = () =>
-    openAlert({
+    alert({
       title: 'Delete Case',
       description: 'Are you sure you want to delete this case?',
       action: onDelete,

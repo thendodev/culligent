@@ -1,12 +1,10 @@
-import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { pluralize } from '@/lib/utils';
 import { MQuestion } from '@/models/Cases';
 import { Calendar, Clock, MoreVertical, Pen } from 'lucide-react';
 import React from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { toast } from '@/components/ui/use-toast';
 import CaseActions from './case-actions';
+import ShareCase from './share-case';
 
 type TCaseDetailsProps = {
   name?: string;
@@ -31,7 +29,8 @@ const CaseDetails = ({
 }: TCaseDetailsProps) => {
   return (
     <div className="w-full h-fit bg-[var(--cruto-foreground)] border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] flex justify-center items-center align-middle flex-col gap-4">
-      <div className="ml-auto p-2">
+      <div className="ml-auto p-2 flex items-center gap-2">
+        <ShareCase />
         <CaseActions id={id} />
       </div>
       <div className="py-6 flex flex-col gap-2">

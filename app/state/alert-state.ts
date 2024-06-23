@@ -26,14 +26,13 @@ export const useAlert = create<TAlert>()((set) => ({
   ...initalState,
 }));
 
-export const closeAlert = () => {
-  console.log('closeAlert');
+export const close = () => {
   useAlert.setState(() => ({
     ...initalState,
   }));
 };
 
-export const openAlert = ({ title, description, action }: TAlertProps) => {
+export const alert = ({ title, description, action }: TAlertProps) => {
   useAlert.setState(() => ({
     isOpen: true,
     title,
