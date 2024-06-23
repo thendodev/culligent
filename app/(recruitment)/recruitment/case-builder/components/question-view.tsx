@@ -2,11 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { QuestionDropdown } from './question-dropdown';
-import {
-  useFieldArray,
-  UseFieldArrayReturn,
-  UseFormReturn,
-} from 'react-hook-form';
+import { useFieldArray, UseFormReturn } from 'react-hook-form';
 import { Check, StarIcon, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TCase, TQuestion } from '@/validations/cases';
@@ -16,7 +12,7 @@ type TQuestionProps = {
   fieldArray: any;
   id: number;
   deleteQuestion: (index: number) => void;
-  updateQuestion: (option: string, index: number) => void;
+  updateQuestion: (index: number) => void;
 
   question: TQuestion;
 };
@@ -47,11 +43,6 @@ const QuestionView = ({
       resizeObserver.disconnect();
     };
   }, [questionRef, height]);
-
-  const { fields, append, remove, replace, prepend, move } = useFieldArray({
-    control: form.control,
-    name: `questions.${id}.answers`,
-  });
 
   const handleShiftQuestionToEnd = () => {
     fieldArray.move(id, fieldArray.fields.length - 1);
@@ -90,7 +81,7 @@ const QuestionView = ({
             handleShiftQuestionToFront={handleShiftQuestionToFront}
             handleShiftQuestionToEnd={handleShiftQuestionToEnd}
             deleteQuestion={() => deleteQuestion(id)}
-            updateQuestion={() => updateQuestion(question.type, id)}
+            updateQuestion={() => updateQuestion(id)}
           />
         </div>
 

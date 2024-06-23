@@ -95,7 +95,7 @@ const CaseDetails = ({ id }: TCaseProps) => {
   );
   const [jumpTo, setJumpTo] = useState(0);
 
-  const onNewOption = (option: string, questionIndex?: number) => {
+  const onNewOption = (questionIndex?: number) => {
     questionIndex = questionIndex ?? fieldArray.fields.length;
 
     switch (option) {
