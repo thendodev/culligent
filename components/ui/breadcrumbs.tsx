@@ -14,14 +14,13 @@ const BreadCrumbs = ({ homeElement, homeUrl, children }: BreadCrumbsProps) => {
   const paths = usePathname();
   const crumbs = paths.split('/').filter((p) => p);
   let href = `/${crumbs.join('/')}`;
-  console.log(href);
 
   return (
     <div
       id="breadcrumbs"
-      className="fixed z-10 p-2 h-[60px] w-[calc(100%-80px)] flex gap-2 justify-between items-center border-[color:var(--cruto-off-white)] bg-white m-auto "
+      className="fixed z-10 p-2 h-[60px] w-[calc(100vw-60px)] px-10 flex gap-2 justify-between items-center  bg-[var(--cruto-foreground)]"
     >
-      <ul className="flex flex-row items-center content-center w-full h-full ml-[40px]">
+      <ul className="flex flex-row items-center content-center w-full h-full mx-auto">
         <li className="flex flex-row content-center text-sm text-[color:var(--cruto-grey)]">
           <Home color="var(--cruto-pale-grey)" size={20} className="mr-2" />
           {crumbs[crumbs.length - 1] !== homeElement ? (

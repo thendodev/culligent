@@ -1,5 +1,8 @@
+'use server';
+
 import { toast } from '@/components/ui/use-toast';
 import { ClientErrorResponse } from '@/global/response.types';
+
 import { privateRequest } from '@/lib/requests';
 import { MCase } from '@/models/Cases';
 import { TCase } from '@/validations/cases';
@@ -25,7 +28,7 @@ export const createCaseHandler = async (newCase: TCase) => {
 export const getCasesHandler = async () => {
   try {
     const { data } = await privateRequest.get(ECaseRoutes.CASES);
-
+    console.log(data);
     //remap data to match the case column schema
     return data.map((item: MCase) => ({
       ...item,

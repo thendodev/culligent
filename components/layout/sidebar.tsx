@@ -2,12 +2,7 @@ import { BookOpenText, LayoutDashboard, Library } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import './sidebar.css';
-import { UserProps } from '@/models/User.types';
 import { ProjectRoutes } from '@/global/routes';
-
-type SideBarProps = {
-  user: UserProps;
-};
 
 const SideBar = () => {
   return (
@@ -23,6 +18,13 @@ const SideBar = () => {
                 href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`}
               >
                 Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.teams}`}
+              >
+                Teams
               </Link>
             </li>
             <li>

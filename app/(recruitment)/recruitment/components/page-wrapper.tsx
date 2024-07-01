@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import BreadCrumbs from '../../../../components/ui/breadcrumbs';
 import { Separator } from '../../../../components/ui/separator';
+import LoadingBar from './loading-bar';
 
 interface PageWrapperProps {
   title: string;
@@ -30,6 +31,8 @@ const PageWrapper = ({ description, children }: PageWrapperProps) => {
           {description.toLocaleUpperCase()}
         </p>
       </BreadCrumbs>
+      <LoadingBar />
+
       <div className="mt-[60px] p-5 px-12 w-full h-full overflow-auto">
         {children}
       </div>

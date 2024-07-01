@@ -2,7 +2,6 @@ import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
 import Cases, { MCase } from '@/models/Cases';
 import { TCase } from '@/validations/cases';
-import { use } from 'chai';
 import { ObjectId } from 'mongodb';
 
 export const createCaseService = async (

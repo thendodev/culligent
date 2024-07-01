@@ -21,12 +21,15 @@ import { useRouter } from 'next/navigation';
 import penguinProfile from '@/assets/penguin-profile.svg';
 import Image from 'next/image';
 import { MUser } from '@/models/User';
+import { useAxiosInterceptors } from '@/hooks/useInterceptors';
 
 type ProfileMenuProps = {
   user: MUser;
 };
 const ProfileMenu = ({ user }: ProfileMenuProps) => {
   const router = useRouter();
+  useAxiosInterceptors();
+
   const logout = async () => {
     Cookies.remove('cruto-user');
     router.push('/');

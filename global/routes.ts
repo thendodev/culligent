@@ -9,6 +9,7 @@ export enum ProjectRoutes {
   sign_up = 'sign-up',
   otp_verify = 'otp',
   magicLink = 'magic-link',
+  teams = 'teams',
 
   //deprecated
   multi_choice = `${case_builder}/multi-choice`,

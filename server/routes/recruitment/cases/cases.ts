@@ -59,12 +59,10 @@ cases.openapi(getCasesRoute, async (c) => {
     //return error if no user token is found
     if (!token) return c.json({ message: 'no token' }, EStatusCode.BadRequest);
     //get user from token
-    const user = JSON.parse(token);
+    const user = JSON.parse(token) as TUser;
 
     //get case
-    const { data, success, message, code } = await getCasesService(
-      user._id.toString(),
-    );
+    const { data, success, message, code } = await getCasesService(user._id);
     //return error if case not found
     if (!success || !data) return c.json({ message }, code);
 
