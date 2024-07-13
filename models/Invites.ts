@@ -3,11 +3,17 @@ import { types, schema } from 'papr';
 
 const InviteSchema = schema(
   {
-    user: types.objectId({ required: true }),
+    userId: types.objectId({ required: true }),
+    teamId: types.objectId({ required: true }),
     inviteHash: types.string({ required: true }),
-    profile: types.string({ required: true }),
+    status: types.string({ required: true }),
+    isValid: types.boolean({ required: true }),
   },
   {
+    defaults: {
+      status: 'pending',
+      isValid: true,
+    },
     timestamps: true,
   },
 );

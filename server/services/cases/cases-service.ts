@@ -28,11 +28,13 @@ export const getCasesService = async (
   user: string,
 ): Promise<ApiResponse<MCase[]>> => {
   const cases = await Cases.find({
-    user: new ObjectId(user),
+    user: ObjectId.createFromHexString(user),
     isArchived: {
       $eq: false,
     },
   });
+
+  console.log(cases);
 
   if (!cases) {
     return {

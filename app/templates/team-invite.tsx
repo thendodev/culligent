@@ -4,8 +4,10 @@ import {
   Container,
   Column,
   Head,
+  Heading,
   Hr,
   Html,
+  Img,
   Link,
   Preview,
   Row,
@@ -15,18 +17,26 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-type TForgotPasswordProps = {
+interface VercelInviteUserEmailProps {
   username?: string;
-  userImage?: string;
-  inviteLink?: string;
-};
+  invitedByUsername?: string;
+  invitedByEmail?: string;
+  teamName?: string;
+  inviteLink: string;
+}
 
-export const MagicLinkEmail = ({
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : '';
+
+export const InviteUserEmail = ({
   username,
-  userImage,
+  invitedByUsername,
+  invitedByEmail,
+  teamName,
   inviteLink,
-}: TForgotPasswordProps) => {
-  const previewText = `Magic Login for ${username}`;
+}: VercelInviteUserEmailProps) => {
+  const previewText = `Join ${invitedByUsername} on Culligent`;
 
   return (
     <Html>
@@ -35,21 +45,31 @@ export const MagicLinkEmail = ({
       <Tailwind>
         <Body className="bg-white my-auto mx-auto font-sans px-2">
           <Container className="border border-solid border-[#eaeaea] rounded my-[40px] mx-auto p-[20px] max-w-[465px]">
-            <Section className="mt-[32px] w-full ">
-              {/* <Img
-                src={`data:image/png;base64,${banner}`}
-                className="my-0 mx-auto absolute object-contain"
-              /> */}
-              <Text className="text-[var(--cruto-text)] text-4xl font-bold leading-[24px] mx-auto">
-                Culligent
-              </Text>
+            <Section className="mt-[32px]">
+              <Img
+                src={`${baseUrl}/static/vercel-logo.png`}
+                width="40"
+                height="37"
+                alt="Vercel"
+                className="my-0 mx-auto"
+              />
             </Section>
-
+            <Heading className="text-black text-[24px] font-normal text-center p-0 my-[30px] mx-0">
+              Join <strong>{teamName}</strong> on <strong>Vercel</strong>
+            </Heading>
             <Text className="text-black text-[14px] leading-[24px]">
               Hello {username},
             </Text>
             <Text className="text-black text-[14px] leading-[24px]">
-              Click on the button below to gain access to your account.
+              <strong>{invitedByUsername}</strong> (
+              <Link
+                href={`mailto:${invitedByEmail}`}
+                className="text-blue-600 no-underline"
+              >
+                {invitedByEmail}
+              </Link>
+              ) has invited you to the <strong>{teamName}</strong> team on{' '}
+              <strong>Culligent</strong>.
             </Text>
             <Section>
               <Row>
@@ -59,22 +79,22 @@ export const MagicLinkEmail = ({
                     src={userImage}
                     width="64"
                     height="64"
-                  /> */}
+                  />
                 </Column>
                 <Column align="center">
-                  {/* <Img
+                  <Img
                     src={`${baseUrl}/static/vercel-arrow.png`}
                     width="12"
                     height="9"
+                    alt="invited you to"
                   /> */}
                 </Column>
                 <Column align="left">
                   {/* <Img
                     className="rounded-full"
-                    src={`data:image/png;base64,${logoImg}`}
+                    src={teamImage}
                     width="64"
                     height="64"
-                    alt="culligent logo"
                   /> */}
                 </Column>
               </Row>
@@ -84,25 +104,22 @@ export const MagicLinkEmail = ({
                 className="bg-[#000000] rounded text-white text-[12px] font-semibold no-underline text-center px-5 py-3"
                 href={inviteLink}
               >
-                Login
+                Join the team
               </Button>
             </Section>
             <Text className="text-black text-[14px] leading-[24px]">
-              or copy and paste this URL into your browser:
-              <br />
+              or copy and paste this URL into your browser:{' '}
               <Link href={inviteLink} className="text-blue-600 no-underline">
                 {inviteLink}
               </Link>
             </Text>
             <Hr className="border border-solid border-[#eaeaea] my-[26px] mx-0 w-full" />
             <Text className="text-[#666666] text-[12px] leading-[24px]">
-              This email was intended for{' '}
-              <span className="text-black">{username}</span>.
-              <span>
-                If you were not expecting this invitation, you can ignore this
-                email. If you are concerned about your account`&apos;`s safety,
-                please get in touch with us.
-              </span>
+              This invitation was intended for{' '}
+              <span className="text-black">{username}</span>. If you were not
+              expecting this invitation, you can ignore this email. If you are
+              concerned about your account&apos;s safety, please reply to this
+              email to get in touch with us.
             </Text>
           </Container>
         </Body>
@@ -111,4 +128,16 @@ export const MagicLinkEmail = ({
   );
 };
 
-export default MagicLinkEmail;
+InviteUserEmail.PreviewProps = {
+  username: 'alanturing',
+  userImage: `${baseUrl}/static/vercel-user.png`,
+  invitedByUsername: 'Alan',
+  invitedByEmail: 'alan.turing@example.com',
+  teamName: 'Enigma',
+  teamImage: `${baseUrl}/static/vercel-team.png`,
+  inviteLink: 'https://vercel.com/teams/invite/foo',
+  inviteFromIp: '204.13.186.218',
+  inviteFromLocation: 'São Paulo, Brazil',
+} as VercelInviteUserEmailProps;
+
+export default InviteUserEmail;

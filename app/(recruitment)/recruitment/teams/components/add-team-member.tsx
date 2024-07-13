@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -8,44 +9,98 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Form } from '@/components/ui/form';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { teamInviteSchema, TTeamInvite } from '@/validations/teams';
+import { sendInviteHandler } from '@/handlers/handleTeam';
 
-type TCreateTeamMemberProps = {};
+type TCreateTeamMemberProps = {
+  teamId: string | undefined | null;
+  name: string | undefined | null;
+};
 
-const InviteTeamMember = ({}: TCreateTeamMemberProps) => {
-  const form = useForm<any>({
+const InviteTeamMember = ({ teamId, name }: TCreateTeamMemberProps) => {
+  const form = useForm<TTeamInvite>({
     mode: 'onBlur',
     defaultValues: {
-      name: '',
-      email: '',
+      teamId: teamId ?? '',
     },
-    // resolver: zodResolver(),
+    resolver: zodResolver(teamInviteSchema),
   });
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Add New Member</Button>
+        <Button disabled={teamId ? false : true} variant="outline">
+          Add New Member
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Add a new team member</DialogTitle>
-          <DialogDescription>
-            Search for a team member or invite a team member to join your team.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Form {...form}>
-            <form className="grid grid-cols-4 items-center gap-4"></form>
-          </Form>
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+      <DialogContent className="w-full">
+        <Tabs defaultValue="account" className="w-[400px] mx-auto">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="Search">Add existing</TabsTrigger>
+            <TabsTrigger value="Invite">Invite new</TabsTrigger>
+          </TabsList>
+          <TabsContent value="Search" className="mx-auto">
+            <DialogHeader>
+              <DialogTitle>Search an existing team member</DialogTitle>
+              <DialogDescription>
+                Search for a team member or invite a team member to join {name}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4"></div>
+            <DialogFooter>
+              <Button type="submit">Add changes</Button>
+            </DialogFooter>
+          </TabsContent>
+          <TabsContent value="Invite">
+            <DialogHeader>
+              <DialogTitle>Send an invite to join {name}</DialogTitle>
+              <DialogDescription>
+                Send an email invite to a new team member to join {name}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(sendInviteHandler)}>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="johnDoe@culligent.com"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button type="submit">Send Invite</Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </div>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

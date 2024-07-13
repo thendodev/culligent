@@ -1,4 +1,4 @@
-import { teamsSchema } from '@/validations/teams';
+import { teamInviteSchema, teamsSchema } from '@/validations/teams';
 import { createRoute, z } from '@hono/zod-openapi';
 
 export const createTeamRoute = createRoute({
@@ -43,5 +43,31 @@ export const getTeamsRoute = createRoute({
     500: {
       description: 'Internal Server Error',
     },
+  },
+});
+
+export const sendInviteRoute = createRoute({
+  method: 'post',
+  path: '/invite',
+  tags: ['Teams'],
+  summary: 'Send a team invite',
+  request: {
+    body: {
+      description: 'Request body',
+      content: {
+        'application/json': {
+          schema: teamInviteSchema.openapi('Teams'),
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    200: {
+      description: 'Success',
+    },
+  },
+  500: {
+    description: 'Internal Server Error',
   },
 });

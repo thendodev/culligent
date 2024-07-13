@@ -2,7 +2,7 @@
 import { ChevronRight, Home } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 
 type BreadCrumbsProps = {
   homeElement: string;
@@ -14,11 +14,52 @@ const BreadCrumbs = ({ homeElement, homeUrl, children }: BreadCrumbsProps) => {
   const paths = usePathname();
   const crumbs = paths.split('/').filter((p) => p);
   let href = `/${crumbs.join('/')}`;
+  const ref = useRef<HTMLDivElement>(null);
+  const timeout = React.useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const breadcrumbs = ref.current;
+
+    const handleMouseEnter = () => {
+      if (!ref.current) return;
+      ref.current.style.opacity = '1';
+      ref.current.style.transition = 'all 0.25s ease-in-out';
+    };
+
+    const handleMouseLeave = () => {
+      if (!ref.current) return;
+      ref.current.style.opacity = '0';
+      ref.current.style.transition = 'all 0.25s ease-in-out';
+    };
+
+    const delayedMouseLeave = () => {
+      timeout.current = setTimeout(() => {
+        handleMouseLeave();
+      }, 1500);
+    };
+
+    ref.current.addEventListener('mouseenter', handleMouseEnter);
+    ref.current.addEventListener('mouseleave', delayedMouseLeave);
+
+    timeout.current = setTimeout(() => {
+      handleMouseLeave();
+    }, 2500);
+
+    return () => {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+        breadcrumbs.removeEventListener('mouseenter', handleMouseEnter);
+        breadcrumbs.removeEventListener('mouseleave', delayedMouseLeave);
+      }
+    };
+  }, []);
 
   return (
     <div
+      ref={ref}
       id="breadcrumbs"
-      className="fixed z-10 p-2 h-[60px] w-[calc(100vw-60px)] px-10 flex gap-2 justify-between items-center  bg-[var(--cruto-foreground)]"
+      className="p-2 h-[60px] w-full px-10 flex gap-2 justify-between items-center  bg-[var(--cruto-foreground)]"
     >
       <ul className="flex flex-row items-center content-center w-full h-full mx-auto">
         <li className="flex flex-row content-center text-sm text-[color:var(--cruto-grey)]">

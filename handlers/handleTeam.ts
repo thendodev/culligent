@@ -1,27 +1,16 @@
-import { toast } from '@/components/ui/use-toast';
-import { ClientErrorResponse } from '@/global/response.types';
 import { privateRequest } from '@/lib/requests';
-import { TTeamsAPi } from '@/server/routes/recruitment/business/teams/teams';
-import { TTeam } from '@/validations/teams';
-import { AxiosError } from 'axios';
+import { TTeam, TTeamInvite } from '@/validations/teams';
 enum ETeamsRoutes {
   TEAMS = '/recruitment/business/teams',
+  INVITE = `${ETeamsRoutes.TEAMS}/invite`,
 }
 
 export const createTeamHandler = async (team: TTeam) => {
   try {
-    const { data } = await privateRequest.post<TTeamsAPi>(
-      ETeamsRoutes.TEAMS,
-      team,
-    );
+    const { data } = await privateRequest.post(ETeamsRoutes.TEAMS, team);
 
     return data;
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-    toast({
-      title: 'Teams',
-      description: response?.data.message,
-    });
+  } catch {
     return [];
   }
 };
@@ -31,13 +20,13 @@ export const getTeamsHandler = async () => {
     const { data } = await privateRequest.get(ETeamsRoutes.TEAMS);
     console.log(data);
     return data;
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-
-    toast({
-      title: 'Teams',
-      description: response?.data.message,
-    });
+  } catch {
     return [];
   }
+};
+
+export const sendInviteHandler = async (invite: TTeamInvite) => {
+  try {
+    await privateRequest.post(ETeamsRoutes.INVITE, invite);
+  } catch {}
 };

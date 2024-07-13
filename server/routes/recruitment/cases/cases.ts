@@ -35,7 +35,10 @@ cases.openapi(createCaseRoute, async (c) => {
     //get user from token
     const user = JSON.parse(token);
 
-    const newCase = { user: new ObjectId(user._id), ...cases } as MCase;
+    const newCase = {
+      user: ObjectId.createFromHexString(user._id),
+      ...cases,
+    } as MCase;
 
     const { success, message } = await createCaseService(newCase);
 
@@ -63,6 +66,7 @@ cases.openapi(getCasesRoute, async (c) => {
 
     //get case
     const { data, success, message, code } = await getCasesService(user._id);
+    console.log(data);
     //return error if case not found
     if (!success || !data) return c.json({ message }, code);
 

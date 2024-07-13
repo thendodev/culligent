@@ -39,6 +39,7 @@ export const generateTokens = async (user: any) => {
 
     return Promise.resolve({ accessToken, refreshToken });
   } catch (err) {
+    console.log(err);
     return Promise.reject(err);
   }
 };

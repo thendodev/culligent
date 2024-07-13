@@ -46,6 +46,7 @@ login.openapi(loginRoute, async ({ req, res, json }) => {
       message: 'Login successful',
     });
   } catch (e) {
+    console.log(e);
     return json({ message: 'internal error' }, EStatusCode.InternalServerError);
   }
 });

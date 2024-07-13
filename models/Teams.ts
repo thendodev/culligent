@@ -1,5 +1,6 @@
 import { types, schema } from 'papr';
 import papr from '@/lib/database/papr';
+import { ObjectId } from 'mongodb';
 
 const MembersSchema = types.object({
   name: types.string({ required: true }),
@@ -22,5 +23,7 @@ const TeamsSchema = schema(
   },
 );
 
-export type MTeam = (typeof TeamsSchema)[0];
+export type MTeam = (typeof TeamsSchema)[0] & {
+  _id: string | ObjectId;
+};
 export default papr.model('Team', TeamsSchema);

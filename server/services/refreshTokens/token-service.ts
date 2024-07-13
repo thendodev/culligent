@@ -17,6 +17,7 @@ export const createRefreshTokenService = async (
       refreshToken,
     };
   } catch (e) {
+    console.log(e);
     return null;
   }
 };

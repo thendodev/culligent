@@ -27,6 +27,7 @@ export const envServer = createEnv({
     JWT_SECRET: z.any(),
     JWT_REFRESH_SECRET: z.any(),
     NEXT_PUBLIC_ENVIRONMENT: z.string(),
+    INVITE_RESEND: z.string(),
   },
   runtimeEnv: process.env,
   emptyStringAsUndefined: true,

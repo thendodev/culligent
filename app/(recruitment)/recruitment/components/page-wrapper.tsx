@@ -1,10 +1,4 @@
-import {
-  ChevronRight,
-  ChevronRightCircle,
-  ChevronUpCircle,
-} from 'lucide-react';
 import BreadCrumbs from '../../../../components/ui/breadcrumbs';
-import { Separator } from '../../../../components/ui/separator';
 import LoadingBar from './loading-bar';
 
 interface PageWrapperProps {
@@ -25,7 +19,7 @@ interface PageWrapperProps {
 
 const PageWrapper = ({ description, children }: PageWrapperProps) => {
   return (
-    <div className="w-full px-2 h-[100%] flex flex-col overflow-hidden mt-[70px] mx-auto">
+    <div className="w-full px-2 min-h-screen flex flex-col mx-auto">
       <BreadCrumbs homeUrl="/dashboard" homeElement="dashboard">
         <p className="text-end text-sm w-full text-[color:var(--cruto-pale-grey)]">
           {description.toLocaleUpperCase()}
@@ -33,9 +27,7 @@ const PageWrapper = ({ description, children }: PageWrapperProps) => {
       </BreadCrumbs>
       <LoadingBar />
 
-      <div className="mt-[60px] p-5 px-12 w-full h-full overflow-auto">
-        {children}
-      </div>
+      <main className="p-5 px-12 w-full h-full">{children}</main>
     </div>
   );
 };

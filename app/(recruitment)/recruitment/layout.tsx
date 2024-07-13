@@ -35,7 +35,7 @@ export default async function RootLayout({
           <div className="w-[60px]">
             <SideBar />
           </div>
-          <div className="w-[calc(100%-80px)] h-full mx-auto flex flex-col">
+          <div className="w-[calc(100%-60px)] h-full flex flex-col">
             <NavBar />
             <Toaster />
             <AlertModal />
