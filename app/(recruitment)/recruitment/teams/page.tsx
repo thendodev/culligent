@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PageWrapper from '../components/page-wrapper';
 import TeamSwitcher from './components/teams-select';
 import { getTeamsHandler } from '@/handlers/handleTeam';
@@ -8,21 +8,17 @@ import { MTeam } from '@/models/Teams';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import InviteTeamMember from './components/add-team-member';
 import { Separator } from '@/components/ui/separator';
+import { useQuery } from '@tanstack/react-query';
 
 type TTeamsProps = {};
 
 const Teams = ({}: TTeamsProps) => {
-  const [teams, setTeams] = useState<MTeam[] | null>();
   const [selectedTeam, setSelectedTeam] = useState<MTeam>();
 
-  useEffect(() => {
-    const fetchTeams = async () => {
-      const data = await getTeamsHandler();
-      setTeams(data);
-    };
-
-    fetchTeams();
-  }, []);
+  const { data } = useQuery({
+    queryKey: ['teams'],
+    queryFn: async () => getTeamsHandler(),
+  });
 
   const onTeamSelect = (team: MTeam) => {
     setSelectedTeam(team);
@@ -34,7 +30,7 @@ const Teams = ({}: TTeamsProps) => {
         <TeamSwitcher
           onTeamSelect={onTeamSelect}
           selectedTeam={selectedTeam}
-          teams={teams}
+          teams={data}
         />
         <InviteTeamMember
           name={selectedTeam?.name}

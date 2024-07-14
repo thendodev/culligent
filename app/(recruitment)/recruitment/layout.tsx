@@ -7,6 +7,7 @@ import { useUserServer } from '@/lib/useUserServer';
 import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/layout/nav-bar';
 import AlertModal from '@/components/modules/alert-modal';
+import Providers from '@/app/query-provider';
 const inter = Work_Sans({
   style: ['normal'],
   weight: '400',
@@ -31,7 +32,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="bg-[var(--cruto-background)] min-w-screen min-h-screen">
-        <div className="flex flex-row w-full h-full ">
+        <div className="flex flex-row w-full h-full">
           <div className="w-[60px]">
             <SideBar />
           </div>
@@ -39,7 +40,7 @@ export default async function RootLayout({
             <NavBar />
             <Toaster />
             <AlertModal />
-            {children}
+            <Providers>{children}</Providers>
           </div>
         </div>
       </body>
