@@ -28,7 +28,6 @@ export const createCaseHandler = async (newCase: TCase) => {
 export const getCasesHandler = async () => {
   try {
     const { data } = await privateRequest.get(ECaseRoutes.CASES);
-    console.log(data);
     //remap data to match the case column schema
     return data.map((item: MCase) => ({
       ...item,
@@ -41,13 +40,7 @@ export const getCasesHandler = async () => {
         day: 'numeric',
       }),
     }));
-  } catch (e) {
-    const { response, message } = e as AxiosError<ClientErrorResponse>;
-
-    toast({
-      title: 'Error',
-      description: response?.data.message,
-    });
+  } catch {
     return [];
   }
 };
@@ -65,37 +58,18 @@ export const getCaseHandler = async (id: string) => {
         day: 'numeric',
       }),
     };
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-
-    toast({
-      title: 'Error',
-      description: response?.data.message,
-    });
-  }
+  } catch {}
 };
 
 export const updateCaseHandler = async (id: string, updatedCase: TCase) => {
   try {
     await privateRequest.put(`${ECaseRoutes.CASES}/${id}`, updatedCase);
     toast({ title: 'Case', description: 'Case updated' });
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-    toast({
-      title: 'Error',
-      description: response?.data.message,
-    });
-  }
+  } catch {}
 };
 export const deleteCaseHandler = async (id: string) => {
   try {
     await privateRequest.put(`${ECaseRoutes.CASES}/?id=${id}`, {});
     toast({ title: 'Case', description: 'Case updated' });
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-    toast({
-      title: 'Error',
-      description: response?.data.message,
-    });
-  }
+  } catch {}
 };

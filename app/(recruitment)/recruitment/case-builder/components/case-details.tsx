@@ -13,7 +13,7 @@ import {
 import { AlignLeft, Check, ListChecks } from 'lucide-react';
 import OptionCard from './option-card';
 import QuestionView from './question-view';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import SingleChoice from './SingleChoice';
 import OpenEnded from './OpenEnded';
 import MultiChoice from './MultiChoice';
@@ -22,6 +22,7 @@ import { QuestionViewSkeleton } from './question-view-skeleton';
 import SaveCase from './save-case';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getCaseHandler } from '@/handlers/handleCases';
+import { useQuery } from '@tanstack/react-query';
 
 export enum QuestionType {
   SingleChoice = 'Single Choice',
@@ -33,16 +34,11 @@ type TCaseProps = {
 };
 
 const CaseDetails = ({ id }: TCaseProps) => {
-  const [editCase, setEditCase] = useState(null);
-
-  useEffect(() => {
-    if (!id) return;
-    const getCase = async () => {
-      const data = await getCaseHandler(id as string);
-      setEditCase(data);
-    };
-    getCase();
-  }, [id]);
+  const { data: editCase } = useQuery({
+    queryKey: ['cases', id],
+    queryFn: () => getCaseHandler(id as string),
+    enabled: !!id,
+  });
 
   const form = useForm<TCase>({
     resolver: zodResolver(CaseSchema),

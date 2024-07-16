@@ -56,6 +56,7 @@ cases.openapi(createCaseRoute, async (c) => {
 
 cases.openapi(getCasesRoute, async (c) => {
   try {
+    console.log('hey');
     //get user token
     const token = getCookie(c, EUserCookies.user);
 
@@ -64,6 +65,7 @@ cases.openapi(getCasesRoute, async (c) => {
     //get user from token
     const user = JSON.parse(token) as TUser;
 
+    console.log(user);
     //get case
     const { data, success, message, code } = await getCasesService(user._id);
     console.log(data);

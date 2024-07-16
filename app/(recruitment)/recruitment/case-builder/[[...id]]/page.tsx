@@ -1,11 +1,24 @@
 import PageWrapper from '@/app/(recruitment)/recruitment/components/page-wrapper';
 import React from 'react';
 import CaseDetails from '../components/case-details';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import getQueryClient from '@/app/query-client';
+import { getCaseHandler } from '@/handlers/handleCases';
 
-const CaseBuilder = ({ params }: { params: { id: string } }) => {
+const CaseBuilder = async ({ params }: { params: { id: string } }) => {
+  const queryClient = getQueryClient();
+  !!params.id &&
+    (await queryClient.prefetchQuery({
+      queryKey: ['cases', params.id],
+      queryFn: () => getCaseHandler(params.id),
+    }));
+  const dehydratedState = dehydrate(queryClient);
+
   return (
     <PageWrapper title="new-case" description="create a new case from scratch">
-      <CaseDetails id={params.id} />
+      <HydrationBoundary state={dehydratedState}>
+        <CaseDetails id={params.id} />
+      </HydrationBoundary>
     </PageWrapper>
   );
 };

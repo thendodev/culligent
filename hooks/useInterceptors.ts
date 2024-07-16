@@ -12,7 +12,6 @@ export const useAxiosInterceptors = () => {
     const requestInterceptor = () =>
       privateRequest.interceptors.request.use(
         (config: any) => {
-          console.log('here');
           // Do something before request is sent
           setLoading(true);
           return config;
@@ -30,8 +29,6 @@ export const useAxiosInterceptors = () => {
     const responseInterceptor = () =>
       privateRequest.interceptors.response.use(
         (response: any) => {
-          console.log('here');
-
           // Do something with response data
           setLoading(false);
           if (response instanceof AxiosError) {
