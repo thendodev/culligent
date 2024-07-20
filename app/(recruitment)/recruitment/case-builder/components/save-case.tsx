@@ -20,7 +20,6 @@ import { UseFormReturn } from 'react-hook-form';
 import { CaseSchema, TCase } from '../../../../../validations/cases';
 import { toast } from '@/components/ui/use-toast';
 import { createCaseHandler, updateCaseHandler } from '@/handlers/handleCases';
-import { Toggle } from '@/components/ui/toggle';
 import { Switch } from '@/components/ui/switch';
 
 type TSaveCaseProps = {
@@ -29,10 +28,13 @@ type TSaveCaseProps = {
 };
 
 const SaveCase = ({ form, id }: TSaveCaseProps) => {
-  const onSubmit = async () => {
+  const onSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
     //get form from react forms
     const newCase = form.getValues();
-
+    console.log(newCase);
     //validate form
     const isValid = CaseSchema.safeParse(newCase);
     if (!isValid.success) {

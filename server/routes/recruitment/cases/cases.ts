@@ -25,7 +25,6 @@ cases.openapi(createCaseRoute, async (c) => {
   try {
     //validate json body
     if (!c.req.valid('json')) throw new Error('invalid json');
-
     //get case and token
     const cases = c.req.valid('json');
     const token = getCookie(c, EUserCookies.user);
@@ -56,7 +55,6 @@ cases.openapi(createCaseRoute, async (c) => {
 
 cases.openapi(getCasesRoute, async (c) => {
   try {
-    console.log('hey');
     //get user token
     const token = getCookie(c, EUserCookies.user);
 
@@ -65,10 +63,8 @@ cases.openapi(getCasesRoute, async (c) => {
     //get user from token
     const user = JSON.parse(token) as TUser;
 
-    console.log(user);
     //get case
     const { data, success, message, code } = await getCasesService(user._id);
-    console.log(data);
     //return error if case not found
     if (!success || !data) return c.json({ message }, code);
 
@@ -83,12 +79,14 @@ cases.openapi(getCaseRoute, async (c) => {
     //validate json body
     const id = c.req.param('id');
 
+    //return error if no case id is found
     if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
     //get user token
     const token = getCookie(c, EUserCookies.user);
 
     //return error if no user token is found
     if (!token) return c.json({ message: 'no token' }, EStatusCode.BadRequest);
+
     //get user from token
     const user = JSON.parse(token) as TUser;
 
@@ -102,7 +100,7 @@ cases.openapi(getCaseRoute, async (c) => {
     if (!success || !data) return c.json({ message }, code);
 
     return c.json(data, EStatusCode.Ok);
-  } catch (e) {
+  } catch {
     return c.json(
       { message: 'Internal server error' },
       EStatusCode.InternalServerError,
@@ -117,6 +115,7 @@ cases.openapi(updateCaseRoute, async (c) => {
     const id = c.req.param('id');
 
     if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
+
     if (!updatedCase)
       return c.json(
         { message: 'Case doesnt meet validation requirements' },

@@ -5,9 +5,7 @@ export const QuestionSchema = z.object({
   type: z.string().min(1).max(100),
   skill: z.string().min(1).max(100),
   skill_level: z.string().min(1).max(100),
-  points: z.string().transform((i) => {
-    return parseInt(i);
-  }),
+  points: z.coerce.number(),
   answers: z
     .object({
       answer: z.string().min(1).max(1000),
@@ -18,7 +16,7 @@ export const QuestionSchema = z.object({
 
 export const CaseSchema = z.object({
   name: z.string().min(1).max(100),
-  duration: z.string().transform((i) => parseFloat(i)),
+  duration: z.coerce.number(),
   description: z.string().min(1).max(1000),
   questions: QuestionSchema.array(),
   isFeatured: z.boolean().default(true),

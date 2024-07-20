@@ -27,15 +27,12 @@ export const createCaseService = async (
 export const getCasesService = async (
   user: string,
 ): Promise<ApiResponse<MCase[]>> => {
-  console.log(user);
   const cases = await Cases.find({
     user: ObjectId.createFromHexString(user),
     isArchived: {
       $eq: false,
     },
   });
-
-  console.log(cases);
 
   if (!cases) {
     return {

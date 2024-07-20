@@ -1,11 +1,14 @@
 import PageWrapper from '../components/page-wrapper';
 import { getCasesHandler } from '@/handlers/handleCases';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import getQueryClient from '@/app/query-client';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 import CasesClient from './components/cases';
 const Cases = async () => {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
+  const queryClient = new QueryClient();
+  queryClient.prefetchQuery({
     queryKey: ['cases'],
     queryFn: getCasesHandler,
   });
