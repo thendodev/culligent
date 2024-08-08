@@ -26,19 +26,12 @@ export const loginHandler = async (userData: TLogin): Promise<MUser | void> => {
     if (user.isVerified)
       storeLoginCookiesUtil({ accessToken, user, refreshToken });
     return user;
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-
-    toast({
-      title: 'Error',
-      description: response?.data.message,
-    });
-  }
+  } catch (e) {}
 };
 
 export const createMagicLinkHandler = async (email: string): Promise<void> => {
   try {
-    const res = await publicRequest.post(EAuth.CREATE_MAGIC_LINK, {
+    await publicRequest.post(EAuth.CREATE_MAGIC_LINK, {
       email,
     });
 
@@ -46,13 +39,7 @@ export const createMagicLinkHandler = async (email: string): Promise<void> => {
       title: 'Success',
       description: 'Email sent successfully',
     });
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-    toast({
-      title: 'Error',
-      description: response?.data.message,
-    });
-  }
+  } catch (e) {}
 };
 export const loginMagicLinkHandler = async (
   id: string,
@@ -76,13 +63,7 @@ export const loginMagicLinkHandler = async (
     });
 
     return user;
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-    toast({
-      title: 'Error',
-      description: response?.data.message,
-    });
-  }
+  } catch {}
 };
 
 export const linkedinHandler = async (): Promise<MUser | void> => {
@@ -93,11 +74,5 @@ export const linkedinHandler = async (): Promise<MUser | void> => {
     if (user.isVerified)
       storeLoginCookiesUtil({ accessToken, user, refreshToken });
     return user;
-  } catch (e) {
-    const { response } = e as AxiosError<ClientErrorResponse>;
-    toast({
-      title: 'Error',
-      description: response?.data.message,
-    });
-  }
+  } catch {}
 };

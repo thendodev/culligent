@@ -2,19 +2,19 @@
 
 import React, { useEffect, useRef } from 'react';
 import { QuestionDropdown } from './question-dropdown';
-import { useFieldArray, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import { Check, StarIcon, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { TCase, TQuestion } from '@/validations/cases';
+import { TCaseValidation, TQuestionValidation } from '@/validations/cases';
 
 type TQuestionProps = {
-  form: UseFormReturn<TCase>;
+  form: UseFormReturn<TCaseValidation>;
   fieldArray: any;
   id: number;
   deleteQuestion: (index: number) => void;
   updateQuestion: (option: string, index: number) => void;
 
-  question: TQuestion;
+  question: TQuestionValidation;
 };
 
 const QuestionView = ({

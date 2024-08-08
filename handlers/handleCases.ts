@@ -1,57 +1,57 @@
 import { toast } from '@/components/ui/use-toast';
-
+import { dateFormat } from '@/global/config';
 import { privateRequest } from '@/lib/requests';
-import { MCase } from '@/models/Cases';
-import { TCase } from '@/validations/cases';
+import { TCase } from '@/models/Cases';
 
 enum ECaseRoutes {
   CASES = 'recruitment/cases',
 }
 
 export const createCaseHandler = async (newCase: TCase) => {
-  const { data } = await privateRequest.post(ECaseRoutes.CASES, newCase);
-  if (!data) return;
-  toast({ title: 'Case', description: 'Case created' });
+  try {
+    const { data } = await privateRequest.post(ECaseRoutes.CASES, newCase);
+    if (!data) return;
+    toast({ title: 'Case', description: 'Case created' });
+  } catch {}
 };
 
 export const getCasesHandler = async () => {
   const { data } = await privateRequest.get(ECaseRoutes.CASES);
-  if (!data) return [];
   //remap data to match the case column schema
-  return data.map((item: MCase) => ({
+  console.log(data);
+  return data?.map((item: TCase) => ({
     ...item,
     questions: item?.questions?.length,
     status: item.isFeatured ? 'Featured' : 'Draft',
-    createdAt: new Date(item.createdAt).toLocaleDateString('en-us', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }),
+    createdAt: new Date(item.createdAt).toLocaleDateString('en-us', dateFormat),
   }));
 };
 
 export const getCaseHandler = async (id: string) => {
-  const { data } = await privateRequest.get(`${ECaseRoutes.CASES}/${id}`);
-  if (!data) return;
-  return {
-    ...data,
-    createdAt: new Date(data.createdAt).toLocaleDateString('en-us', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    }),
-  };
+  try {
+    const { data } = await privateRequest.get(`${ECaseRoutes.CASES}/${id}`);
+    console.log(data);
+    return {
+      ...data.data,
+      createdAt: new Date(data.data.createdAt).toLocaleDateString('en-us', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      }),
+    };
+  } catch {}
 };
 
 export const updateCaseHandler = async (id: string, updatedCase: TCase) => {
-  const { status } = await privateRequest.put(
-    `${ECaseRoutes.CASES}/${id}`,
-    updatedCase,
-  );
-  if (status !== 200) return;
-  toast({ title: 'Case', description: 'Case updated' });
+  try {
+    const { status } = await privateRequest.put(
+      `${ECaseRoutes.CASES}/${id}`,
+      updatedCase,
+    );
+    if (status !== 200) return;
+    toast({ title: 'Case', description: 'Case updated' });
+  } catch {}
 };
 export const deleteCaseHandler = async (id: string) => {
   await privateRequest.put(`${ECaseRoutes.CASES}/?id=${id}`, {});

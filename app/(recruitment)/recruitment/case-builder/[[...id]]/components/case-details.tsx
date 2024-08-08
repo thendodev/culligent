@@ -1,18 +1,10 @@
 'use client';
 
-import { Input } from '@/components/ui/input';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
-import {
-  CaseSchema,
-  QuestionSchema,
-  TCase,
-} from '../../../../../validations/cases';
 
 import { AlignLeft, Check, ListChecks } from 'lucide-react';
 import OptionCard from './option-card';
-import QuestionView from './question-view';
 import { ReactNode, useState } from 'react';
 import SingleChoice from './SingleChoice';
 import OpenEnded from './OpenEnded';
@@ -22,7 +14,14 @@ import { QuestionViewSkeleton } from './question-view-skeleton';
 import SaveCase from './save-case';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getCaseHandler } from '@/handlers/handleCases';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import ViewQuestion from './new-question/view-question';
+import {
+  CaseSchema,
+  QuestionSchema,
+  TCaseValidation,
+} from '@/validations/cases';
+import QuestionView from './question-view';
 
 export enum QuestionType {
   SingleChoice = 'Single Choice',
@@ -31,28 +30,23 @@ export enum QuestionType {
 }
 type TCaseProps = {
   id?: string | null;
+  queryKey?: string | null;
 };
 
-const CaseDetails = ({ id }: TCaseProps) => {
-  const { data: editCase } = useSuspenseQuery({
-    queryKey: ['cases', id],
+const CaseDetails = ({ id, queryKey }: TCaseProps) => {
+  const { data: editCase, isError } = useQuery({
+    queryKey: [queryKey, id],
     queryFn: () => getCaseHandler(id as string),
+    enabled: !!id,
   });
 
-  const form = useForm<TCase>({
+  const form = useForm<TCaseValidation>({
     resolver: zodResolver(CaseSchema),
     defaultValues: editCase ?? {
       name: '',
       description: '',
       duration: 0,
       questions: [],
-    },
-    values: editCase ?? {
-      name: '',
-      description: '',
-      duration: 0,
-      questions: [],
-      isFeatured: true,
     },
   });
 
@@ -142,23 +136,22 @@ const CaseDetails = ({ id }: TCaseProps) => {
         );
     }
   };
-  const cannotDeleteFirstQuestion = () =>
-    toast({
-      title: 'Cannot delete first question',
-      description: 'Please add a new question before deleting this one',
-    });
-
-  const deletQuestion = (questionIndex: number) => {
-    if (questionIndex === 0 && fieldArray.fields.length === 1)
-      return cannotDeleteFirstQuestion();
-    fieldArray.remove(questionIndex);
-  };
 
   return (
-    <div className="w-full h-full flex gap-5">
-      <div className="w-[55%] h-full flex flex-col gap-5 ">
+    <div className="w-full h-full flex flex-col gap-2">
+      <div className="flex flex-col gap-5 w-full h-full">
+        <div className="space-x-2 ml-auto">
+          <ViewQuestion
+            form={form}
+            fieldArray={fieldArray}
+            updateQuestion={onNewOption}
+          />
+          <SaveCase form={form} id={id} />
+        </div>
+      </div>
+      <div className="w-full h-full flex flex-col gap-5 ">
         <div className="flex flex-row justify-between p-1 ">
-          <p className="text-4xl">Question options</p>
+          <p className="text-4xl">Create a new question</p>
         </div>
         <div className="flex flex-wrap gap-5 ">
           <OptionCard
@@ -180,35 +173,6 @@ const CaseDetails = ({ id }: TCaseProps) => {
         </div>
 
         {option}
-      </div>
-      <div className="flex flex-col gap-5 w-[45%] h-full">
-        <SaveCase form={form} id={id} />
-
-        <div className="ml-auto flex justify-between items-center bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border-[var(--cruto-border)] border">
-          <Button
-            disabled
-            variant={'ghost'}
-            className="rounded-none  border-r border-r-[var(--cruto-border)]"
-          >
-            Jump to
-          </Button>
-          <Input placeholder="Ex. 4" className="w-3/4 h-3/4 border-none  " />
-        </div>
-        <ScrollArea className="w-full h-[550px]">
-          {fieldArray.fields.map((field, index) => (
-            <div key={field.id}>
-              <QuestionView
-                fieldArray={fieldArray}
-                id={index}
-                deleteQuestion={deletQuestion}
-                updateQuestion={onNewOption}
-                form={form}
-                question={fieldArray.fields[index] as any}
-              />
-            </div>
-          ))}
-          <QuestionViewSkeleton />
-        </ScrollArea>
       </div>
     </div>
   );

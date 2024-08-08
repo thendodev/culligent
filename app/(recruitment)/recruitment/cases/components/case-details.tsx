@@ -1,6 +1,6 @@
 import { Switch } from '@/components/ui/switch';
 import { pluralize } from '@/lib/utils';
-import { MQuestion } from '@/models/Cases';
+import { TQuestion } from '@/models/Cases';
 import { Calendar, Clock, MoreVertical, Pen } from 'lucide-react';
 import React from 'react';
 import CaseActions from './case-actions';
@@ -10,7 +10,7 @@ type TCaseDetailsProps = {
   name?: string;
   description?: string;
   status?: boolean;
-  questions?: MQuestion[];
+  questions?: TQuestion[];
   duration?: number;
   createdAt?: Date;
   updatedAt?: Date;

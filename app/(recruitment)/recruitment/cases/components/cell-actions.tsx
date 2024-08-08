@@ -10,28 +10,19 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { Button } from '@/components/ui/button';
-import {
-  Copy,
-  Edit,
-  Eye,
-  MoreHorizontal,
-  Trash,
-  WorkflowIcon,
-} from 'lucide-react';
+import { Copy, Edit, Eye, MoreHorizontal, WorkflowIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
 import { useParams, useRouter } from 'next/navigation';
-import axios from 'axios';
-import { MCase } from '@/models/Cases';
+import { TCase } from '@/models/Cases';
 import { ProjectRoutes } from '@/global/routes';
 
 interface CellActionProps {
-  data: MCase;
+  data: TCase;
 }
 
 const CellActions = ({ data }: CellActionProps) => {
   const router = useRouter();
-  const params = useParams();
 
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);

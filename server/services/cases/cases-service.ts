@@ -1,11 +1,10 @@
 import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
-import Cases, { MCase } from '@/models/Cases';
-import { TCase } from '@/validations/cases';
+import Cases, { TCase } from '@/models/Cases';
 import { ObjectId } from 'mongodb';
 
 export const createCaseService = async (
-  cases: MCase,
+  cases: TCase,
 ): Promise<ApiResponse<null>> => {
   const caseCreated = await Cases.insertOne(cases);
   if (!caseCreated)
@@ -26,7 +25,7 @@ export const createCaseService = async (
 
 export const getCasesService = async (
   user: string,
-): Promise<ApiResponse<MCase[]>> => {
+): Promise<ApiResponse<TCase[]>> => {
   const cases = await Cases.find({
     user: ObjectId.createFromHexString(user),
     isArchived: {
@@ -54,7 +53,7 @@ export const getCasesService = async (
 export const getSingleCaseService = async (
   user: string,
   caseId: string,
-): Promise<ApiResponse<MCase>> => {
+): Promise<ApiResponse<TCase>> => {
   const caseFound = await Cases.findOne({
     user: new ObjectId(user),
     _id: new ObjectId(caseId),
@@ -84,7 +83,7 @@ export const updateCaseService = async (
   user: string,
   caseId: string,
   data: Partial<TCase>,
-): Promise<ApiResponse<MCase>> => {
+): Promise<ApiResponse<TCase>> => {
   const updatedCase = await Cases.findOneAndUpdate(
     {
       _id: new ObjectId(caseId),
@@ -120,7 +119,7 @@ export const updateCaseService = async (
 export const deleteCaseService = async (
   user: string,
   caseId: string,
-): Promise<ApiResponse<MCase>> => {
+): Promise<ApiResponse<TCase>> => {
   const updatedCase = await Cases.findOneAndUpdate(
     {
       _id: new ObjectId(caseId),

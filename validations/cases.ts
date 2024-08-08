@@ -22,5 +22,5 @@ export const CaseSchema = z.object({
   isFeatured: z.boolean().default(true),
 });
 
-export type TCase = z.infer<typeof CaseSchema>;
-export type TQuestion = z.infer<typeof QuestionSchema>;
+export type TCaseValidation = z.infer<typeof CaseSchema>;
+export type TQuestionValidation = z.infer<typeof QuestionSchema>;

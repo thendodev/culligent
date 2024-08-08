@@ -2,14 +2,14 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import CellActions from './cell-actions';
-import { MCase } from '@/models/Cases';
+import { TCase } from '@/models/Cases';
 
 export type CaseTableProps = {
   name: string;
   createdAt: Date;
   questions: number;
   status: string;
-} & MCase;
+} & TCase;
 
 export const caseTableColumns: ColumnDef<CaseTableProps>[] = [
   {

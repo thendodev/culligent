@@ -15,7 +15,7 @@ import {
 } from '@/server/services/cases/cases-service';
 import { getCookie } from 'hono/cookie';
 import { EStatusCode, EUserCookies } from '@/global/config';
-import { MCase } from '@/models/Cases';
+import { TCase } from '@/models/Cases';
 import { ObjectId } from 'mongodb';
 import { TUser } from '@/server/types';
 
@@ -37,7 +37,7 @@ cases.openapi(createCaseRoute, async (c) => {
     const newCase = {
       user: ObjectId.createFromHexString(user._id),
       ...cases,
-    } as MCase;
+    } as TCase;
 
     const { success, message } = await createCaseService(newCase);
 

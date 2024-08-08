@@ -17,13 +17,14 @@ import {
 } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
 import { UseFormReturn } from 'react-hook-form';
-import { CaseSchema, TCase } from '../../../../../validations/cases';
 import { toast } from '@/components/ui/use-toast';
 import { createCaseHandler, updateCaseHandler } from '@/handlers/handleCases';
 import { Switch } from '@/components/ui/switch';
+import { CaseSchema, TCaseValidation } from '@/validations/cases';
+import { TCase } from '@/models/Cases';
 
 type TSaveCaseProps = {
-  form: UseFormReturn<TCase>;
+  form: UseFormReturn<TCaseValidation>;
   id?: string | null;
 };
 
@@ -33,8 +34,7 @@ const SaveCase = ({ form, id }: TSaveCaseProps) => {
   ) => {
     e.preventDefault();
     //get form from react forms
-    const newCase = form.getValues();
-    console.log(newCase);
+    const newCase = form.getValues() as TCase;
     //validate form
     const isValid = CaseSchema.safeParse(newCase);
     if (!isValid.success) {

@@ -1,12 +1,15 @@
 import React from 'react';
 import PageWrapper from '../components/page-wrapper';
 import AccountForm from './components/account-form';
-import getQueryClient from '@/app/query-client';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from '@tanstack/react-query';
 import { handleUserAccount } from '@/handlers/handleUser';
 
 const Account = async () => {
-  const queryClient = getQueryClient();
+  const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['account'],
     queryFn: handleUserAccount,

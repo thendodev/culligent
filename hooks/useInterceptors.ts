@@ -3,7 +3,6 @@
 import { setLoading } from '@/app/state/loading-state';
 import { toast } from '@/components/ui/use-toast';
 import { privateRequest } from '@/lib/requests';
-import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 
 export const useAxiosInterceptors = () => {
@@ -16,17 +15,23 @@ export const useAxiosInterceptors = () => {
       });
 
     const responseInterceptor = () =>
-      privateRequest.interceptors.response.use((response: any) => {
-        // Do something with response data
-        setLoading(false);
-        if (response instanceof AxiosError) {
-          toast({
-            title: `Status ${response.status}`,
-            description: response.response?.data.message,
-          });
-        }
-        return response;
-      });
+      privateRequest.interceptors.response.use(
+        ({ status, data, ...others }) => {
+          // Do something with response data
+          setLoading(false);
+          if (status !== 200) {
+            toast({
+              title: `Status ${status}`,
+              description: data.message,
+            });
+            data = {
+              ...data,
+              success: false,
+            };
+          }
+          return { status, data, ...others };
+        },
+      );
 
     const requests = requestInterceptor();
     const responses = responseInterceptor();

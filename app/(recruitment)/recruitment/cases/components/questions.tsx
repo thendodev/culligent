@@ -1,12 +1,12 @@
 'use client';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { MQuestion } from '@/models/Cases';
+import { TQuestion } from '@/models/Cases';
 import { Check, Search, X } from 'lucide-react';
 import { useState } from 'react';
 
 type TQuestionsProps = {
-  questions: MQuestion[] | undefined;
+  questions: TQuestion[] | undefined;
 };
 
 const Questions = ({ questions }: TQuestionsProps) => {

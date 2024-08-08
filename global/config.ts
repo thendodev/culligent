@@ -51,3 +51,10 @@ export enum EStatusCode {
   TemporaryRedirect = 307,
   PermanentRedirect = 308,
 }
+
+export const dateFormat: Intl.DateTimeFormatOptions = {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+};

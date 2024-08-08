@@ -1,11 +1,9 @@
 'use client';
 
-import { MCase } from '@/models/Cases';
-import React, { useEffect, useState } from 'react';
+import { TCase } from '@/models/Cases';
 import PageWrapper from '../../components/page-wrapper';
 import { getCaseHandler } from '@/handlers/handleCases';
 import { useParams } from 'next/navigation';
-import { TCase } from '@/validations/cases';
 import { Input } from '@/components/ui/input';
 import { getBaseUrl } from '@/global/config';
 import { envPublic } from '@/global/envClient';
@@ -13,28 +11,26 @@ import { Copy } from 'lucide-react';
 import CaseDetails from '../components/case-details';
 import { toast } from '@/components/ui/use-toast';
 import Questions from '../components/questions';
+import { useQuery } from '@tanstack/react-query';
 
 const url = getBaseUrl(envPublic.NEXT_PUBLIC_ENVIRONMENT);
 
 const Case = () => {
-  const [editCase, setEditCase] = useState<MCase>();
   const { id } = useParams();
 
-  useEffect(() => {
-    const getCase = async () => {
-      const data = await getCaseHandler(id as string);
-      setEditCase(data);
-    };
-    getCase();
-  }, [id]);
+  const { data } = useQuery<TCase>({
+    queryKey: ['cases', id],
+    queryFn: () => getCaseHandler(id as string),
+    enabled: !!id,
+  });
 
   const onCopy = () => {
-    navigator.clipboard.writeText(`${url}showroom/${editCase?._id}`);
+    navigator.clipboard.writeText(`${url}showroom/${data?._id}`);
     toast({ title: 'Copy case link', description: 'case link copied' });
   };
 
   return (
-    <PageWrapper title={editCase?.name ?? ''} description={''}>
+    <PageWrapper title={data?.name ?? ''} description={''}>
       <div className="flex flex-col gap-4 relative">
         <div
           id="header"
@@ -45,7 +41,7 @@ const Case = () => {
             <div className="flex align-middle items-center border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] bg-[var(--curto-foreground)] px-2">
               <Input
                 className="border-none"
-                value={`${url}showroom/${editCase?._id}`}
+                value={`${url}showroom/${data?._id}`}
               />
 
               <Copy
@@ -56,16 +52,16 @@ const Case = () => {
           </div>
         </div>
         <CaseDetails
-          name={editCase?.name}
-          description={editCase?.description}
-          status={editCase?.isFeatured}
-          questions={editCase?.questions}
-          duration={editCase?.duration}
-          createdAt={editCase?.createdAt}
-          updatedAt={editCase?.updatedAt}
-          id={editCase?._id.toString()}
+          name={data?.name}
+          description={data?.description}
+          status={data?.isFeatured}
+          questions={data?.questions}
+          duration={data?.duration}
+          createdAt={data?.createdAt}
+          updatedAt={data?.updatedAt}
+          id={data?._id.toString()}
         />
-        <Questions questions={editCase?.questions} />
+        <Questions questions={data?.questions} />
       </div>
     </PageWrapper>
   );

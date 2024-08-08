@@ -1,15 +1,16 @@
 'use client';
 import { getCasesHandler } from '@/handlers/handleCases';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import React from 'react';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { caseTableColumns } from './cases-column';
 import { DataTable } from '@/components/modules/data-table';
+import { toast } from '@/components/ui/use-toast';
 
 const CasesClient = () => {
-  const { data } = useSuspenseQuery({
+  const { data, isLoading } = useSuspenseQuery({
     queryKey: ['cases'],
     queryFn: getCasesHandler,
   });
+
   return (
     <DataTable
       data={data ?? []}

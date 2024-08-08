@@ -19,13 +19,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Plus, SaveAll, Trash } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { UseFormReturn, useFieldArray } from 'react-hook-form';
+import { useFieldArray } from 'react-hook-form';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SkillsCombobox } from './skills-combobox';
-import { TCase } from '@/validations/cases';
 import { TQuestionProps } from '../types';
 
 type TSingleChoiceProps = {} & TQuestionProps;

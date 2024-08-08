@@ -1,4 +1,5 @@
 import papr from '@/lib/database/papr';
+import { ObjectId } from 'mongodb';
 import { schema, types } from 'papr';
 
 const AnswerSchema = types.object({
@@ -39,8 +40,12 @@ const CasesSchema = schema(
   },
 );
 
-export type MCase = (typeof CasesSchema)[0];
-export type MQuestion = typeof QuestionsSchema;
-export type MAnswer = typeof AnswerSchema;
+export type TCase = (typeof CasesSchema)[0] & {
+  _id: string | ObjectId;
+  user: string | ObjectId;
+};
+
+export type TQuestion = typeof QuestionsSchema;
+export type TAnswer = typeof AnswerSchema;
 
 export default papr.model('Cases', CasesSchema);
