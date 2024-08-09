@@ -1,9 +1,9 @@
 import { ObjectId } from 'mongodb';
 
 export enum ProfileType {
-  independent = 1,
-  company = 2,
-  employee = 3,
+  professional = 1,
+  business = 2,
+  dependent = 3,
 }
 
 export type UserProps = {

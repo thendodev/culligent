@@ -4,5 +4,9 @@ export type ApiResponse<T> = {
   message: string;
   data: T | null | undefined;
   success: boolean;
-  code?: StatusCode;
+  code: StatusCode;
+};
+
+export type ClientErrorResponse = {
+  message: string;
 };

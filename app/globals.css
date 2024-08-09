@@ -6,6 +6,7 @@
   :root {
     --cruto-green: #29b475;
     --cruto-black: #16252d;
+    --cruto-deep-black: rgb(24 24 27);
     --cruto-purple: #685efc;
     --cruto-red: #dc3545;
     --cruto-yellow: #ffc107;
@@ -30,9 +31,10 @@
     --cruto-foreground: var(--cruto-white);
     --cruto-background: #f6f8fb;
 
-    --cruto-text-grey: var(var(--cruto-pale-grey));
-    --cruto-text-black: var(var(--cruto-pale-black));
+    --cruto-text-grey: var(--cruto-pale-grey);
+    --cruto-text-black: var(--cruto-pale-black);
     --cruto-text: #000;
+    --cruto-text-light: #fff;
   }
 
   .dark {

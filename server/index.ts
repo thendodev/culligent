@@ -6,6 +6,7 @@ import { signUp } from './routes/auth/sign-up/sign-up';
 import { opt } from './routes/auth/otp/otp';
 import { logger } from './middleware/logger';
 import { recruitment } from './routes/recruitment';
+import { magicLink } from './routes/auth/magic-link/magic-link';
 const app = new OpenAPIHono();
 
 //initailaize swagger
@@ -36,12 +37,14 @@ app.get(
 );
 
 //register middleware
+
 app.use(logger);
 
 //authentification end points
 app.route('/', login);
 app.route('/', signUp);
 app.route('/', opt);
+app.route('/', magicLink);
 
 //recruitment
 app.route('/api/recruitment', recruitment);

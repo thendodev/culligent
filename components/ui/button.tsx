@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        black: 'bg-[var(--cruto-black)] text-[var(--cruto-white)]',
+        black: 'bg-[var(--cruto-deep-black)] text-[var(--cruto-white)]',
         green: 'bg-[color:var(--cruto-green)] text-primary-foreground',
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
@@ -33,15 +33,18 @@ const buttonVariants = cva(
     },
   },
 );
-
+export type TLoadingProps = {
+  isLoading?: boolean;
+};
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    TLoadingProps,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ isLoading, className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp

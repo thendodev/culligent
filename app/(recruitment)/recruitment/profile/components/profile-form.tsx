@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ProfileDetailsSchema } from '../profile.types';
 import { cn } from '@/lib/utils';
-import { profileHandler } from '@/handlers/handleProfile';
+import { createProfile, mutateProfile } from '@/handlers/handleProfile';
 import { useState } from 'react';
 import { MProfile } from '@/models/Profile';
 import { useUserClientSide } from '@/hooks/useUser';
@@ -43,11 +43,11 @@ const ProfileForm = ({ profile }: Props) => {
   const onSubmit = async (data: MProfile) => {
     setIsLoading(true);
     !profile
-      ? await profileHandler.createProfile({
+      ? await createProfile({
           ...data,
           user: user.email,
         })
-      : await profileHandler.mutateProfile(data);
+      : await mutateProfile(data);
     setIsLoading(false);
     return;
   };

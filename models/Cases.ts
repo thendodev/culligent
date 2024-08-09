@@ -1,4 +1,5 @@
 import papr from '@/lib/database/papr';
+import { ObjectId } from 'mongodb';
 import { schema, types } from 'papr';
 
 const AnswerSchema = types.object({
@@ -11,6 +12,12 @@ const QuestionsSchema = types.object({
   skill_level: types.string(),
   points: types.number(),
   answers: types.array(AnswerSchema),
+  type: types.string(),
+});
+
+const SharedWithSchema = types.object({
+  user: types.objectId({ required: true }),
+  role: types.string({ required: true }),
 });
 
 const CasesSchema = schema(
@@ -20,19 +27,25 @@ const CasesSchema = schema(
     duration: types.number({ required: true }),
     user: types.objectId({ required: true }),
     questions: types.array(QuestionsSchema),
+    sharedWith: types.array(SharedWithSchema),
     isFeatured: types.boolean(),
+    isArchived: types.boolean(),
   },
   {
     timestamps: true,
     defaults: {
-      isArchived: false,
       isFeatured: true,
+      isArchived: false,
     },
   },
 );
 
-export type MCase = (typeof CasesSchema)[0];
-export type MQuestion = typeof QuestionsSchema;
-export type MAnswer = typeof AnswerSchema;
+export type TCase = (typeof CasesSchema)[0] & {
+  _id: string | ObjectId;
+  user: string | ObjectId;
+};
+
+export type TQuestion = typeof QuestionsSchema;
+export type TAnswer = typeof AnswerSchema;
 
 export default papr.model('Cases', CasesSchema);

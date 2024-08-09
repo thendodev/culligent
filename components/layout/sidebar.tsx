@@ -2,22 +2,11 @@ import { BookOpenText, LayoutDashboard, Library } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import './sidebar.css';
-import { UserProps } from '@/models/User.types';
-import logo from '@/assets/bot.svg';
-import Image from 'next/image';
 import { ProjectRoutes } from '@/global/routes';
-
-type SideBarProps = {
-  user: UserProps;
-};
 
 const SideBar = () => {
   return (
     <div className="sidebar border-[var(--cruto-black)] close">
-      <div className="logo-details">
-        <Image src={logo} alt="logo" width={30} height={30} color={'white'} />
-        <p>A.I</p>
-      </div>
       <ul id="nav-link" className="nav-links close">
         <li>
           <div id="icon-link" className="icon-link">
@@ -29,6 +18,13 @@ const SideBar = () => {
                 href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`}
               >
                 Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.teams}`}
+              >
+                Teams
               </Link>
             </li>
             <li>
@@ -63,14 +59,18 @@ const SideBar = () => {
               <Link
                 href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.case_builder}`}
               >
-                Case builder
+                Create Case
               </Link>
             </li>
             <li>
-              <Link href={`${ProjectRoutes.recruitment}`}>Case library</Link>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.cases}`}
+              >
+                Case library
+              </Link>
             </li>
             <li>
-              <Link href="">Custom cases</Link>
+              <Link href="">Shared cases</Link>
             </li>
           </ul>
         </li>

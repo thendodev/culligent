@@ -6,14 +6,12 @@ const OtpSchema = schema(
   {
     user: types.objectId({ required: true }),
     otp: types.string({ required: true }),
-    isVerified: types.boolean({ required: true }),
     isExpired: types.boolean({ required: true }),
     expiresAt: types.date({ required: true }),
   },
   {
     defaults: {
       isExpired: false,
-      isVerified: false,
       expiresAt: fiveMinutesFromNow,
     },
   },

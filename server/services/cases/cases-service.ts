@@ -1,24 +1,156 @@
+import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
-import Cases, { MCase } from '@/models/Cases';
+import Cases, { TCase } from '@/models/Cases';
+import { ObjectId } from 'mongodb';
 
 export const createCaseService = async (
-  cases: MCase,
+  cases: TCase,
 ): Promise<ApiResponse<null>> => {
-  try {
-    const caseCreated = await Cases.insertOne(cases);
-    if (!caseCreated)
-      return { data: null, success: false, message: 'Case not created' };
-
-    return {
-      data: null,
-      success: true,
-      message: 'Case created successfully',
-    };
-  } catch (e) {
+  const caseCreated = await Cases.insertOne(cases);
+  if (!caseCreated)
     return {
       data: null,
       success: false,
-      message: 'Internal Server Error',
+      message: 'Case not created',
+      code: EStatusCode.NotModified,
+    };
+
+  return {
+    data: null,
+    success: true,
+    message: 'Case created successfully',
+    code: EStatusCode.Ok,
+  };
+};
+
+export const getCasesService = async (
+  user: string,
+): Promise<ApiResponse<TCase[]>> => {
+  const cases = await Cases.find({
+    user: ObjectId.createFromHexString(user),
+    isArchived: {
+      $eq: false,
+    },
+  });
+
+  if (!cases) {
+    return {
+      data: null,
+      success: false,
+      message: 'Cases not found',
+      code: EStatusCode.NotFound,
     };
   }
+
+  return {
+    data: cases,
+    success: true,
+    message: 'Cases found successfully',
+    code: EStatusCode.Ok,
+  };
+};
+
+export const getSingleCaseService = async (
+  user: string,
+  caseId: string,
+): Promise<ApiResponse<TCase>> => {
+  const caseFound = await Cases.findOne({
+    user: new ObjectId(user),
+    _id: new ObjectId(caseId),
+    isArchived: {
+      $eq: false,
+    },
+  });
+
+  if (!caseFound) {
+    return {
+      data: null,
+      success: false,
+      message: 'Case not found',
+      code: EStatusCode.NotFound,
+    };
+  }
+
+  return {
+    data: caseFound,
+    success: true,
+    message: 'Case found successfully',
+    code: EStatusCode.Ok,
+  };
+};
+
+export const updateCaseService = async (
+  user: string,
+  caseId: string,
+  data: Partial<TCase>,
+): Promise<ApiResponse<TCase>> => {
+  const updatedCase = await Cases.findOneAndUpdate(
+    {
+      _id: new ObjectId(caseId),
+      user: new ObjectId(user),
+      isArchived: {
+        $eq: false,
+      },
+    },
+    {
+      $set: data,
+    },
+    {
+      returnDocument: 'after',
+    },
+  );
+
+  if (!updatedCase) {
+    return {
+      data: null,
+      success: false,
+      message: 'Case not found',
+      code: EStatusCode.NotFound,
+    };
+  }
+
+  return {
+    data: updatedCase,
+    success: true,
+    message: 'Case updated successfully',
+    code: EStatusCode.Ok,
+  };
+};
+export const deleteCaseService = async (
+  user: string,
+  caseId: string,
+): Promise<ApiResponse<TCase>> => {
+  const updatedCase = await Cases.findOneAndUpdate(
+    {
+      _id: new ObjectId(caseId),
+      user: new ObjectId(user),
+      isArchived: {
+        $eq: false,
+      },
+    },
+    {
+      $set: {
+        isArchived: true,
+      },
+    },
+    {
+      returnDocument: 'after',
+    },
+  );
+
+  if (!updatedCase) {
+    return {
+      data: null,
+      success: false,
+      message: 'Sorry, Something went wrong',
+      code: EStatusCode.NotFound,
+    };
+  }
+
+  return {
+    data: null,
+    success: true,
+    message: 'Case deleted successfully',
+    code: EStatusCode.Ok,
+  };
 };

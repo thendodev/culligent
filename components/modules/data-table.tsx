@@ -36,6 +36,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns,
@@ -52,9 +53,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="rounded-[var(--cruto-radius)] border border-[color:var(--cruto-border)] ">
-        <div className="flex items-center py-4 shadow-sm">
+    <>
+      <div className="rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] ">
+        <div className="flex items-center py-4 hover:shadow-sm bg-[var(--cruto-foreground)]">
           <Input
             placeholder="Search..."
             value={
@@ -63,14 +64,14 @@ export function DataTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn(searchKey)?.setFilterValue(event.target.value)
             }
-            className="max-w-sm ml-2 rounded-[var(--cruto-radius)] text-[color:var(--cruto-black)] border-[color:var(--cruto-border)]"
+            className="max-w-sm ml-2 rounded-[var(--cruto-radius)] text-[var(--cruto-text)] border-[var(--cruto-border)]"
           />
         </div>
         <Table>
-          <TableHeader className="bg-[color:var(--cruto-whitish)]">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
-                className="border-[color:var(--cruto-border)] text-[color:var(--cruto-black)]"
+                className="border-[var(--cruto-border)] text-[var(--cruto-black)]"
                 key={headerGroup.id}
               >
                 {headerGroup.headers.map((header) => {
@@ -88,7 +89,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="">
+          <TableBody className="bg-[var(--cruto-foreground)]">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -118,7 +119,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-end space-x-2 py-4 w-fit">
         <Button
           variant="outline"
           size="sm"
@@ -136,6 +137,6 @@ export function DataTable<TData, TValue>({
           Next
         </Button>
       </div>
-    </div>
+    </>
   );
 }
