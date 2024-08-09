@@ -1,3 +1,5 @@
+import { EStatusCode } from '@/global/config';
+import { ApiResponse } from '@/global/response.types';
 import Passwords, { MPasswords } from '@/models/Passwords';
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
@@ -9,32 +11,59 @@ type TPasswordService = {
 export const createPasswordService = async ({
   user,
   password,
-}: TPasswordService): Promise<boolean> => {
-  try {
-    const salt = await bcrypt.genSalt();
+}: TPasswordService): Promise<ApiResponse<boolean>> => {
+  const salt = await bcrypt.genSalt();
 
-    const hashPassword = await bcrypt.hash(password, salt);
+  const hashPassword = await bcrypt.hash(password, salt);
 
-    await Passwords.insertOne({ user, password: hashPassword, salt });
-    return true;
-  } catch (e) {
-    return false;
-  }
+  const createdPassword = await Passwords.insertOne({
+    user,
+    password: hashPassword,
+    salt,
+  });
+
+  if (!createdPassword)
+    return {
+      success: false,
+      message: 'password not created',
+      data: false,
+      code: EStatusCode.NotModified,
+    };
+  return {
+    success: true,
+    message: 'Password created successfully',
+    data: true,
+    code: EStatusCode.Ok,
+  };
 };
 
 export const verifyPasswordService = async ({
   user,
   password,
-}: TPasswordService) => {
-  try {
-    const storedPassword = await Passwords.findOne({ user });
-    if (!storedPassword) return false;
-    //hash incoming password
-    const hashPassword = await bcrypt.hash(password, storedPassword.salt);
-    //check if incoming password is the same as the stored password
-    if (hashPassword !== storedPassword.password) return false;
-    return true;
-  } catch (e) {
-    return false;
-  }
+}: TPasswordService): Promise<ApiResponse<boolean>> => {
+  const storedPassword = await Passwords.findOne({ user });
+  if (!storedPassword)
+    return {
+      success: false,
+      message: 'Unauthorized',
+      data: null,
+      code: EStatusCode.NotFound,
+    };
+
+  //hash incoming password
+  const hashPassword = await bcrypt.hash(password, storedPassword.salt);
+  //check if incoming password is the same as the stored password
+  if (hashPassword !== storedPassword.password)
+    return {
+      success: false,
+      message: 'Unauthorized',
+      data: null,
+      code: EStatusCode.NotFound,
+    };
+  return {
+    success: true,
+    message: 'Authorized',
+    data: true,
+    code: EStatusCode.Ok,
+  };
 };

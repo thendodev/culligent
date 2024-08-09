@@ -1,102 +1,56 @@
 'use client';
 
-import React, { BaseSyntheticEvent } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { ProjectRoutes } from '@/global/routes';
-import { useRouter } from 'next/navigation';
-import { loginHandler } from '@/handlers/handleAuth';
-import { loginSchema, TLogin } from '@/validations/auth';
+import MagicLink from './magic-link';
+import SignIn from './sign-in';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 const UserAuthForm = () => {
-  const router = useRouter();
-  const form = useForm<TLogin>({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-    resolver: zodResolver(loginSchema),
-  });
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
-  const onSubmit = async (data: TLogin, e: any) => {
-    if (!data.email || !data.password) return;
-    e?.preventDefault();
-    const user = await loginHandler(data);
-    if (user && user.isVerified) {
-      router.push(`${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`);
-    }
-    if (user && !user.isVerified) {
-      router.push(`${ProjectRoutes.sign_up}/otp?email=${user.email}`);
-    }
+  const toggleForgotPassword = () => {
+    setShowForgotPassword(!showForgotPassword);
   };
 
   return (
-    <div className="w-full flex flex-col gap-5 sm:border border-[var(--cruto-off-white)] rounded-[0.5rem] p-5">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
-          <FormField
-            name="email"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Email" {...field} type="email" />
-                </FormControl>
-                <FormMessage>
-                  {form.formState.errors.email?.message || ''}
-                </FormMessage>
-              </FormItem>
-            )}
-          />
-          <FormField
-            name="password"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input placeholder="Password" {...field} type="password" />
-                </FormControl>
-                <FormMessage>
-                  {form.formState.errors.password?.message || ''}
-                </FormMessage>
-              </FormItem>
-            )}
-          />
-          <div className="mt-5">
-            <Button
-              type="submit"
-              variant={'green'}
-              className="mt-5 w-[100%] text-[color:var(--cruto-white)]"
-            >
-              Log in
-            </Button>
-          </div>
-        </form>
-      </Form>
-      <div className="w-full text-center text-sm text-[color:var(--cruto-black)]">
+    <div className="relative overflow-hidden w-full flex flex-col gap-5 sm:border bg-[var(--cruto-foreground)] border-[var(--cruto-border)] rounded-[0.5rem] p-5">
+      <motion.div
+        initial={{ opacity: 0, x: -50 }}
+        animate={{
+          opacity: showForgotPassword ? 0 : 1,
+          x: showForgotPassword ? -50 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <SignIn />
+      </motion.div>
+
+      <motion.div
+        className="p-6 absolute top-0 left-0 right-0"
+        initial={{ opacity: 0, x: '100%' }}
+        animate={{
+          opacity: showForgotPassword ? 1 : 0,
+          x: showForgotPassword ? 0 : '100%',
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <MagicLink />
+      </motion.div>
+      <div className="w-full flex gap-2 justify-center items-center text-center text-sm text-[color:var(--cruto-black)]">
         <Link className=" hover:text-[var(--cruto-green)]" href={'/sign-up'}>
           Sign up
-        </Link>{' '}
-        |{' '}
-        <Link
-          className=" hover:text-[var(--cruto-green)]"
-          href={'/forget-password'}
-        >
-          Forgot password
         </Link>
+        |
+        <Button
+          isLoading
+          onClick={toggleForgotPassword}
+          variant="ghost"
+          className=" hover:text-[var(--cruto-green)] w-fit m-0 p-0"
+        >
+          {showForgotPassword ? 'Back to Sign In' : 'Forgot Password'}
+        </Button>
       </div>
     </div>
   );

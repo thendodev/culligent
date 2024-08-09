@@ -14,22 +14,26 @@ login.openapi(loginRoute, async ({ req, res, json }) => {
     const { email, password } = req.valid('json');
 
     //fetch user from database
-    const { success, data, message } = await getUserService(email);
+    const { success, data, message, code } = await getUserService(email);
 
-    if (!success || !data)
-      throw new HTTPException(EStatusCode.BadRequest, { message });
+    if (!success || !data) return json({ message }, code);
 
-    if (!data.isVerified) return res.json();
+    if (!data.isVerified)
+      return json({ message: 'not verified', user: data }, code);
+
     //validate password
-    const isValidPassword = await verifyPasswordService({
+    const validatePassword = await verifyPasswordService({
       user: data._id,
       password,
     });
 
-    if (!isValidPassword)
-      throw new HTTPException(EStatusCode.Unauthorized, {
-        message: 'Invalid credentials',
-      });
+    if (!validatePassword.success)
+      return json(
+        {
+          message: validatePassword.message,
+        },
+        validatePassword.code,
+      );
 
     //create a refresh and access tokens for the user
     const token = await createRefreshTokenService(data);
@@ -42,7 +46,7 @@ login.openapi(loginRoute, async ({ req, res, json }) => {
       message: 'Login successful',
     });
   } catch (e) {
-    const { message } = e as Error;
-    return json({ message: message });
+    console.log(e);
+    return json({ message: 'internal error' }, EStatusCode.InternalServerError);
   }
 });

@@ -1,3 +1,4 @@
+import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
 import Profile, { MProfile } from '@/models/Profile';
 
@@ -14,89 +15,77 @@ enum EServiceResponse {
 export const CreateProfileService = async (
   newProfile: MProfile,
 ): Promise<ApiResponse<MProfile>> => {
-  try {
-    const profile = await Profile.insertOne(newProfile);
-    if (!profile)
-      return {
-        success: false,
-        message: EServiceResponse.failedCreateProfile,
-        data: null,
-      };
-    return {
-      success: true,
-      message: 'profile created successfully',
-      data: profile,
-    };
-  } catch (e) {
-    console.log(e);
+  const profile = await Profile.insertOne(newProfile);
+  if (!profile)
     return {
       success: false,
-      message: EServiceResponse.Error,
+      message: EServiceResponse.failedCreateProfile,
       data: null,
+      code: EStatusCode.NotModified,
     };
-  }
+  return {
+    success: true,
+    message: 'profile created successfully',
+    data: profile,
+    code: EStatusCode.Ok,
+  };
 };
 
 export const getProfileService = async (
   userId: string,
 ): Promise<ApiResponse<MProfile>> => {
-  try {
-    const profile = await Profile.findOne({ user: userId });
-    if (!profile)
-      return {
-        success: false,
-        message: EServiceResponse.failedGetUser,
-        data: null,
-      };
+  const profile = await Profile.findOne({ user: userId });
+  if (!profile)
     return {
-      success: true,
-      message: EServiceResponse.successGetUser,
-      data: { ...profile },
+      success: false,
+      message: 'Could not find profile',
+      data: null,
+      code: EStatusCode.NotFound,
     };
-  } catch (e) {
-    return { success: false, message: EServiceResponse.Error, data: null };
-  }
+  return {
+    success: true,
+    message: 'Profile fetched successfully',
+    data: { ...profile },
+    code: EStatusCode.Ok,
+  };
 };
 
 export const updateProfileService = async (
   data: MProfile,
 ): Promise<ApiResponse<MProfile>> => {
-  try {
-    await Profile.findOneAndUpdate(
-      {
-        _id: data._id,
-      },
-      {
-        $set: data,
-      },
-    );
+  await Profile.findOneAndUpdate(
+    {
+      _id: data._id,
+    },
+    {
+      $set: data,
+    },
+  );
 
-    return {
-      success: true,
-      message: 'profile updated successfully',
-      data: null,
-    };
-  } catch (e) {
-    return {
-      success: false,
-      data: null,
-      message: 'could not update profile',
-    };
-  }
+  return {
+    success: true,
+    message: 'profile updated successfully',
+    data: null,
+    code: EStatusCode.Ok,
+  };
 };
 
 export const deleteProfileService = async (
   userId: string,
 ): Promise<ApiResponse<boolean>> => {
-  try {
-    Profile.findOneAndUpdate({ user: userId }, { $set: { active: false } });
-
+  Profile.findOneAndUpdate({ user: userId }, { $set: { active: false } });
+  if (!Profile) {
     return {
-      success: true,
-      message: EServiceResponse.successDeleteProfile,
+      success: false,
+      message: 'Could not find profile',
       data: null,
+      code: EStatusCode.NotFound,
     };
-  } catch (e) {
-    return { success: false, message: EServiceResponse.Error, data: null };
   }
+  return {
+    success: true,
+    message: EServiceResponse.successDeleteProfile,
+    data: null,
+    code: EStatusCode.Ok,
+  };
 };

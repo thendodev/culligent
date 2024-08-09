@@ -1,5 +1,12 @@
 import { envPublic } from './envClient';
 
+// export enum ETimeFormat {
+//   dayFirst = 'dd/mm/yyyy',
+//   dayFirstWithTime = 'dd/mm/yyyy:hh:mm',
+//   monthFirst = 'mm/dd/yyyy',
+//   monthFirstWithTime = 'mm/dd/yyyy:hh:mm',
+// }
+
 export enum EUserCookies {
   token = 'cruto-access-token',
   user = 'cruto-user',
@@ -44,3 +51,10 @@ export enum EStatusCode {
   TemporaryRedirect = 307,
   PermanentRedirect = 308,
 }
+
+export const dateFormat: Intl.DateTimeFormatOptions = {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+};

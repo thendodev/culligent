@@ -26,7 +26,7 @@ export const PlaidVerifyIdentityEmail = ({ user, otp }: MOtp) => (
         <Text style={paragraph}>
           {' '}
           <Link
-            href={`localhost:3000/${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?email=${user}&otp=${otp}`}
+            href={`localhost:3000/${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?user=${user}&otp=${otp}`}
             style={link}
           >
             Or click here link to verify.

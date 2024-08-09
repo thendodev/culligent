@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { emailSignUphandler } from '@/handlers/handleAccounts';
 import Link from 'next/link';
-import { ArrowLeftCircle } from 'lucide-react';
 import { ProjectRoutes } from '@/global/routes';
 import { TSignUp, signUpSchema } from '@/validations/auth';
 
@@ -40,13 +39,13 @@ const SignUpForm = () => {
     const user = await emailSignUphandler(data);
     if (user) {
       router.push(
-        `${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?email=${user.email}`,
+        `${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?user=${user._id}`,
       );
     }
   };
 
   return (
-    <div className="w-full mx-auto my-10 sm:border border-[var(--cruto-off-white)] rounded-[0.5rem] p-5">
+    <div className="mx-auto w-[90%] lg:w-[45%] sm:w-[80%] my-10 sm:border border-[var(--cruto-border)] bg-[var(--cruto-foreground)] rounded-[0.5rem] p-5">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -102,7 +101,12 @@ const SignUpForm = () => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password (complex password)</FormLabel>
+                <FormLabel>
+                  Password{' '}
+                  <p className="text-[0.6rem] text-[var(--cruto-pale-grey)]">
+                    (uppercase, lowercase, number and special characters)
+                  </p>
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Password" {...field} type="password" />
                 </FormControl>
@@ -133,18 +137,16 @@ const SignUpForm = () => {
           />
 
           <div>
-            <Button className="bg-[color:var(--cruto-green)] mt-5 w-[100%] text-[color:var(--cruto-white)] hover:scale-95">
-              Sign Up
-            </Button>
+            <Button className="mt-2">Sign Up</Button>
           </div>
         </form>
       </Form>
       <div className="flex justify-center w-full my-4 mx-auto text-sm text-center">
         <Link
           href={'/'}
-          className="flex gap-2 text-[color:var(--cruto-green)] w-fit"
+          className="flex gap-2 hover:text-[color:var(--cruto-green)] w-fit"
         >
-          <ArrowLeftCircle /> Back to the login page
+          Back to the login page
         </Link>
       </div>
     </div>

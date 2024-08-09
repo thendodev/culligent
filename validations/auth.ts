@@ -36,6 +36,12 @@ export const signUpSchema = z
     }
   });
 
+export const magicLinkSchema = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
+export type TForgotPassword = z.infer<typeof magicLinkSchema>;
+
 export type TSignUp = z.infer<typeof signUpSchema>;
 
 export type TLogin = z.infer<typeof loginSchema>;

@@ -2,14 +2,7 @@ import { BookOpenText, LayoutDashboard, Library } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import './sidebar.css';
-import { UserProps } from '@/models/User.types';
-import logo from '@/assets/bot.svg';
-import Image from 'next/image';
 import { ProjectRoutes } from '@/global/routes';
-
-type SideBarProps = {
-  user: UserProps;
-};
 
 const SideBar = () => {
   return (
@@ -25,6 +18,13 @@ const SideBar = () => {
                 href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`}
               >
                 Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.teams}`}
+              >
+                Teams
               </Link>
             </li>
             <li>
@@ -63,7 +63,11 @@ const SideBar = () => {
               </Link>
             </li>
             <li>
-              <Link href={`${ProjectRoutes.recruitment}`}>Case library</Link>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.cases}`}
+              >
+                Case library
+              </Link>
             </li>
             <li>
               <Link href="">Shared cases</Link>

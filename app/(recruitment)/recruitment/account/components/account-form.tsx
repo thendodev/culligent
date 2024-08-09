@@ -9,8 +9,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { handleUserAccount } from '@/handlers/handleUser';
 import { UserProps } from '@/models/User.types';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -19,11 +21,20 @@ type AccountProps = {
   account: UserProps | null;
 };
 
-const UserSchema = z.object({});
+const UserSchema = z.object({
+  name: z.string().min(2),
+  surname: z.string().min(2),
+  email: z.string().email(),
+});
 
-const AccountForm = ({ account }: AccountProps) => {
+const AccountForm = () => {
+  const { data } = useQuery({
+    queryKey: ['account'],
+    queryFn: handleUserAccount,
+  });
+
   const form = useForm<UserProps>({
-    defaultValues: account || {},
+    defaultValues: data || {},
     resolver: zodResolver(UserSchema),
   });
   return (

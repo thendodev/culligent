@@ -13,7 +13,7 @@ const UserSchema = schema(
   {
     defaults: {
       isVerified: false,
-      profile: ProfileType.independent,
+      profile: ProfileType.professional,
     },
     timestamps: true,
   },
