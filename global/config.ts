@@ -21,7 +21,9 @@ export const getBaseUrl = (env: any) => {
     case EEnvironment.development:
       return `http://localhost:3000/`;
     case EEnvironment.production:
-      return `https://recruto.vercel.app/`;
+      return `https://culligent.vercel.app/`;
+    case EEnvironment.uat:
+      `https://culligentuat.vercel.app/`;
     default:
       return `http://localhost:3000`;
   }
@@ -32,6 +34,7 @@ export const baseUrl = getBaseUrl(envPublic.NEXT_PUBLIC_ENVIRONMENT);
 export enum EEnvironment {
   development = 'development',
   production = 'production',
+  uat = 'uat',
 }
 export enum ESocialProvider {
   google = 'google',
