@@ -1,12 +1,13 @@
+import { baseUrl } from '@/global/config';
 import axios from 'axios';
-const baseURL = '/api/';
+const requestbase = baseUrl + '/api/';
 
 export const publicRequest = axios.create({
-  baseURL,
+  baseURL: requestbase,
 });
 
 export const privateRequest = axios.create({
-  baseURL,
+  baseURL: requestbase,
   headers: {
     Authorization: true,
   },
