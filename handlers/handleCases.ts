@@ -4,7 +4,7 @@ import { privateRequest } from '@/lib/requests';
 import { TCase } from '@/models/Cases';
 
 enum ECaseRoutes {
-  CASES = 'recruitment/cases',
+  CASES = '/recruitment/cases',
 }
 
 export const createCaseHandler = async (newCase: TCase) => {
