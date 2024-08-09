@@ -6,7 +6,7 @@ import { DataTable } from '@/components/modules/data-table';
 import { toast } from '@/components/ui/use-toast';
 
 const CasesClient = () => {
-  const { data, isLoading } = useSuspenseQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['cases'],
     queryFn: getCasesHandler,
   });
