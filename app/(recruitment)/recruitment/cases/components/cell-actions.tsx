@@ -13,9 +13,11 @@ import { Button } from '@/components/ui/button';
 import { Copy, Edit, Eye, MoreHorizontal, WorkflowIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { TCase } from '@/models/Cases';
 import { ProjectRoutes } from '@/global/routes';
+import { QueryClient } from '@tanstack/react-query';
+import { getCaseHandler } from '@/handlers/handleCases';
 
 interface CellActionProps {
   data: TCase;
@@ -27,6 +29,15 @@ const CellActions = ({ data }: CellActionProps) => {
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast({ title: 'Copy ID', description: 'id copied' });
+  };
+
+  const queryClient = new QueryClient();
+
+  const prefetchCase = async () => {
+    await queryClient.prefetchQuery({
+      queryKey: ['cases', data._id],
+      queryFn: () => getCaseHandler(data._id),
+    });
   };
 
   return (
@@ -56,6 +67,7 @@ const CellActions = ({ data }: CellActionProps) => {
             <Eye className="mr-2 h-4 w-4" /> View
           </DropdownMenuItem>
           <DropdownMenuItem
+            onMouseOver={prefetchCase}
             onClick={() =>
               router.push(
                 `/${ProjectRoutes.recruitment}/${ProjectRoutes.case_builder}/${data?._id}`,

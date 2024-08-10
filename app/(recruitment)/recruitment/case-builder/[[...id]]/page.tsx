@@ -7,22 +7,20 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 import { getCaseHandler } from '@/handlers/handleCases';
-import getQueryClient from '@/app/providers/query-client';
 
-const CaseBuilder = async ({ params }: { params: { id: string } }) => {
+const CaseBuilder = async ({ params }: { params: { id: string[] } }) => {
   const queryKey = 'cases';
   const queryClient = new QueryClient();
-  !!params.id &&
-    queryClient.prefetchQuery({
-      queryKey: ['cases', params.id],
-      queryFn: () => getCaseHandler(params.id),
-    });
+  await queryClient.prefetchQuery({
+    queryKey: ['cases', params.id],
+    queryFn: () => getCaseHandler(params.id[0]),
+  });
   const dehydratedState = dehydrate(queryClient);
 
   return (
     <PageWrapper title="new-case" description="create a new case from scratch">
       <HydrationBoundary state={dehydratedState}>
-        <CaseDetails id={params.id} queryKey={queryKey} />
+        <CaseDetails id={params.id[0]} queryKey={queryKey} />
       </HydrationBoundary>
     </PageWrapper>
   );

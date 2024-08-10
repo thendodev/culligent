@@ -41,8 +41,8 @@ const CasesSchema = schema(
 );
 
 export type TCase = (typeof CasesSchema)[0] & {
-  _id: string | ObjectId;
-  user: string | ObjectId;
+  _id: string;
+  user: string;
 };
 
 export type TQuestion = typeof QuestionsSchema;

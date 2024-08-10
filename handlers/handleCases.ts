@@ -28,19 +28,11 @@ export const getCasesHandler = async () => {
 };
 
 export const getCaseHandler = async (id: string) => {
-  try {
-    const { data } = await privateRequest.get(`${ECaseRoutes.CASES}/${id}`);
-    console.log(data);
-    return {
-      ...data.data,
-      createdAt: new Date(data.data.createdAt).toLocaleDateString('en-us', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }),
-    };
-  } catch {}
+  const { data } = await privateRequest.get(`${ECaseRoutes.CASES}/${id}`);
+  return {
+    ...data,
+    createdAt: new Date(data.createdAt).toLocaleDateString('en-us', dateFormat),
+  };
 };
 
 export const updateCaseHandler = async (id: string, updatedCase: TCase) => {

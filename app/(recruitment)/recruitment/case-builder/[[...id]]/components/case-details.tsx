@@ -10,18 +10,15 @@ import SingleChoice from './SingleChoice';
 import OpenEnded from './OpenEnded';
 import MultiChoice from './MultiChoice';
 import { toast } from '@/components/ui/use-toast';
-import { QuestionViewSkeleton } from './question-view-skeleton';
 import SaveCase from './save-case';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { getCaseHandler } from '@/handlers/handleCases';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import ViewQuestion from './new-question/view-question';
 import {
   CaseSchema,
   QuestionSchema,
   TCaseValidation,
 } from '@/validations/cases';
-import QuestionView from './question-view';
 
 export enum QuestionType {
   SingleChoice = 'Single Choice',
@@ -29,25 +26,20 @@ export enum QuestionType {
   MultiChoice = 'Multiple Choice',
 }
 type TCaseProps = {
-  id?: string | null;
+  id: string;
   queryKey?: string | null;
 };
 
 const CaseDetails = ({ id, queryKey }: TCaseProps) => {
-  const { data: editCase, isError } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: [queryKey, id],
-    queryFn: () => getCaseHandler(id as string),
-    enabled: !!id,
+    queryFn: () => getCaseHandler(id),
+    enabled: !!id?.length,
   });
 
   const form = useForm<TCaseValidation>({
     resolver: zodResolver(CaseSchema),
-    defaultValues: editCase ?? {
-      name: '',
-      description: '',
-      duration: 0,
-      questions: [],
-    },
+    values: data,
   });
 
   const fieldArray = useFieldArray({
@@ -85,7 +77,6 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
       key={0}
     />,
   );
-  const [jumpTo, setJumpTo] = useState(0);
 
   const onNewOption = (option: string, questionIndex?: number) => {
     questionIndex = questionIndex ?? fieldArray.fields.length;
