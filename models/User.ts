@@ -19,6 +19,6 @@ const UserSchema = schema(
   },
 );
 
-export type MUser = (typeof UserSchema)[0];
+export type TUser = (typeof UserSchema)[0];
 
 export default papr.model('User', UserSchema);

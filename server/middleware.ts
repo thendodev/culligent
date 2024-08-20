@@ -1,11 +1,26 @@
 import { EUserCookies } from '@/global/config';
-import type { NextRequest } from 'next/server';
+import { ProjectRoutes } from '@/global/routes';
 
+import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
-  const activeToken = request.cookies.get(EUserCookies.user)?.value;
-  if (!activeToken && request.nextUrl.pathname !== '/') {
-    return Response.redirect(new URL('/', request.url));
+  const path = request.nextUrl.pathname;
+  const isPrivateRoute = path.includes(ProjectRoutes.recruitment);
+  const accessToken = request.cookies.get(EUserCookies.token);
+
+  if (!isPrivateRoute && accessToken) {
+    return NextResponse.redirect(
+      new URL(
+        `${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`,
+        request.nextUrl,
+      ),
+    );
   }
+
+  if (isPrivateRoute && !accessToken) {
+    return NextResponse.redirect(new URL(ProjectRoutes.login, request.nextUrl));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

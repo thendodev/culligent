@@ -25,6 +25,6 @@ const ActivityLog = schema(
   },
 );
 
-export type TUser = (typeof ActivityLog)[0];
+export type TActivity = (typeof ActivityLog)[0];
 
 export default papr.model('ActivityLog', ActivityLog);

@@ -1,10 +1,8 @@
 import React from 'react';
 import SearchBar from '../modules/search-bar';
 import ProfileMenu from '../modules/profile-menu';
-import { UserProps } from '@/models/User.types';
 import { useUserServer } from '@/lib/useUserServer';
 import { redirect } from 'next/navigation';
-import LoadingBar from '@/app/(recruitment)/recruitment/components/loading-bar';
 
 const NavBar = async () => {
   const user = await useUserServer();

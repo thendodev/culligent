@@ -15,16 +15,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { ProjectRoutes } from '@/global/routes';
-import { UserProps } from '@/models/User.types';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import penguinProfile from '@/assets/penguin-profile.svg';
 import Image from 'next/image';
-import { MUser } from '@/models/User';
+import { TUser } from '@/models/User';
 import { useAxiosInterceptors } from '@/hooks/useInterceptors';
 
 type ProfileMenuProps = {
-  user: MUser;
+  user: TUser;
 };
 const ProfileMenu = ({ user }: ProfileMenuProps) => {
   const router = useRouter();

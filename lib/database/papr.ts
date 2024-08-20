@@ -8,7 +8,7 @@ export let client: MongoClient;
 const getDbConnection = () => {
   switch (envServer.NEXT_PUBLIC_ENVIRONMENT) {
     case undefined:
-      return console.log('no enviroment defined');
+      return console.log('no environment defined');
     case 'development':
       return envServer.DEV_MONGO_URI;
     case 'production':

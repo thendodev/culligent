@@ -7,11 +7,8 @@ import AlertModal from '@/components/modules/alert-modal';
 import Providers from '@/app/providers/query-provider';
 
 export const metadata: Metadata = {
-  title: 'Culligrant - AI Recruitment Platform',
+  title: 'Culligent - Smart Recruitment',
   description: 'A.I Recruitment Partner',
-  icons: {
-    icon: '/public/favicon_io/favicon.ico',
-  },
 };
 
 export default async function RootLayout({

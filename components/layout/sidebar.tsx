@@ -66,11 +66,22 @@ const SideBar = () => {
               <Link
                 href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.cases}`}
               >
-                Case library
+                Cases
               </Link>
             </li>
             <li>
-              <Link href="">Shared cases</Link>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.post}`}
+              >
+                Create Post
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.posts}`}
+              >
+                Posts
+              </Link>
             </li>
           </ul>
         </li>

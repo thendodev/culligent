@@ -9,7 +9,7 @@ import CasesClient from './components/cases';
 const Cases = async () => {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
+  queryClient.prefetchQuery({
     queryKey: ['cases'],
     queryFn: getCasesHandler,
   });

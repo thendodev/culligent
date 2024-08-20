@@ -1,44 +1,28 @@
-'use client';
-
-import React from 'react';
 import {
+  Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
-  Form,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Plus, SaveAll } from 'lucide-react';
-import { Textarea } from '@/components/ui/textarea';
+  SelectContent,
+  SelectGroup,
+  SelectLabel,
+  SelectItem,
+} from '@radix-ui/react-select';
+import React from 'react';
+import { SkillsCombobox } from '../skills-combobox';
+import { TQuestionProps } from '../../types';
 import { Button } from '@/components/ui/button';
-import { useFieldArray } from 'react-hook-form';
-import { SkillsCombobox } from '../components/skills-combobox';
-import { Checkbox } from '@/components/ui/checkbox';
-import { TQuestionProps } from '../types';
 
-type TMultiChoiceProps = {} & TQuestionProps;
-const MultiChoice = ({
-  form,
-  question,
-  handleSave,
-  type,
-}: TMultiChoiceProps) => {
-  const { fields, append } = useFieldArray({
-    control: form?.control,
-    name: `questions.${question}.answers`,
-  });
-
+const Question = ({ form, question, handleSave, type }: TQuestionProps) => {
   return (
     <Form {...form}>
       <form className="h-full space-y-10 overflow-hidden bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border-[var(--cruto-border)] border">
@@ -137,55 +121,6 @@ const MultiChoice = ({
                 </FormItem>
               )}
             />
-            <div className="w-full flex flex-row mt-2 justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                className="hover:scale-105 hover:border-[color:var(--cruto-green)]"
-                onClick={() => append({ answer: '', correct: false })}
-              >
-                <Plus size={20} /> Add answer
-              </Button>
-            </div>
-            <div className="w-full">
-              {fields.map(({ id }, index) => {
-                return (
-                  <div key={id} className="w-full h-fit flex  items-center">
-                    <FormField
-                      name={`questions.${question}.answers.${index}.correct`}
-                      control={form.control}
-                      render={({ field }) => (
-                        <FormItem className="mr-5">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormMessage>
-                            {form.formState.errors.name?.message || ''}
-                          </FormMessage>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      name={`questions.${question}.answers.${index}.answer`}
-                      control={form.control}
-                      render={({ field }) => (
-                        <FormItem className="w-[90%] m-2">
-                          <FormControl>
-                            <Textarea {...field} placeholder="Case name" />
-                          </FormControl>
-                          <FormMessage>
-                            {form.formState.errors.name?.message || ''}
-                          </FormMessage>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
       </form>
@@ -193,4 +128,4 @@ const MultiChoice = ({
   );
 };
 
-export default MultiChoice;
+export default Question;

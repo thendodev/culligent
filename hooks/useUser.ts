@@ -2,12 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { MUser } from '@/models/User';
-import { useRouter } from 'next/navigation';
+import { TUser } from '@/models/User';
 
 export const useUserClientSide = () => {
-  const [currentUser, setCurrentUser] = useState<MUser | null>(null);
-  const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<TUser | null>(null);
 
   useEffect(() => {
     if (!Cookies.get('currentUser')) return;
@@ -15,5 +13,5 @@ export const useUserClientSide = () => {
     setCurrentUser(user);
   }, []);
 
-  return { ...currentUser } as MUser;
+  return { ...currentUser } as TUser;
 };

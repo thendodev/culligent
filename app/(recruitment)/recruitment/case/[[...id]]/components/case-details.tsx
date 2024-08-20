@@ -3,12 +3,9 @@
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { AlignLeft, Check, ListChecks } from 'lucide-react';
+import { AlignLeft, ListChecks } from 'lucide-react';
 import OptionCard from './option-card';
 import { ReactNode, useState } from 'react';
-import SingleChoice from './SingleChoice';
-import OpenEnded from './OpenEnded';
-import MultiChoice from './MultiChoice';
 import { toast } from '@/components/ui/use-toast';
 import SaveCase from './save-case';
 import { getCaseHandler } from '@/handlers/handleCases';
@@ -19,6 +16,9 @@ import {
   QuestionSchema,
   TCaseValidation,
 } from '@/validations/cases';
+import QuestionWrapper from './QuestionWrapper';
+import Answers from './new-question/Answers';
+import Question from './new-question/Question';
 
 export enum QuestionType {
   SingleChoice = 'Single Choice',
@@ -69,13 +69,15 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
   };
 
   const [option, setOption] = useState<ReactNode>(
-    <SingleChoice
-      type={QuestionType.SingleChoice}
-      form={form}
-      question={0}
-      handleSave={handleSave}
-      key={0}
-    />,
+    <QuestionWrapper form={form}>
+      <Question
+        question={0}
+        handleSave={handleSave}
+        type={QuestionType.SingleChoice}
+        form={form}
+      />
+      <Answers form={form} question={0} />
+    </QuestionWrapper>,
   );
 
   const onNewOption = (option: string, questionIndex?: number) => {
@@ -84,46 +86,41 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
     switch (option) {
       case QuestionType.SingleChoice:
         setOption(
-          <SingleChoice
-            form={form}
-            question={questionIndex}
-            key={questionIndex}
-            handleSave={handleSave}
-            type={QuestionType.SingleChoice}
-          />,
+          <QuestionWrapper form={form}>
+            <Question
+              question={questionIndex}
+              handleSave={handleSave}
+              type={QuestionType.SingleChoice}
+              form={form}
+            />
+            <Answers form={form} question={questionIndex} />
+          </QuestionWrapper>,
         );
         break;
       case QuestionType.OpenEnded:
         setOption(
-          <OpenEnded
-            form={form}
-            question={questionIndex}
-            key={questionIndex}
-            handleSave={handleSave}
-            type={QuestionType.OpenEnded}
-          />,
+          <QuestionWrapper form={form}>
+            <Question
+              question={questionIndex}
+              handleSave={handleSave}
+              type={QuestionType.SingleChoice}
+              form={form}
+            />
+          </QuestionWrapper>,
         );
         break;
-      case QuestionType.MultiChoice:
-        setOption(
-          <MultiChoice
-            form={form}
-            question={questionIndex}
-            key={questionIndex}
-            handleSave={handleSave}
-            type={QuestionType.MultiChoice}
-          />,
-        );
-        break;
+
       default:
         setOption(
-          <SingleChoice
-            form={form}
-            question={questionIndex}
-            handleSave={handleSave}
-            key={questionIndex}
-            type={QuestionType.SingleChoice}
-          />,
+          <QuestionWrapper form={form}>
+            <Question
+              question={questionIndex}
+              handleSave={handleSave}
+              type={QuestionType.SingleChoice}
+              form={form}
+            />
+            <Answers form={form} question={questionIndex} />
+          </QuestionWrapper>,
         );
     }
   };
@@ -149,11 +146,6 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
             onNewOption={onNewOption}
             icon={<ListChecks size={30} className="mr-2" />}
             name="Multiple Choice"
-          />
-          <OptionCard
-            icon={<Check size={30} className="mr-2" />}
-            name="Single Choice"
-            onNewOption={onNewOption}
           />
 
           <OptionCard

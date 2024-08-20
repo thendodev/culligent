@@ -6,12 +6,13 @@ import { Check, Search, X } from 'lucide-react';
 import { useState } from 'react';
 
 type TQuestionsProps = {
-  questions: TQuestion[] | Record<string, any>[];
+  questions: TQuestion[] | Record<string, any>[] | undefined;
 };
 
 const Questions = ({ questions }: TQuestionsProps) => {
-  const [filteredQuestions, setFilteredQuestions] =
-    useState<TQuestion[]>(questions);
+  const [filteredQuestions, setFilteredQuestions] = useState<
+    TQuestion[] | undefined
+  >(questions);
 
   const deepSearch = (search: string) => {
     const searchTerm = search.toLowerCase();
