@@ -1,14 +1,18 @@
 import papr from '@/lib/database/papr';
-import { TPostValidation } from '@/validations/posts';
 import { schema, types } from 'papr';
 
+const tags = types.object({
+  name: types.string({ required: true }),
+});
+const certifications = types.object({
+  name: types.string({ required: true }),
+  level: types.string({ required: true }),
+});
 const idealCandidate = types.object({
   experience: types.number({ required: true }),
   skills: types.array(types.string()),
   education: types.string({ required: true }),
-  languages: types.array(types.string()),
-  certifications: types.array(types.string()),
-  certifications_level: types.string(),
+  certifications: types.array(certifications),
 });
 
 const PostsSchema = schema(
@@ -18,7 +22,7 @@ const PostsSchema = schema(
     role: types.string({ required: true }),
     idealCandidate: idealCandidate,
     userId: types.objectId({ required: true }),
-    tags: types.array(types.string()),
+    tags: types.array(tags),
     isFeatured: types.boolean(),
     isArchived: types.boolean(),
   },
