@@ -47,7 +47,7 @@ const Post = ({ id, queryKey }: TPostProps) => {
         education: data?.idealCandidate.education,
         certifications: data?.idealCandidate.certifications,
       },
-      isFeatured: data?.isFeatured,
+      isFeatured: data?.isFeatured ?? true,
       isArchived: data?.isArchived,
     },
     resolver: zodResolver(postsValidationSchema),
