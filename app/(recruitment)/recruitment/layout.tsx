@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import NavBar from '@/components/layout/nav-bar';
 import AlertModal from '@/components/modules/alert-modal';
 import Providers from '@/app/providers/query-provider';
-
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 export const metadata: Metadata = {
   title: 'Culligent - Smart Recruitment',
   description: 'A.I Recruitment Partner',
@@ -27,7 +27,10 @@ export default async function RootLayout({
             <NavBar />
             <Toaster />
             <AlertModal />
-            <Providers>{children}</Providers>
+            <Providers>
+              {children}
+              <ReactQueryDevtools initialIsOpen={false} />
+            </Providers>
           </div>
         </div>
       </body>

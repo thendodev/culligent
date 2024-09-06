@@ -20,7 +20,7 @@ const Cases = async () => {
       description={'A library of all existing cases.'}
     >
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <CasesClient />{' '}
+        <CasesClient />
       </HydrationBoundary>
     </PageWrapper>
   );

@@ -16,8 +16,9 @@ import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { TCase } from '@/models/Cases';
 import { ProjectRoutes } from '@/global/routes';
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { getCaseHandler } from '@/handlers/handleCases';
+import { use } from 'chai';
 
 interface CellActionProps {
   data: TCase;
@@ -31,7 +32,7 @@ const CellActions = ({ data }: CellActionProps) => {
     toast({ title: 'Copy ID', description: 'id copied' });
   };
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const prefetchCase = async () => {
     await queryClient.prefetchQuery({

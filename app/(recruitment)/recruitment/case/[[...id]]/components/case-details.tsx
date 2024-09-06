@@ -31,7 +31,7 @@ type TCaseProps = {
 };
 
 const CaseDetails = ({ id, queryKey }: TCaseProps) => {
-  const { data, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: [queryKey, id],
     queryFn: () => getCaseHandler(id),
     enabled: !!id?.length,

@@ -15,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { ProjectRoutes } from '@/global/routes';
-import { QueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { getCaseHandler } from '@/handlers/handleCases';
 import { TPost } from '@/models/Posts';
 
@@ -31,7 +31,7 @@ const PostActions = ({ data }: PostActionProps) => {
     toast({ title: 'Copy ID', description: 'id copied' });
   };
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const prefetchCase = async () => {
     await queryClient.prefetchQuery({

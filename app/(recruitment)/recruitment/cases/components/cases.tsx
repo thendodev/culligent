@@ -1,9 +1,8 @@
 'use client';
 import { getCasesHandler } from '@/handlers/handleCases';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { caseTableColumns } from './cases-column';
 import { DataTable } from '@/components/modules/data-table';
-import { toast } from '@/components/ui/use-toast';
 
 const CasesClient = () => {
   const { data, isLoading } = useQuery({

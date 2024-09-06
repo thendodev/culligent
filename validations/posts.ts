@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const tagsValidationSchema = z.object({
+const skillsValidationSchema = z.object({
   name: z.string().min(1).max(100),
 });
 const certificationsValidationSchema = z.object({
@@ -9,7 +9,7 @@ const certificationsValidationSchema = z.object({
 });
 const idealCandidateValidationSchema = z.object({
   experience: z.number().min(1).max(100),
-  skills: z.array(z.string().min(1).max(100)),
+  skills: z.array(skillsValidationSchema).optional(),
   education: z.string().min(1).max(100),
   certifications: z.array(certificationsValidationSchema).optional(),
 });
@@ -19,7 +19,6 @@ export const postsValidationSchema = z.object({
   description: z.string().min(1).max(100),
   role: z.string().min(1).max(1500),
   idealCandidate: idealCandidateValidationSchema,
-  tags: z.array(tagsValidationSchema).optional(),
   isFeatured: z.boolean(),
   isArchived: z.boolean(),
 });

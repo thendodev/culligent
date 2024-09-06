@@ -16,11 +16,10 @@ const CaseBuilder = async ({ params }: { params: { id: string } }) => {
     queryKey: ['cases', id],
     queryFn: () => getCaseHandler(id),
   });
-  const dehydratedState = dehydrate(queryClient);
 
   return (
     <PageWrapper title="new-case" description="create a new case from scratch">
-      <HydrationBoundary state={dehydratedState}>
+      <HydrationBoundary state={dehydrate(queryClient)}>
         <CaseDetails id={id} queryKey={queryKey} />
       </HydrationBoundary>
     </PageWrapper>
