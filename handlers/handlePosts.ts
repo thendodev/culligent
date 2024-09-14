@@ -1,7 +1,8 @@
-'use server';
 import { dateFormat } from '@/global/config';
+import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
 import { TPost } from '@/models/Posts';
+import { TPostValidation } from '@/validations/posts';
 
 enum EPostRoutes {
   POSTS = '/recruitment/posts',
@@ -19,5 +20,23 @@ export const getPostsHandler = async () => {
 
 export const getPostHandler = async (id: string) => {
   const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
+  return data;
+};
+
+export const updatePostHandler = async (data: TWithId<TPostValidation>) => {
+  const { data: response } = await privateRequest.put(
+    `${EPostRoutes.POSTS}/${data._id}`,
+    data,
+  );
+  return response;
+};
+
+export const createPostHandler = async (data: TPostValidation) => {
+  const { data: response } = await privateRequest.post(EPostRoutes.POSTS, data);
+  return response;
+};
+
+export const deletePostHandler = async (id: string) => {
+  const { data } = await privateRequest.delete(`${EPostRoutes.POSTS}/${id}`);
   return data;
 };

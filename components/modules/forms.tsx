@@ -1,13 +1,18 @@
+import { UseMutateFunction } from '@tanstack/react-query';
 import React from 'react';
 
 type TFormProps = {
   title: string;
+  action?: UseMutateFunction<any, unknown, any, unknown>;
   children: React.ReactNode;
 };
 
-export const FormWrapper = ({ title, children }: TFormProps) => {
+export const FormWrapper = ({ title, action, children }: TFormProps) => {
   return (
-    <form className="w-full border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] bg-[var(--cruto-foreground)]">
+    <form
+      onSubmit={action!}
+      className="w-full border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] bg-[var(--cruto-foreground)]"
+    >
       <div className="w-full text-xl font-bold p-4">{title}</div>
       <div className="w-full space-y-1 p-2 border border-[var(--cruto-border)]">
         {children}

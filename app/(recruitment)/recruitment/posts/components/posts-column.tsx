@@ -14,7 +14,7 @@ export type PostTableProps = {
 export const PostTableColumns: ColumnDef<PostTableProps>[] = [
   {
     header: 'Post',
-    accessorKey: 'name',
+    accessorKey: 'title',
   },
   {
     header: 'Date Created',

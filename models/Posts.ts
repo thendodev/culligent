@@ -1,7 +1,9 @@
 import papr from '@/lib/database/papr';
+import { app } from '@/server';
 import { schema, types } from 'papr';
+import CurriculumVitae from './CurriculumVitae';
 
-const tags = types.object({
+const skills = types.object({
   name: types.string({ required: true }),
 });
 const certifications = types.object({
@@ -10,7 +12,7 @@ const certifications = types.object({
 });
 const idealCandidate = types.object({
   experience: types.number({ required: true }),
-  skills: types.array(types.string()),
+  skills: types.array(skills),
   education: types.string({ required: true }),
   certifications: types.array(certifications),
 });
@@ -21,8 +23,10 @@ const PostsSchema = schema(
     description: types.string({ required: true }),
     role: types.string({ required: true }),
     idealCandidate: idealCandidate,
+    applicants: types.array(
+      types.objectId({ ref: CurriculumVitae, required: true }),
+    ),
     userId: types.objectId({ required: true }),
-    tags: types.array(tags),
     isFeatured: types.boolean(),
     isArchived: types.boolean(),
   },

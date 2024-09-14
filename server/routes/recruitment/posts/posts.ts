@@ -23,10 +23,11 @@ export const posts = new OpenAPIHono();
 
 posts.openapi(createPostRoute, async (c) => {
   try {
-    //validate json body
-    if (!c.req.valid('json')) throw new Error('invalid json');
     //get post and token
     const posts = c.req.valid('json');
+    console.log(posts);
+    if (!posts) return c.json({ message: 'no post' }, EStatusCode.BadRequest);
+
     const token = getCookie(c, EUserCookies.user);
     //throw error if no user token is found
     if (!token) return c.json({ message: 'no token' }, EStatusCode.BadRequest);
@@ -111,12 +112,12 @@ posts.openapi(getPostRoute, async (c) => {
 posts.openapi(updatePostRoute, async (c) => {
   try {
     //validate json body
-    const updatedPost = c.req.valid('json');
+    const post = c.req.valid('json');
     const id = c.req.param('id');
 
     if (!id) return c.json({ message: 'no case id' }, EStatusCode.BadRequest);
 
-    if (!updatedPost)
+    if (!post)
       return c.json(
         { message: 'Case doesnt meet validation requirements' },
         EStatusCode.BadRequest,
@@ -131,7 +132,7 @@ posts.openapi(updatePostRoute, async (c) => {
     const { data, success, message, code } = await updatePostService(
       user._id,
       id,
-      updatedPost,
+      post,
     );
 
     if (!success) return c.json({ message }, code);

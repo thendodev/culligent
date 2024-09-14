@@ -1,6 +1,10 @@
 'use client';
-import { getPostHandler } from '@/handlers/handlePosts';
-import { useQuery } from '@tanstack/react-query';
+import {
+  createPostHandler,
+  getPostHandler,
+  updatePostHandler,
+} from '@/handlers/handlePosts';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { postsValidationSchema, TPostValidation } from '@/validations/posts';
@@ -24,6 +28,9 @@ import {
   FormFooter,
   FormWrapper,
 } from '@/components/modules/forms';
+import { toast } from '@/components/ui/use-toast';
+import { TWithId } from '@/global/types';
+
 type TPostProps = {
   id: string;
   queryKey: string[];
@@ -36,7 +43,7 @@ const Post = ({ id, queryKey }: TPostProps) => {
     enabled: !!id,
   });
 
-  const form = useForm<TPostValidation>({
+  const form = useForm<TWithId<TPostValidation>>({
     defaultValues: {
       title: data?.title,
       description: data?.description,
@@ -48,14 +55,27 @@ const Post = ({ id, queryKey }: TPostProps) => {
         certifications: data?.idealCandidate.certifications,
       },
       isFeatured: data?.isFeatured ?? true,
-      isArchived: data?.isArchived,
+      isArchived: data?.isArchived ?? false,
     },
     resolver: zodResolver(postsValidationSchema),
   });
 
+  const { mutate } = useMutation({
+    mutationFn: id
+      ? form.handleSubmit(updatePostHandler)
+      : form.handleSubmit(createPostHandler),
+    onSuccess: () => {
+      toast({
+        title: 'Post saved',
+        description: 'Post saved successfully',
+      });
+      form.reset();
+    },
+  });
+
   return (
     <Form {...form}>
-      <FormWrapper title={id ? 'Edit post' : 'Create post'}>
+      <FormWrapper action={mutate} title={id ? 'Edit post' : 'Create post'}>
         <FormCollection
           section="Post information"
           description="General information related to the post"
@@ -169,7 +189,7 @@ const Post = ({ id, queryKey }: TPostProps) => {
           <Button variant={'outline'} type="button">
             Cancel
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button>Submit</Button>
         </FormFooter>
       </FormWrapper>
     </Form>

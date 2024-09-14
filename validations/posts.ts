@@ -8,7 +8,7 @@ const certificationsValidationSchema = z.object({
   level: z.string().min(1).max(100),
 });
 const idealCandidateValidationSchema = z.object({
-  experience: z.number().min(1).max(100),
+  experience: z.coerce.number().min(0).max(100),
   skills: z.array(skillsValidationSchema).optional(),
   education: z.string().min(1).max(100),
   certifications: z.array(certificationsValidationSchema).optional(),
