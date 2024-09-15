@@ -5,8 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const isPrivateRoute = path.includes(ProjectRoutes.recruitment);
+  console.log(isPrivateRoute);
   const accessToken = request.cookies.get(EUserCookies.token);
-
+  console.log(accessToken);
   if (!isPrivateRoute && accessToken) {
     return NextResponse.redirect(
       new URL(

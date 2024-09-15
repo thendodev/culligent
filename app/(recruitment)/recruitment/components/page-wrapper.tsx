@@ -2,8 +2,8 @@ import BreadCrumbs from '../../../../components/ui/breadcrumbs';
 import LoadingBar from './loading-bar';
 
 interface PageWrapperProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   children: React.ReactNode;
 }
 
@@ -22,7 +22,7 @@ const PageWrapper = ({ description, children }: PageWrapperProps) => {
     <div className="w-full px-2 min-h-screen flex flex-col mx-auto">
       <BreadCrumbs homeUrl="/dashboard" homeElement="dashboard">
         <p className="text-end text-sm w-full text-[color:var(--cruto-pale-grey)]">
-          {description.toLocaleUpperCase()}
+          {description?.toLocaleUpperCase()}
         </p>
       </BreadCrumbs>
       <LoadingBar />
