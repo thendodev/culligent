@@ -37,7 +37,7 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        <div className="h-[50px] w-[50px] bg-[var(--cruto-white)] rounded-full border border-[var(--cruto-off-white)]">
+        <div className="h-[45px] w-[45px] bg-[var(--cruto-white)] rounded-full border border-[var(--cruto-off-white)]">
           <Image
             src={penguinProfile}
             objectFit="contain"
@@ -46,7 +46,10 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          My Account
+          <p className="text-sm text-gray-400">{user.email}</p>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>

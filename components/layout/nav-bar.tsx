@@ -12,7 +12,6 @@ const NavBar = async () => {
       <div className="sticky top-0 bottom-0 z-10 w-full px-8 bg-white flex justify-between items-center mx-auto h-[70px]">
         <SearchBar />
         <div className="flex items-center gap-5">
-          <p>{user.email}</p>
           <ProfileMenu user={user} />
         </div>
       </div>
