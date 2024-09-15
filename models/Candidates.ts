@@ -2,7 +2,7 @@ import Post from '@/app/(recruitment)/recruitment/post/[[...id]]/component/post'
 import papr from '@/lib/database/papr';
 import { schema, types } from 'papr';
 
-const CurriculumVitaeSchema = schema(
+const CandidateSchema = schema(
   {
     postId: types.objectId({ required: true }),
     userId: types.objectId({ required: true }),
@@ -19,5 +19,5 @@ const CurriculumVitaeSchema = schema(
   },
 );
 
-export type TUserCurriculumVitae = (typeof CurriculumVitaeSchema)[0];
-export default papr.model('CurriculumVitae', CurriculumVitaeSchema);
+export type TUserCurriculumVitae = (typeof CandidateSchema)[0];
+export default papr.model('Candidate', CandidateSchema);

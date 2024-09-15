@@ -1,4 +1,9 @@
-import { BookOpenText, LayoutDashboard, Library } from 'lucide-react';
+import {
+  BookOpenText,
+  LayoutDashboard,
+  Library,
+  LucideBriefcase,
+} from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import './sidebar.css';
@@ -69,6 +74,13 @@ const SideBar = () => {
                 Cases
               </Link>
             </li>
+          </ul>
+        </li>
+        <li>
+          <div id="icon-link-2" className="icon-link">
+            <LucideBriefcase className="text-[color:var(--cruto-white)] m-auto w-[40px] h-[30px]" />
+          </div>
+          <ul id="sub-menu" className="sub-menu">
             <li>
               <Link
                 href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.post}`}
