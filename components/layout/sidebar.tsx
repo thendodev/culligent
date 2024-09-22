@@ -15,7 +15,7 @@ const SideBar = () => {
       <ul id="nav-link" className="nav-links close">
         <li>
           <div id="icon-link" className="icon-link">
-            <LayoutDashboard className="text-[color:var(--cruto-white)] m-auto w-[40px] h-[30px]" />
+            <LayoutDashboard className="text-[color:var(--cruto-white)] m-auto w-[25px] h-[30px]" />
           </div>
           <ul id="sub-menu" className="sub-menu">
             <li>
@@ -57,7 +57,7 @@ const SideBar = () => {
         </li>
         <li>
           <div id="icon-link-2" className="icon-link">
-            <Library className="text-[color:var(--cruto-white)] m-auto w-[40px] h-[30px]" />
+            <Library className="text-[color:var(--cruto-white)] m-auto w-[25px] h-[30px]" />
           </div>
           <ul id="sub-menu" className="sub-menu">
             <li>
@@ -78,7 +78,7 @@ const SideBar = () => {
         </li>
         <li>
           <div id="icon-link-2" className="icon-link">
-            <LucideBriefcase className="text-[color:var(--cruto-white)] m-auto w-[40px] h-[30px]" />
+            <LucideBriefcase className="text-[color:var(--cruto-white)] m-auto w-[25px] h-[30px]" />
           </div>
           <ul id="sub-menu" className="sub-menu">
             <li>
@@ -99,7 +99,7 @@ const SideBar = () => {
         </li>
         <li>
           <div id="link-icon-3" className="icon-link">
-            <BookOpenText className="text-[color:var(--cruto-white)] m-auto w-[40px] h-[30px]" />
+            <BookOpenText className="text-[color:var(--cruto-white)] m-auto w-[25px] h-[30px]" />
           </div>
           <ul id="sub-menu-2" className="sub-menu">
             <li>

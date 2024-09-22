@@ -1,11 +1,7 @@
 import React from 'react';
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { getPostHandler } from '@/handlers/handlePosts';
-import Post from './components/post';
+import { TPost } from '@/models/Posts';
 
 interface IPostPageProps {
   params: {
@@ -16,16 +12,12 @@ interface IPostPageProps {
 const PostPage = async ({ params: { id } }: IPostPageProps) => {
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
+  const post = await queryClient.fetchQuery<TPost | null>({
     queryKey: ['posts', id],
-    queryFn: () => getPostHandler(id),
+    queryFn: async () => getPostHandler(id),
   });
 
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Post />
-    </HydrationBoundary>
-  );
+  return <div></div>;
 };
 
 export default PostPage;

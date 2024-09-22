@@ -1,5 +1,5 @@
 import { postsValidationSchema } from '@/validations/posts';
-import { createRoute } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 
 export const createPostRoute = createRoute({
   method: 'post',
@@ -31,6 +31,11 @@ export const getPostRoute = createRoute({
   path: '/:id',
   tags: ['Post'],
   summary: 'Fetch single post',
+  request: {
+    params: z.object({
+      id: z.string().openapi('Post ID'),
+    }),
+  },
   responses: {
     200: {
       description: 'Success',

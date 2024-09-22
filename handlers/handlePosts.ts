@@ -3,6 +3,7 @@ import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
 import { TPost } from '@/models/Posts';
 import { TPostValidation } from '@/validations/posts';
+import { AxiosError } from 'axios';
 
 enum EPostRoutes {
   POSTS = '/recruitment/posts',
@@ -19,8 +20,14 @@ export const getPostsHandler = async () => {
 };
 
 export const getPostHandler = async (id: string) => {
-  const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
-  return data;
+  try {
+    const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
+    return data;
+  } catch (e) {
+    const error = e as AxiosError;
+    console.log(error);
+    return null;
+  }
 };
 
 export const updatePostHandler = async (data: TWithId<TPostValidation>) => {
