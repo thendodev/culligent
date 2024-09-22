@@ -30,6 +30,7 @@ export async function Dbconnect(): Promise<MongoClient | void> {
   papr.initialize(client.db(envServer.DATABASE_NAME));
 
   await papr.updateSchemas();
+  return client;
 }
 
 export async function Dbdisconnect() {

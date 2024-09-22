@@ -4,12 +4,15 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { login } from './routes/auth/login/login';
 import { signUp } from './routes/auth/sign-up/sign-up';
 import { opt } from './routes/auth/otp/otp';
-import { logger } from './middleware/logger';
 import { recruitment } from './routes/recruitment';
 import { magicLink } from './routes/auth/magic-link/magic-link';
+import { Dbconnect } from '@/lib/database/papr';
+import { logger } from 'hono/logger';
+import { MongoClient } from 'mongodb';
+
 const app = new OpenAPIHono();
 
-//initailaize swagger
+//initialize swagger
 app.doc31('/api/swagger.json', {
   openapi: '3.1.0',
   info: {
@@ -36,11 +39,24 @@ app.get(
   }),
 );
 
+//connect to database
+let dbConnection: void | MongoClient;
+app.use('*', async (c, next) => {
+  try {
+    if (dbConnection) return await next();
+    dbConnection = await Dbconnect();
+    console.log('connected to database');
+    await next();
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 //register middleware
 
-app.use(logger);
+app.use(logger());
 
-//authentification end points
+//authentication end points
 app.route('/', login);
 app.route('/', signUp);
 app.route('/', opt);
