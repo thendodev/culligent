@@ -2,6 +2,7 @@ import LinkTabs from '@/components/modules/link-tabs';
 import React from 'react';
 import PageWrapper from '../../components/page-wrapper';
 import { ProjectRoutes } from '@/global/routes';
+import SharePost from './components/share-post';
 
 interface IPostLayoutProps {
   params: {
@@ -28,7 +29,10 @@ const PostLayout = ({ params: { id }, children }: IPostLayoutProps) => {
   return (
     <div className="w-full">
       <PageWrapper>
-        <LinkTabs tabs={tabs} />
+        <div className="w-full flex justify-between p-1">
+          <LinkTabs tabs={tabs} />
+          <SharePost />
+        </div>
         <div className="mt-4">{children}</div>
       </PageWrapper>
     </div>

@@ -18,7 +18,6 @@ export const createCaseHandler = async (newCase: TCase) => {
 export const getCasesHandler = async () => {
   const { data } = await privateRequest.get(ECaseRoutes.CASES);
   //remap data to match the case column schema
-  console.log(data);
   return data?.map((item: TCase) => ({
     ...item,
     questions: item?.questions?.length,
