@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { emailSignUphandler } from '@/handlers/handleAccounts';
+import { emailSignUpHandler } from '@/handlers/handleAccounts';
 import Link from 'next/link';
 import { ProjectRoutes } from '@/global/routes';
 import { TSignUp, signUpSchema } from '@/validations/auth';
@@ -38,7 +38,7 @@ const SignUpForm = () => {
   ) => {
     e?.preventDefault();
     setIsLoading(true);
-    const user = await emailSignUphandler(data);
+    const user = await emailSignUpHandler(data);
     setIsLoading(false);
     if (user) {
       router.push(

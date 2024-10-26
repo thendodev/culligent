@@ -9,7 +9,6 @@ const StageSchema = new Mongoose.Schema({
 });
 
 const PipelineSchema = new Mongoose.Schema<TPipeline>({
-  pipeline: { type: String, minLength: 2, required: true },
   stages: [StageSchema],
 });
 

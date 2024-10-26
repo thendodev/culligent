@@ -7,7 +7,6 @@ const StageValidationSchema = z.object({
 });
 const PipelineValidationSchema = z.object({
   userId: z.string().min(8),
-  pipeline: z.string().min(2),
   stages: z.array(StageValidationSchema),
 });
 

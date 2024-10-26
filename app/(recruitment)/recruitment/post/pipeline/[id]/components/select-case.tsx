@@ -25,29 +25,30 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckIcon, ChevronsUpDown, Link, PlusCircleIcon } from 'lucide-react';
 
 import { MTeam } from '@/models/Teams';
 import { useLoading } from '@/app/state/loading-state';
 import { ProjectRoutes } from '@/global/routes';
 import { useRouter } from 'next/navigation';
+import { TCase } from '@/models/Cases';
+import { FormLabel } from '@/components/ui/form';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
 interface TeamSwitcherProps extends PopoverTriggerProps {
-  teams: MTeam[] | null | undefined;
-  onTeamSelect: (team: MTeam) => void;
-  selectedTeam: MTeam | null | undefined;
+  cases: TCase[] | null | undefined;
+  onCaseSelect: (team: TCase) => void;
+  selectedCase: TCase | null | undefined;
 }
 
 export default function SelectCase({
   className,
-  teams,
-  onTeamSelect,
-  selectedTeam,
+  cases,
+  onCaseSelect,
+  selectedCase,
 }: TeamSwitcherProps) {
   const [open, setOpen] = React.useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false);
@@ -56,6 +57,9 @@ export default function SelectCase({
 
   return (
     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+      <FormLabel className="font-light text-sm">
+        Case <sup>(optional)</sup>
+      </FormLabel>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -65,7 +69,7 @@ export default function SelectCase({
             aria-label="Select a case"
             className={cn('w-full justify-between', className)}
           >
-            {selectedTeam?.name ?? <p>Select a case</p>}
+            {selectedCase?.name ?? <p>Select a case</p>}
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -75,20 +79,20 @@ export default function SelectCase({
               <CommandInput className="w-full" placeholder="Search team..." />
               <CommandEmpty>No team found.</CommandEmpty>
               {isLoading && <CommandItem>Loading teams</CommandItem>}
-              {teams?.map((team) => (
+              {cases?.map((selectCase) => (
                 <CommandItem
-                  key={team.name}
+                  key={selectCase.name}
                   onSelect={() => {
-                    onTeamSelect(team);
+                    onCaseSelect(selectCase);
                     setOpen(false);
                   }}
                   className="text-sm"
                 >
-                  {team.name}
+                  {selectCase.name}
                   <CheckIcon
                     className={cn(
                       'ml-auto h-4 w-4',
-                      selectedTeam?._id === team._id
+                      selectedCase?._id === selectCase._id
                         ? 'opacity-100'
                         : 'opacity-0',
                     )}

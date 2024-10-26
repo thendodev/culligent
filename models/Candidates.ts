@@ -1,4 +1,3 @@
-import Post from '@/app/(recruitment)/recruitment/post/[[...id]]/component/post';
 import papr from '@/lib/database/papr';
 import { schema, types } from 'papr';
 
