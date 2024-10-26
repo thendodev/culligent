@@ -30,7 +30,7 @@ type TCaseProps = {
   queryKey?: string | null;
 };
 
-const CaseDetails = ({ id, queryKey }: TCaseProps) => {
+const Case = ({ id, queryKey }: TCaseProps) => {
   const { data } = useQuery({
     queryKey: [queryKey, id],
     queryFn: () => getCaseHandler(id),
@@ -161,4 +161,4 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
   );
 };
 
-export default CaseDetails;
+export default Case;

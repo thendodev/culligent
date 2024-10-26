@@ -12,6 +12,10 @@ export enum ProjectRoutes {
   teams = 'teams',
   posts = 'posts',
   post = 'post',
+  pipeline = 'pipeline',
+  pipelines = 'pipelines',
+  candidates = 'candidates',
+  applicants = 'applicants',
   login = '/',
 
   //deprecated

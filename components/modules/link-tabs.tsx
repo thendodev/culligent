@@ -2,19 +2,26 @@
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import { baseUrl } from '@/global/config';
+import { cn } from '@/lib/utils';
 
 interface ILinkTabProps {
   tabs: {
     name: string;
     href: string;
   }[];
+  style?: string;
 }
 
-const LinkTabs = ({ tabs }: ILinkTabProps) => {
+const LinkTabs = ({ tabs, style }: ILinkTabProps) => {
   const path = usePathname();
 
   return (
-    <div className="w-fit border-b border-b-[var(--cruto-border)] space-x-2">
+    <div
+      className={cn(
+        'w-fit border-b border-b-[var(--cruto-border)] space-x-2',
+        style,
+      )}
+    >
       {tabs.map((tab, index) => (
         <a
           key={index}

@@ -1,6 +1,6 @@
 import PageWrapper from '@/app/(recruitment)/recruitment/components/page-wrapper';
 import React from 'react';
-import CaseDetails from './components/case-details';
+import Case from './components/case';
 import {
   dehydrate,
   HydrationBoundary,
@@ -20,7 +20,7 @@ const CaseBuilder = async ({ params }: { params: { id: string } }) => {
   return (
     <PageWrapper title="new-case" description="create a new case from scratch">
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <CaseDetails id={id} queryKey={queryKey} />
+        <Case id={id} queryKey={queryKey} />
       </HydrationBoundary>
     </PageWrapper>
   );

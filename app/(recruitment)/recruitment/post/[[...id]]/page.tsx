@@ -1,36 +1,190 @@
-import { getPostHandler } from '@/handlers/handlePosts';
+'use client';
 import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from '@tanstack/react-query';
+  createPostHandler,
+  getPostHandler,
+  updatePostHandler,
+} from '@/handlers/handlePosts';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React from 'react';
-import PageWrapper from '../../components/page-wrapper';
-import Post from './component/post';
+import { useForm } from 'react-hook-form';
+import { postsValidationSchema, TPostValidation } from '@/validations/posts';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 
-type TPostProps = {
-  params: {
-    id: string;
-  };
-};
+import {
+  FormCollection,
+  FormFooter,
+  FormWrapper,
+} from '@/components/modules/forms';
+import { toast } from '@/components/ui/use-toast';
+import { TWithId } from '@/global/types';
+import Certifications from './component/certifications';
+import Skills from './component/skills';
+import { useParams } from 'next/navigation';
 
-const PostPage = async ({ params: { id } }: TPostProps) => {
+const Post = () => {
+  const { id } = useParams();
+
   const queryKey = ['posts', id];
 
-  const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery({
+  const { data } = useQuery({
     queryKey,
-    queryFn: () => getPostHandler(id),
+    queryFn: () => getPostHandler(id as string),
+    enabled: !!id,
+  });
+
+  console.log(data);
+
+  const form = useForm<TWithId<TPostValidation>>({
+    values: data,
+    resolver: zodResolver(postsValidationSchema),
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: id
+      ? form.handleSubmit(updatePostHandler)
+      : form.handleSubmit(createPostHandler),
+    onSuccess: () => {
+      toast({
+        title: 'Post saved',
+        description: 'Post saved successfully',
+      });
+      form.reset();
+    },
   });
 
   return (
-    <PageWrapper title="Post" description="Post">
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Post id={id} queryKey={queryKey} />
-      </HydrationBoundary>
-    </PageWrapper>
+    <Form {...form}>
+      <FormWrapper action={mutate} title={id ? 'Edit post' : 'Create post'}>
+        <FormCollection
+          section="Post information"
+          description="General information related to the post"
+        >
+          <FormField
+            name={'title'}
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="font-light text-md">Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Post title" {...field} />
+                </FormControl>
+                <FormMessage>
+                  {form.formState.errors.title?.message || ''}
+                </FormMessage>
+              </FormItem>
+            )}
+          />
+          <FormField
+            name={'description'}
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="font-light text-md">
+                  Description
+                </FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Post description" {...field} />
+                </FormControl>
+                <FormMessage>
+                  {form.formState.errors.title?.message || ''}
+                </FormMessage>
+              </FormItem>
+            )}
+          />
+          <FormField
+            name={'role'}
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="font-light text-md">Role</FormLabel>
+                <FormControl>
+                  <Input placeholder="Post role" {...field} />
+                </FormControl>
+                <FormMessage>
+                  {form.formState.errors.title?.message || ''}
+                </FormMessage>
+              </FormItem>
+            )}
+          />
+          <Skills />
+          <FormField
+            name={'isFeatured'}
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="font-light text-md">Published</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage>
+                  {form.formState.errors.title?.message || ''}
+                </FormMessage>
+              </FormItem>
+            )}
+          />
+        </FormCollection>
+        <FormCollection
+          section="Candidate information"
+          description="General information related to the ideal candidate"
+        >
+          <FormField
+            name={'idealCandidate.experience'}
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="font-light text-md">Experience</FormLabel>
+                <FormControl>
+                  <Input placeholder="Candidate experience" {...field} />
+                </FormControl>
+                <FormMessage>
+                  {form.formState.errors.title?.message || ''}
+                </FormMessage>
+              </FormItem>
+            )}
+          />
+          <FormField
+            name={'idealCandidate.education'}
+            control={form.control}
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="font-light text-md">
+                  Education level
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="Candidate experience" {...field} />
+                </FormControl>
+                <FormMessage>
+                  {form.formState.errors.title?.message || ''}
+                </FormMessage>
+              </FormItem>
+            )}
+          />
+          <Certifications />
+        </FormCollection>
+        <FormFooter>
+          <Button variant={'outline'} type="button">
+            Cancel
+          </Button>
+          <Button>Submit</Button>
+        </FormFooter>
+      </FormWrapper>
+    </Form>
   );
 };
 
-export default PostPage;
+export default Post;

@@ -35,7 +35,7 @@ const PostActions = ({ data }: PostActionProps) => {
 
   const prefetchCase = async () => {
     await queryClient.prefetchQuery({
-      queryKey: ['cases', data._id],
+      queryKey: ['posts', data._id],
       queryFn: () => getCaseHandler(data._id.toString()),
     });
   };
@@ -70,7 +70,7 @@ const PostActions = ({ data }: PostActionProps) => {
             onMouseOver={prefetchCase}
             onClick={() =>
               router.push(
-                `/${ProjectRoutes.recruitment}/${ProjectRoutes.case_builder}/${data?._id}`,
+                `/${ProjectRoutes.recruitment}/${ProjectRoutes.post}/${data?._id}`,
               )
             }
           >
