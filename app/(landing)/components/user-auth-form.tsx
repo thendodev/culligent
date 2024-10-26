@@ -44,7 +44,6 @@ const UserAuthForm = () => {
         </Link>
         |
         <Button
-          isLoading
           onClick={toggleForgotPassword}
           variant="ghost"
           className=" hover:text-[var(--cruto-green)] w-fit m-0 p-0"
