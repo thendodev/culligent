@@ -1,10 +1,8 @@
 import { EStatusCode } from '@/global/config';
-import { Dbconnect, Dbdisconnect } from '@/lib/database/papr';
 import { verifyPasswordService } from '@/server/services/passwords/password-service';
 import { createRefreshTokenService } from '@/server/services/refreshTokens/token-service';
 import { getUserService } from '@/server/services/user/user-service';
 import { OpenAPIHono } from '@hono/zod-openapi';
-import { HTTPException } from 'hono/http-exception';
 import { loginRoute } from './route';
 
 export const login = new OpenAPIHono();

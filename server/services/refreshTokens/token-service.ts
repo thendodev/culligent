@@ -1,5 +1,5 @@
 import RefreshToken from '@/models/RefreshToken';
-import { MUser } from '@/models/User';
+import { TUser } from '@/models/User';
 import { generateTokens } from '@/server/helpers/tokens';
 
 type TTokenResponse = {
@@ -7,7 +7,7 @@ type TTokenResponse = {
   refreshToken: string;
 };
 export const createRefreshTokenService = async (
-  user: MUser,
+  user: TUser,
 ): Promise<TTokenResponse | null> => {
   try {
     const { refreshToken, accessToken } = await generateTokens(user);

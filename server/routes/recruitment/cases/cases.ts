@@ -28,7 +28,7 @@ cases.openapi(createCaseRoute, async (c) => {
     //get case and token
     const cases = c.req.valid('json');
     const token = getCookie(c, EUserCookies.user);
-    //throw error if no user token is found
+    //return error if no user token is found
     if (!token) return c.json({ message: 'no token' }, EStatusCode.BadRequest);
 
     //get user from token

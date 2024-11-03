@@ -1,11 +1,9 @@
 import { toast } from '@/components/ui/use-toast';
-import { ClientErrorResponse } from '@/global/response.types';
 import { TAuthResponse } from '@/global/types';
 import { storeLoginCookiesUtil } from '@/lib/cookiesUtil';
 import { publicRequest } from '@/lib/requests';
-import { MUser } from '@/models/User';
+import { TUser } from '@/models/User';
 import { TLogin } from '@/validations/auth';
-import { AxiosError } from 'axios';
 
 export enum EAuth {
   SIGN_IN = '/auth/login',
@@ -16,57 +14,51 @@ export enum EAuth {
   LINKEDIN = '/auth/linkedin',
 }
 
-export const loginHandler = async (userData: TLogin): Promise<MUser | void> => {
-  try {
-    const { data } = await publicRequest.post<TAuthResponse>(EAuth.SIGN_IN, {
-      ...userData,
-    });
+export const loginHandler = async (userData: TLogin): Promise<TUser | void> => {
+  const { data } = await publicRequest.post<TAuthResponse>(EAuth.SIGN_IN, {
+    ...userData,
+  });
 
-    const { user, accessToken, refreshToken } = data;
-    if (user.isVerified)
-      storeLoginCookiesUtil({ accessToken, user, refreshToken });
-    return user;
-  } catch (e) {}
+  const { user, accessToken, refreshToken } = data;
+  if (user.isVerified)
+    storeLoginCookiesUtil({ accessToken, user, refreshToken });
+  return user;
 };
 
 export const createMagicLinkHandler = async (email: string): Promise<void> => {
-  try {
-    await publicRequest.post(EAuth.CREATE_MAGIC_LINK, {
-      email,
-    });
+  await publicRequest.post(EAuth.CREATE_MAGIC_LINK, {
+    email,
+  });
 
-    toast({
-      title: 'Success',
-      description: 'Email sent successfully',
-    });
-  } catch (e) {}
+  toast({
+    title: 'Success',
+    description: 'Email sent successfully',
+  });
 };
 export const loginMagicLinkHandler = async (
   id: string,
   otp: string,
-): Promise<MUser | void> => {
-  try {
-    const { data } = await publicRequest.put<TAuthResponse>(
-      EAuth.MAGIC_LINK_LOGIN,
-      {
-        user: id,
-        otp,
-      },
-    );
-    const { user, accessToken, refreshToken } = data;
-    if (!user.isVerified) throw new Error('User not verified');
-    storeLoginCookiesUtil({ accessToken, user, refreshToken });
+): Promise<TUser | void> => {
+  const { data } = await publicRequest.put<TAuthResponse>(
+    EAuth.MAGIC_LINK_LOGIN,
+    {
+      user: id,
+      otp,
+    },
+  );
+  const { user, accessToken, refreshToken } = data;
+  if (!user.isVerified) return;
+  storeLoginCookiesUtil({ accessToken, user, refreshToken });
 
-    toast({
-      title: 'Success',
-      description: 'Login successful',
-    });
+  toast({
+    title: 'Success',
+    description: 'Login successful',
+  });
 
-    return user;
-  } catch {}
+  return user;
 };
 
-export const linkedinHandler = async (): Promise<MUser | void> => {
+export const linkedinHandler = async (): Promise<TUser | void> => {
   try {
     const { data } = await publicRequest.get<TAuthResponse>(EAuth.LINKEDIN);
 

@@ -1,6 +1,6 @@
 import { ApiResponse } from '@/global/response.types';
 import Otp, { MOtp } from '@/models/Otp';
-import User, { MUser } from '@/models/User';
+import User, { TUser } from '@/models/User';
 import { EUserServiceResponse } from './service.types';
 import { EStatusCode } from '@/global/config';
 import { TSignUp } from '@/validations/auth';
@@ -17,7 +17,7 @@ export const createUserService = async ({
   password,
   surname,
   name,
-}: Partial<TSignUp>): Promise<ApiResponse<MUser>> => {
+}: Partial<TSignUp>): Promise<ApiResponse<TUser>> => {
   if (!email || !password || !name || !surname) {
     return {
       success: false,
@@ -52,7 +52,7 @@ export const createUserService = async ({
 
 export const getUserService = async (
   email: string,
-): Promise<ApiResponse<MUser>> => {
+): Promise<ApiResponse<TUser>> => {
   const user = await User.findOne({ email });
   if (!user)
     return {

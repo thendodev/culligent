@@ -15,16 +15,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { ProjectRoutes } from '@/global/routes';
-import { UserProps } from '@/models/User.types';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import penguinProfile from '@/assets/penguin-profile.svg';
 import Image from 'next/image';
-import { MUser } from '@/models/User';
+import { TUser } from '@/models/User';
 import { useAxiosInterceptors } from '@/hooks/useInterceptors';
 
 type ProfileMenuProps = {
-  user: MUser;
+  user: TUser;
 };
 const ProfileMenu = ({ user }: ProfileMenuProps) => {
   const router = useRouter();
@@ -38,7 +37,7 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        <div className="h-[50px] w-[50px] bg-[var(--cruto-white)] rounded-full border border-[var(--cruto-off-white)]">
+        <div className="h-[45px] w-[45px] bg-[var(--cruto-white)] rounded-full border border-[var(--cruto-off-white)]">
           <Image
             src={penguinProfile}
             objectFit="contain"
@@ -47,7 +46,10 @@ const ProfileMenu = ({ user }: ProfileMenuProps) => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          My Account
+          <p className="text-sm text-gray-400">{user.email}</p>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>

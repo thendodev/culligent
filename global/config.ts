@@ -61,3 +61,30 @@ export const dateFormat: Intl.DateTimeFormatOptions = {
   month: 'short',
   day: 'numeric',
 };
+
+export enum EDateRegions {
+  'United States' = 'en-US',
+  'United Kingdom' = 'en-GB',
+  'Canada' = 'en-CA',
+  'Australia' = 'en-AU',
+  'Ireland' = 'en-IE',
+  'New Zealand' = 'en-NZ',
+  'South Africa' = 'en-ZA',
+  'India' = 'en-IN',
+  'Philippines' = 'en-PH',
+  'Singapore' = 'en-SG',
+  'Hong Kong' = 'en-HK',
+  'Malaysia' = 'en-MY',
+  'Switzerland' = 'en-CH',
+  'Austria' = 'en-AT',
+  'Belgium' = 'en-BE',
+  'Denmark' = 'en-DK',
+  'Finland' = 'en-FI',
+  'France' = 'en-FR',
+  'Germany' = 'en-DE',
+  'Italy' = 'en-IT',
+}
+
+export enum EGenericQueryKeys {
+  CASES = 'cases',
+}

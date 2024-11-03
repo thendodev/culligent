@@ -1,6 +1,6 @@
 'use client';
 
-import React, { BaseSyntheticEvent } from 'react';
+import { BaseSyntheticEvent, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -14,14 +14,15 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { emailSignUphandler } from '@/handlers/handleAccounts';
+import { emailSignUpHandler } from '@/handlers/handleAccounts';
 import Link from 'next/link';
 import { ProjectRoutes } from '@/global/routes';
 import { TSignUp, signUpSchema } from '@/validations/auth';
+import { Loader2Icon } from 'lucide-react';
 
 const SignUpForm = () => {
   const router = useRouter();
-
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<TSignUp>({
     defaultValues: {
       name: '',
@@ -36,7 +37,9 @@ const SignUpForm = () => {
     e: BaseSyntheticEvent<object, any, any> | undefined,
   ) => {
     e?.preventDefault();
-    const user = await emailSignUphandler(data);
+    setIsLoading(true);
+    const user = await emailSignUpHandler(data);
+    setIsLoading(false);
     if (user) {
       router.push(
         `${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?user=${user._id}`,
@@ -137,7 +140,9 @@ const SignUpForm = () => {
           />
 
           <div>
-            <Button className="mt-2">Sign Up</Button>
+            <Button className="mt-2">
+              {!isLoading ? <p>Sign Up</p> : <Loader2Icon />}
+            </Button>
           </div>
         </form>
       </Form>

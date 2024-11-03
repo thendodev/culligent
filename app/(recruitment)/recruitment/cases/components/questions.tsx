@@ -6,27 +6,31 @@ import { Check, Search, X } from 'lucide-react';
 import { useState } from 'react';
 
 type TQuestionsProps = {
-  questions: TQuestion[] | undefined;
+  questions: TQuestion[] | Record<string, any>[] | undefined;
 };
 
 const Questions = ({ questions }: TQuestionsProps) => {
-  const [filteredQuestions, setFilteredQuestions] = useState(questions);
+  const [filteredQuestions, setFilteredQuestions] = useState<
+    TQuestion[] | undefined
+  >(questions);
 
   const deepSearch = (search: string) => {
     const searchTerm = search.toLowerCase();
 
     //i want to destructure the question and answers
-    const filteredList = questions?.filter((question, index) => {
-      const questionText = question?.question?.toLowerCase();
-      const answersText = question?.answers?.some((answer) => {
-        return answer?.answer?.toLowerCase().includes(searchTerm);
-      });
-      const currentQuestion = `question ${index + 1}`.includes(searchTerm);
+    const filteredList = questions?.filter(
+      (question: TQuestion, index: number) => {
+        const questionText = question?.question?.toLowerCase();
+        const answersText = question?.answers?.some((answer) => {
+          return answer?.answer?.toLowerCase().includes(searchTerm);
+        });
+        const currentQuestion = `question ${index + 1}`.includes(searchTerm);
 
-      return (
-        questionText?.includes(searchTerm) || answersText || currentQuestion
-      );
-    });
+        return (
+          questionText?.includes(searchTerm) || answersText || currentQuestion
+        );
+      },
+    );
 
     setFilteredQuestions(filteredList);
   };
@@ -44,29 +48,37 @@ const Questions = ({ questions }: TQuestionsProps) => {
           </div>
         </div>
       </div>
-      {questions?.map((question, index) => {
-        if (!filteredQuestions?.includes(question) && filteredQuestions?.length)
+      {questions?.map((question: TQuestion, index: number) => {
+        if (
+          !filteredQuestions?.includes(question) &&
+          !filteredQuestions?.length
+        )
           return;
         return (
           <div
             className="w-full h-full flex bg-[var(--cruto-foreground)] border border-[var(--cruto-border)] rounded-[var(--cruto-radius)]"
             key={index}
           >
-            <div className="w-full flex flex-col  gap-2 p-8 border-r border-[var(--cruto-border)]">
+            <div className="w-full flex flex-col  gap-2 p-6 border-r border-[var(--cruto-border)]">
               <span className="text-xl font-semibold">
                 Question {index + 1}
               </span>
               <span className="mx-auto">{question?.question}</span>
             </div>
-            <div className="w-full flex flex-col  gap-4 p-8">
-              <div className="flex gap-2 w-full">
-                <span className="ml-auto text-2xl font-semibold">
+            <div className="w-full flex flex-col gap-4 p-6">
+              <div className="mx-auto space-x-2 flex">
+                <span className="text-2xl font-semibold">
                   {question?.skill}
                 </span>
                 <Separator orientation="vertical" className="bg-black" />
-                <span className="mr-auto text-xl bg-[var(--cruto-pale-green)] px-2 py-1 rounded-[var(--cruto-radius)] text-[var(--cruto-off-white)]">
-                  {question?.skill_level} level
-                </span>
+                <div className="flex gap-2 mx-auto">
+                  <span className="text-sm bg-[var(--cruto-pale-green)] px-1 py-1">
+                    {question?.skill_level} level
+                  </span>
+                  <div className="text-sm bg-[var(--cruto-pale-green)] px-1 py-1">
+                    {question?.points} Points
+                  </div>
+                </div>
               </div>
               <div className="flex flex-col w-full justify-between gap-4">
                 {question?.answers?.map((answer) => (
@@ -82,9 +94,6 @@ const Questions = ({ questions }: TQuestionsProps) => {
                     <span className="text-large">{answer.answer}</span>
                   </div>
                 ))}
-              </div>
-              <div className="mx-auto bg-[var(--cruto-pale-green)] px-2 py-1 rounded-[var(--cruto-radius)] text-[var(--cruto-off-white)]">
-                {question?.points} Points
               </div>
             </div>
           </div>

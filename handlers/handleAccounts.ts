@@ -1,10 +1,10 @@
 import { toast } from '@/components/ui/use-toast';
 import { publicRequest } from '@/lib/requests';
-import { MUser } from '@/models/User';
+import { TUser } from '@/models/User';
 import { TSignUp } from '@/validations/auth';
 
-export const emailSignUphandler = async (newUser: TSignUp) => {
-  const { data } = await publicRequest.post<MUser>('auth/sign-up/', {
+export const emailSignUpHandler = async (newUser: TSignUp) => {
+  const { data } = await publicRequest.post<TUser>('auth/sign-up/', {
     ...newUser,
   });
   toast({

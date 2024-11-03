@@ -3,25 +3,22 @@
 import { useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { AlignLeft, Check, ListChecks } from 'lucide-react';
+import { AlignLeft, ListChecks } from 'lucide-react';
 import OptionCard from './option-card';
 import { ReactNode, useState } from 'react';
-import SingleChoice from './SingleChoice';
-import OpenEnded from './OpenEnded';
-import MultiChoice from './MultiChoice';
 import { toast } from '@/components/ui/use-toast';
-import { QuestionViewSkeleton } from './question-view-skeleton';
 import SaveCase from './save-case';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { getCaseHandler } from '@/handlers/handleCases';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import ViewQuestion from './new-question/view-question';
 import {
   CaseSchema,
   QuestionSchema,
   TCaseValidation,
 } from '@/validations/cases';
-import QuestionView from './question-view';
+import QuestionWrapper from './QuestionWrapper';
+import Answers from './new-question/Answers';
+import Question from './new-question/Question';
 
 export enum QuestionType {
   SingleChoice = 'Single Choice',
@@ -29,25 +26,20 @@ export enum QuestionType {
   MultiChoice = 'Multiple Choice',
 }
 type TCaseProps = {
-  id?: string | null;
+  id: string;
   queryKey?: string | null;
 };
 
-const CaseDetails = ({ id, queryKey }: TCaseProps) => {
-  const { data: editCase, isError } = useQuery({
+const Case = ({ id, queryKey }: TCaseProps) => {
+  const { data } = useQuery({
     queryKey: [queryKey, id],
-    queryFn: () => getCaseHandler(id as string),
-    enabled: !!id,
+    queryFn: () => getCaseHandler(id),
+    enabled: !!id?.length,
   });
 
   const form = useForm<TCaseValidation>({
     resolver: zodResolver(CaseSchema),
-    defaultValues: editCase ?? {
-      name: '',
-      description: '',
-      duration: 0,
-      questions: [],
-    },
+    values: data,
   });
 
   const fieldArray = useFieldArray({
@@ -77,15 +69,16 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
   };
 
   const [option, setOption] = useState<ReactNode>(
-    <SingleChoice
-      type={QuestionType.SingleChoice}
-      form={form}
-      question={0}
-      handleSave={handleSave}
-      key={0}
-    />,
+    <QuestionWrapper form={form}>
+      <Question
+        question={0}
+        handleSave={handleSave}
+        type={QuestionType.SingleChoice}
+        form={form}
+      />
+      <Answers form={form} question={0} />
+    </QuestionWrapper>,
   );
-  const [jumpTo, setJumpTo] = useState(0);
 
   const onNewOption = (option: string, questionIndex?: number) => {
     questionIndex = questionIndex ?? fieldArray.fields.length;
@@ -93,46 +86,41 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
     switch (option) {
       case QuestionType.SingleChoice:
         setOption(
-          <SingleChoice
-            form={form}
-            question={questionIndex}
-            key={questionIndex}
-            handleSave={handleSave}
-            type={QuestionType.SingleChoice}
-          />,
+          <QuestionWrapper form={form}>
+            <Question
+              question={questionIndex}
+              handleSave={handleSave}
+              type={QuestionType.SingleChoice}
+              form={form}
+            />
+            <Answers form={form} question={questionIndex} />
+          </QuestionWrapper>,
         );
         break;
       case QuestionType.OpenEnded:
         setOption(
-          <OpenEnded
-            form={form}
-            question={questionIndex}
-            key={questionIndex}
-            handleSave={handleSave}
-            type={QuestionType.OpenEnded}
-          />,
+          <QuestionWrapper form={form}>
+            <Question
+              question={questionIndex}
+              handleSave={handleSave}
+              type={QuestionType.SingleChoice}
+              form={form}
+            />
+          </QuestionWrapper>,
         );
         break;
-      case QuestionType.MultiChoice:
-        setOption(
-          <MultiChoice
-            form={form}
-            question={questionIndex}
-            key={questionIndex}
-            handleSave={handleSave}
-            type={QuestionType.MultiChoice}
-          />,
-        );
-        break;
+
       default:
         setOption(
-          <SingleChoice
-            form={form}
-            question={questionIndex}
-            handleSave={handleSave}
-            key={questionIndex}
-            type={QuestionType.SingleChoice}
-          />,
+          <QuestionWrapper form={form}>
+            <Question
+              question={questionIndex}
+              handleSave={handleSave}
+              type={QuestionType.SingleChoice}
+              form={form}
+            />
+            <Answers form={form} question={questionIndex} />
+          </QuestionWrapper>,
         );
     }
   };
@@ -159,11 +147,6 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
             icon={<ListChecks size={30} className="mr-2" />}
             name="Multiple Choice"
           />
-          <OptionCard
-            icon={<Check size={30} className="mr-2" />}
-            name="Single Choice"
-            onNewOption={onNewOption}
-          />
 
           <OptionCard
             icon={<AlignLeft size={30} className="mr-2" />}
@@ -178,4 +161,4 @@ const CaseDetails = ({ id, queryKey }: TCaseProps) => {
   );
 };
 
-export default CaseDetails;
+export default Case;

@@ -99,7 +99,7 @@ export default function TeamSwitcher({
             <CommandList>
               <CommandInput placeholder="Search team..." />
               <CommandEmpty>No team found.</CommandEmpty>
-              {isLoading && <CommandItem>Laoding teams</CommandItem>}
+              {isLoading && <CommandItem>Loading teams</CommandItem>}
               {teams?.map((team) => (
                 <CommandItem
                   key={team.name}
