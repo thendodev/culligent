@@ -25,23 +25,29 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { CheckIcon, ChevronsUpDown, Link, PlusCircleIcon } from 'lucide-react';
+import {
+  Briefcase,
+  CheckIcon,
+  ChevronsUpDown,
+  Link,
+  PlusCircleIcon,
+} from 'lucide-react';
 
-import { MTeam } from '@/models/Teams';
 import { useLoading } from '@/app/state/loading-state';
 import { ProjectRoutes } from '@/global/routes';
 import { useRouter } from 'next/navigation';
 import { TCase } from '@/models/Cases';
 import { FormLabel } from '@/components/ui/form';
+import { TWithId } from '@/global/types';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
 interface TeamSwitcherProps extends PopoverTriggerProps {
-  cases: TCase[] | null | undefined;
-  onCaseSelect: (team: TCase) => void;
-  selectedCase: TCase | null | undefined;
+  cases: TWithId<TCase>[] | undefined;
+  onCaseSelect: (team: TWithId<TCase>) => void;
+  selectedCase: TWithId<TCase> | null | undefined;
 }
 
 export default function SelectCase({
@@ -69,12 +75,13 @@ export default function SelectCase({
             aria-label="Select a case"
             className={cn('w-full justify-between', className)}
           >
+            <Briefcase className="mr-4 w-4 h-4" />
             {selectedCase?.name ?? <p>Select a case</p>}
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[80%] p-0">
-          <Command className="w-[80%]">
+        <PopoverContent className="w-[calc(30vw-70px)] p-0">
+          <Command className="w-full">
             <CommandList className="w-full">
               <CommandInput className="w-full" placeholder="Search team..." />
               <CommandEmpty>No team found.</CommandEmpty>

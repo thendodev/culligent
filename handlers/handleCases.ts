@@ -1,7 +1,9 @@
 import { toast } from '@/components/ui/use-toast';
 import { dateFormat } from '@/global/config';
+import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
 import { TCase } from '@/models/Cases';
+import { WithId } from 'mongodb';
 
 enum ECaseRoutes {
   CASES = '/recruitment/cases',
@@ -16,14 +18,10 @@ export const createCaseHandler = async (newCase: TCase) => {
 };
 
 export const getCasesHandler = async () => {
-  const { data } = await privateRequest.get(ECaseRoutes.CASES);
-  //remap data to match the case column schema
-  return data?.map((item: TCase) => ({
-    ...item,
-    questions: item?.questions?.length,
-    status: item.isFeatured ? 'Featured' : 'Draft',
-    createdAt: new Date(item.createdAt).toLocaleDateString('en-us', dateFormat),
-  }));
+  const { data } = await privateRequest.get<TWithId<TCase>[]>(
+    ECaseRoutes.CASES,
+  );
+  return data;
 };
 
 export const getCaseHandler = async (id: string) => {

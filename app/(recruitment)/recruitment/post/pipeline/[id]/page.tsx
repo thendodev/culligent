@@ -1,9 +1,7 @@
 'use client';
-import SearchBar from '@/components/modules/search-bar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import React from 'react';
+import React, { useState } from 'react';
 import SelectCase from './components/select-case';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { TPipeline } from '@/validations/pipeline';
@@ -16,19 +14,36 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { GripVertical, Trash2Icon } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  BriefcaseIcon,
+  GripVertical,
+  PenBox,
+  Trash2Icon,
+  X,
+} from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { getCasesHandler } from '@/handlers/handleCases';
+import { EGenericQueryKeys } from '@/global/config';
+import { TCase } from '@/models/Cases';
+import { TWithId } from '@/global/types';
 
 type Props = {};
 
 const PipelinePage = (props: Props) => {
+  const [selectedCase, setSelectedCase] = useState<TWithId<TCase>[]>([]);
+
+  const { data } = useQuery({
+    queryKey: [EGenericQueryKeys.CASES],
+    queryFn: getCasesHandler,
+  });
+
   const form = useForm<TPipeline>({
     defaultValues: {
       stages: [],
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     name: 'stages',
     control: form.control,
   });
@@ -47,17 +62,24 @@ const PipelinePage = (props: Props) => {
     return `#${randomColor}`;
   };
 
-  const handleNewStage = () => {
+  const handleSaveStage = () => {
     const stage = form.getValues(`stages.${index}`);
     stage.color = randomColorGenerator(2);
-    console.log(stage);
-    append(stage);
+
+    const cases = selectedCase.map((item) => item._id);
+    stage.cases = cases;
+    update(index, stage);
+    setIndex(fields.length + 1);
   };
 
   const handleDeleteStage = (index: number) => {
     remove(index);
   };
 
+  const handleCaseSelect = (newCase: TWithId<TCase>) =>
+    setSelectedCase((prev) => [...prev, newCase]);
+
+  const handleUpdateStage = (index: number) => setIndex(index);
   return (
     <div className="w-full h-[75vh]  flex flex-col gap-2">
       <div className="w-full flex items-center align-middle gap-2 ">
@@ -66,21 +88,47 @@ const PipelinePage = (props: Props) => {
           className="w-[63%] rounded-none border-t-0 border-x-0 "
         />
         <div>
-          <Button variant={'outline'}>Save</Button>
+          <Button>Save</Button>
         </div>
       </div>
       <div className="w-full h-full flex gap-2 ">
         <div className=" overflow-x-auto flex flex-col gap-2 w-[70%] h-full p-6 bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border border-[var(--cruto-border)]">
           {fields.map((pipeline, index) => (
             <div
-              className={`flex align-middle items-center border-t-8 border-t-${pipeline.color} bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] p-4`}
+              className={`flex align-middle items-center justify-between border-t-8 border-t-${pipeline.color} bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] p-4`}
               key={pipeline.id}
             >
               <div className="flex align-middle items-center gap-2">
-                <GripVertical />
-                <span className="font-light text-md">{pipeline.name}</span>
+                <GripVertical className="focus:cursor-grab bg-[var(--cruto-green)] bg-clip-border" />
+                <span className="font-light text-md mr-16">
+                  {pipeline.name}
+                </span>
+                <div className="flex items-center gap-2 border border-[var(--cruto-border)] p-1 rounded-[var(--cruto-radius)]">
+                  {selectedCase.length > 0 && (
+                    <BriefcaseIcon className="w-4 h-4" />
+                  )}
+                  {selectedCase.slice(0, 3)?.map((item) => (
+                    <span
+                      key={item._id.toString()}
+                      className="text-sm flex items-center gap-1 hover: cursor-pointer"
+                    >
+                      {item.name}
+                      <X className="w-3 h-3 hover:text-[var(--cruto-red)]" />
+                    </span>
+                  ))}
+                  {selectedCase.length > 3 && (
+                    <span className="text-sm flex items-center gap-1 hover: cursor-pointer">
+                      +{selectedCase.length - 3}
+                    </span>
+                  )}
+                </div>
               </div>
-              <div>
+
+              <div className="flex items-center gap-2">
+                <PenBox
+                  onClick={() => handleUpdateStage(index)}
+                  className="w-4 h-4 cursor-pointer hover:text-[var(--cruto-green)]"
+                />
                 <Trash2Icon
                   onClick={() => handleDeleteStage(index)}
                   className="mr-2 w-4 h-4 cursor-pointer hover:text-red-500"
@@ -128,13 +176,13 @@ const PipelinePage = (props: Props) => {
                 )}
               />
               <SelectCase
-                cases={[]}
-                onCaseSelect={() => {}}
-                selectedCase={undefined}
+                cases={data!}
+                onCaseSelect={handleCaseSelect}
+                selectedCase={selectedCase[0]}
               />
             </form>
 
-            <Button variant={'outline'} onClick={handleNewStage}>
+            <Button variant={'outline'} onClick={handleSaveStage}>
               Add stage
             </Button>
           </Form>

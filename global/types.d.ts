@@ -4,6 +4,6 @@ export type TAuthResponse = {
   refreshToken: string;
 };
 
-export type TWithId<T> = T & {
+export type TWithId<T> = Omit<T, '_id'> & {
   _id: string;
 };

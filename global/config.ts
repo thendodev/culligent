@@ -84,3 +84,7 @@ export enum EDateRegions {
   'Germany' = 'en-DE',
   'Italy' = 'en-IT',
 }
+
+export enum EGenericQueryKeys {
+  CASES = 'cases',
+}

@@ -14,14 +14,13 @@ import { Copy, Edit, Eye, MoreHorizontal, WorkflowIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
-import { TCase } from '@/models/Cases';
 import { ProjectRoutes } from '@/global/routes';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { getCaseHandler } from '@/handlers/handleCases';
-import { use } from 'chai';
+import { CaseTableProps } from './cases-column';
 
 interface CellActionProps {
-  data: TCase;
+  data: CaseTableProps;
 }
 
 const CellActions = ({ data }: CellActionProps) => {
