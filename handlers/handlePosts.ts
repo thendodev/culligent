@@ -31,6 +31,7 @@ export const getPostHandler = async (id: string) => {
 };
 
 export const updatePostHandler = async (data: TWithId<TPostValidation>) => {
+  console.log(data);
   const { data: response } = await privateRequest.put(
     `${EPostRoutes.POSTS}/${data._id}`,
     data,
