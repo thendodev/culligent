@@ -3,7 +3,6 @@ import { dateFormat } from '@/global/config';
 import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
 import { TCase } from '@/models/Cases';
-import { WithId } from 'mongodb';
 
 enum ECaseRoutes {
   CASES = '/recruitment/cases',
@@ -14,14 +13,20 @@ export const createCaseHandler = async (newCase: TCase) => {
     const { data } = await privateRequest.post(ECaseRoutes.CASES, newCase);
     if (!data) return;
     toast({ title: 'Case', description: 'Case created' });
-  } catch {}
+  } catch {
+    return null;
+  }
 };
 
-export const getCasesHandler = async () => {
-  const { data } = await privateRequest.get<TWithId<TCase>[]>(
-    ECaseRoutes.CASES,
-  );
-  return data;
+export const getCasesHandler = async (): Promise<TWithId<TCase>[] | null> => {
+  try {
+    const { data } = await privateRequest.get<TWithId<TCase>[]>(
+      ECaseRoutes.CASES,
+    );
+    return data;
+  } catch {
+    return null;
+  }
 };
 
 export const getCaseHandler = async (id: string) => {

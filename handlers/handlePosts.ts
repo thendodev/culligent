@@ -25,13 +25,11 @@ export const getPostHandler = async (id: string) => {
     return data;
   } catch (e) {
     const error = e as AxiosError;
-    console.log(error);
     return null;
   }
 };
 
 export const updatePostHandler = async (data: TWithId<TPostValidation>) => {
-  console.log(data);
   const { data: response } = await privateRequest.put(
     `${EPostRoutes.POSTS}/${data._id}`,
     data,

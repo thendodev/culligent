@@ -3,8 +3,6 @@ import Mongoose from 'mongoose';
 
 const StageSchema = new Mongoose.Schema<TStage>({
   name: { type: String, required: true },
-  description: { type: String, required: true },
-  color: { type: String, required: true },
   reviewers: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'User' }],
   cases: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'Case' }],
 });

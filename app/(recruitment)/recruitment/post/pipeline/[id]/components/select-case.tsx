@@ -29,7 +29,6 @@ import {
   Briefcase,
   CheckIcon,
   ChevronsUpDown,
-  Link,
   PlusCircleIcon,
 } from 'lucide-react';
 

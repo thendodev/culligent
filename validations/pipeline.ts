@@ -3,8 +3,6 @@ import { ObjectId } from 'mongodb';
 
 const StageValidationSchema = z.object({
   name: z.string().min(2),
-  color: z.string().min(2),
-  description: z.string().min(2),
   cases: z
     .array(z.string())
     .transform((val) => val.map((v) => new ObjectId(v)))
