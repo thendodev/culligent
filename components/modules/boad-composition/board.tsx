@@ -27,7 +27,7 @@ const Board = ({
   const form = useFormContext<TPipeline | TWithId<TPipeline>>();
 
   return (
-    <div className="group min-w-[250px] min-h-[500px] border-t-4  rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] bg-[var(--cruto-foreground)]">
+    <div className="group min-w-[200px] min-h-[500px] border-t-4  rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] bg-[var(--cruto-foreground)]">
       <div className="flex align-middle items-center justify-between p-2 hover:cursor-grab">
         <Form {...form}>
           <form>
@@ -39,7 +39,7 @@ const Board = ({
                   <FormControl>
                     <Input
                       {...field}
-                      className="border-none font-light text-md mr-16 hover:cursor-pointer hover:bg-[var(--cruto-background)] focus:bg-[var(--cruto-background)]"
+                      className="w-fit border-none rounded-none font-bold text-xl hover:cursor-pointer hover:bg-[var(--cruto-background)] focus:bg-[var(--cruto-background)]"
                       defaultValue={boardName}
                     />
                   </FormControl>

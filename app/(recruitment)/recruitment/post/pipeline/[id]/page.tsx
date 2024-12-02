@@ -93,7 +93,7 @@ const PipelinePage = (props: Props) => {
                 stageIndex={index}
               >
                 <div>
-                  <CasesList caseIndex={index} />
+                  <CasesList stageIndex={index} />
                 </div>
               </Board>
             ))}
