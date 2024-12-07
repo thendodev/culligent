@@ -17,8 +17,24 @@ import {
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { toast } from '@/components/ui/use-toast';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createPostHandler, getPostHandler } from '@/handlers/handlePosts';
+import { useParams, useRouter } from 'next/navigation';
+import {
+  createPipelineHandler,
+  updatePipelineHandler,
+} from '@/handlers/handlePipeline';
+import { mongooseObjectIdString } from '@/validations/mongoose';
 
 const PipelinePage = () => {
+  const { id } = useParams();
+
+  const { data } = useQuery({
+    queryKey: ['posts', id],
+    queryFn: () => getPostHandler(id as string),
+    enabled: !!id,
+  });
+
   const form = useForm<TPipeline>({
     defaultValues: {
       stages: [],
@@ -57,9 +73,11 @@ const PipelinePage = () => {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const stages = form.getValues();
-    const { success, error, data } = PipelineValidationSchema.safeParse(stages);
+    const { success, error, data } = PipelineValidationSchema.extend(
+      mongooseObjectIdString,
+    ).safeParse(stages);
     if (!success) {
       return toast({
         title: 'Pipeline is not valid',
@@ -67,6 +85,7 @@ const PipelinePage = () => {
         variant: 'destructive',
       });
     }
+    !id ? await createPipelineHandler(data) : await updatePipelineHandler(data);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -88,6 +107,15 @@ const PipelinePage = () => {
     }
   };
 
+  const { mutate } = useMutation({
+    mutationFn: handleSubmit,
+    onSuccess: () => {
+      toast({
+        title: 'Pipeline created',
+      });
+    },
+  });
+
   return (
     <DndContext
       modifiers={[restrictToHorizontalAxis]}
@@ -99,7 +127,7 @@ const PipelinePage = () => {
           <Button variant={'outline'} onClick={handleAddStage}>
             Add Stage
           </Button>
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={() => mutate()}>Submit</Button>
         </div>
         <div className="w-full h-full flex gap-2 ">
           <Form {...form}>

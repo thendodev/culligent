@@ -118,7 +118,7 @@ cases.openapi(updateCaseRoute, async (c) => {
 
     if (!updatedCase)
       return c.json(
-        { message: 'Case doesnt meet validation requirements' },
+        { message: "Case doesn't meet validation requirements" },
         EStatusCode.BadRequest,
       );
 
@@ -163,6 +163,7 @@ cases.openapi(deleteCaseRoute, async (c) => {
 
     return c.json(data, EStatusCode.Ok);
   } catch (e) {
+    console.log(e);
     return c.json({ message: 'Internal server error' }, EStatusCode.BadRequest);
   }
 });

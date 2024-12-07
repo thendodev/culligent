@@ -14,6 +14,7 @@ const StageValidationSchema = z.object({
 const PipelineValidationSchema = z.object({
   userId: z.custom<Types.ObjectId>(),
   stages: z.array(StageValidationSchema),
+  isArchived: z.boolean(),
 });
 
 export type TPipeline = z.infer<typeof PipelineValidationSchema>;

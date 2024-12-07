@@ -19,10 +19,10 @@ export const getPostsHandler = async () => {
   }));
 };
 
-export const getPostHandler = async (id: string) => {
+export const getPostHandler = async (id: string): Promise<TPost | null> => {
   try {
     const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
-    return data;
+    return data.data;
   } catch (e) {
     const error = e as AxiosError;
     return null;
