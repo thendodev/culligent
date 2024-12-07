@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import { TPipeline, TStage } from '@/validations/pipeline';
+import { TPipeline } from '@/validations/pipeline';
 import { TCase } from '@/models/Cases';
 import CasesPopover from './cases-popover';
 import { useQuery } from '@tanstack/react-query';

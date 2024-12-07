@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
-import React from 'react';
-import { MoreVertical, Trash2Icon } from 'lucide-react';
+import React, { useState } from 'react';
+import { DotSquare, MoreVertical, Trash2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -11,23 +11,46 @@ import { Form, useFormContext } from 'react-hook-form';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { TPipeline } from '@/validations/pipeline';
 import { TWithId } from '@/global/types';
+import { useDraggable } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
 
 interface IBoardProps {
   boardName: string;
   children: React.ReactNode;
   stageIndex: number;
   handleDelete: () => void;
+  id: string;
 }
 const Board = ({
   boardName,
   handleDelete,
   stageIndex,
+  id,
   children,
 }: IBoardProps) => {
   const form = useFormContext<TPipeline | TWithId<TPipeline>>();
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id,
+      data: {
+        type: 'board',
+      },
+    });
+
+  const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+      }
+    : undefined;
 
   return (
-    <div className="group min-w-[200px] min-h-[500px] border-t-4  rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] bg-[var(--cruto-foreground)]">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className="group min-w-[200px] min-h-[500px] border-t-4  rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] bg-[var(--cruto-foreground)]"
+    >
       <div className="flex align-middle items-center justify-between p-2 hover:cursor-grab">
         <Form {...form}>
           <form>

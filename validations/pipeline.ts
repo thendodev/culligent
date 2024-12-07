@@ -1,18 +1,18 @@
+import { Types } from 'mongoose';
 import { z } from 'zod';
-import { ObjectId } from 'mongodb';
 
 const StageValidationSchema = z.object({
   name: z.string().min(2),
   cases: z
     .array(z.string())
-    .transform((val) => val.map((v) => new ObjectId(v)))
+    .transform((val) => val.map((v) => Types.ObjectId.createFromBase64(v)))
     .or(z.array(z.string())),
   reviewers: z
     .array(z.string())
-    .transform((val) => val.map((v) => new ObjectId(v))),
+    .transform((val) => val.map((v) => Types.ObjectId.createFromBase64(v))),
 });
 const PipelineValidationSchema = z.object({
-  userId: z.custom<ObjectId>(),
+  userId: z.custom<Types.ObjectId>(),
   stages: z.array(StageValidationSchema),
 });
 
