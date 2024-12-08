@@ -17,10 +17,11 @@ import { useRouter } from 'next/navigation';
 import { ProjectRoutes } from '@/global/routes';
 import { useQueryClient } from '@tanstack/react-query';
 import { getCaseHandler } from '@/handlers/handleCases';
-import { TPost } from '@/models/Posts';
+import { TPost } from '@/validations/posts';
+import { TWithId } from '@/global/types';
 
 interface PostActionProps {
-  data: TPost;
+  data: TWithId<TPost>;
 }
 
 const PostActions = ({ data }: PostActionProps) => {

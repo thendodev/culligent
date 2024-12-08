@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useStateReducer } from '@/hooks/useStateReducer';
-import { TPostValidation } from '@/validations/posts';
+import { TPost } from '@/validations/posts';
 import { X } from 'lucide-react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -22,7 +22,7 @@ const Skills = () => {
     skill: '',
     activeSkill: 0,
   });
-  const form = useFormContext<TPostValidation>();
+  const form = useFormContext<TPost>();
 
   const { fields, remove, append } = useFieldArray({
     control: form.control,

@@ -17,7 +17,8 @@ import {
   getPostsService,
   updatePostService,
 } from '@/server/services/posts/posts-service';
-import { TPost } from '@/models/Posts';
+import { TPost } from '@/validations/posts';
+import { TWithId } from '@/global/types';
 
 export const posts = new OpenAPIHono();
 
@@ -36,9 +37,9 @@ posts.openapi(createPostRoute, async (c) => {
     const user = JSON.parse(token);
 
     const newPost = {
-      userId: ObjectId.createFromHexString(user._id),
       ...posts,
-    } as TPost;
+      userId: ObjectId.createFromHexString(user._id),
+    } as TWithId<TPost>;
 
     const { success, message } = await createPostService(newPost);
 

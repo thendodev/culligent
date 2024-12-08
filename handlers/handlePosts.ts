@@ -1,8 +1,7 @@
 import { dateFormat } from '@/global/config';
 import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
-import { TPost } from '@/models/Posts';
-import { TPostValidation } from '@/validations/posts';
+import { TPost } from '@/validations/posts';
 import { AxiosError } from 'axios';
 
 enum EPostRoutes {
@@ -29,7 +28,7 @@ export const getPostHandler = async (id: string): Promise<TPost | null> => {
   }
 };
 
-export const updatePostHandler = async (data: TWithId<TPostValidation>) => {
+export const updatePostHandler = async (data: TWithId<TPost>) => {
   const { data: response } = await privateRequest.put(
     `${EPostRoutes.POSTS}/${data._id}`,
     data,
@@ -37,7 +36,7 @@ export const updatePostHandler = async (data: TWithId<TPostValidation>) => {
   return response;
 };
 
-export const createPostHandler = async (data: TPostValidation) => {
+export const createPostHandler = async (data: TPost) => {
   const { data: response } = await privateRequest.post(EPostRoutes.POSTS, data);
   return response;
 };

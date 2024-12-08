@@ -7,7 +7,7 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { postsValidationSchema, TPostValidation } from '@/validations/posts';
+import { postsValidationSchema, TPost } from '@/validations/posts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -48,8 +48,8 @@ const Post = () => {
     enabled: !!id,
   });
 
-  const form = useForm<TWithId<TPostValidation>>({
-    values: data,
+  const form = useForm<TWithId<TPost>>({
+    defaultValues: data ?? {},
     resolver: zodResolver(postsValidationSchema.extend(mongooseObjectIdString)),
   });
 

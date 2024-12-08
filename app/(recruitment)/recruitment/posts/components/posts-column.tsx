@@ -2,14 +2,15 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import PostActions from './post-actions';
-import { TPost } from '@/models/Posts';
+import { TPost } from '@/validations/posts';
+import { TWithId } from '@/global/types';
 
 export type PostTableProps = {
   name: string;
   createdAt: Date;
   candidates: number;
   status: string;
-} & TPost;
+} & TWithId<TPost>;
 
 export const PostTableColumns: ColumnDef<PostTableProps>[] = [
   {

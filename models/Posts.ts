@@ -1,43 +1,47 @@
-import papr from '@/lib/database/papr';
-import { app } from '@/server';
-import { schema, types } from 'papr';
-import CurriculumVitae from './CurriculumVitae';
+import mongoose from 'mongoose';
+import {
+  TCandidate,
+  TCertifications,
+  TPost,
+  TSkills,
+} from '@/validations/posts';
 
-const skills = types.object({
-  name: types.string({ required: true }),
-});
-const certifications = types.object({
-  name: types.string({ required: true }),
-  level: types.string({ required: true }),
-});
-const idealCandidate = types.object({
-  experience: types.number({ required: true }),
-  skills: types.array(skills),
-  education: types.string({ required: true }),
-  certifications: types.array(certifications),
+const skillsSchema = new mongoose.Schema<TSkills>({
+  name: { type: String, required: true },
 });
 
-const PostsSchema = schema(
+const certificationsSchema = new mongoose.Schema<TCertifications>({
+  name: { type: String, required: true },
+  level: { type: String, required: true },
+});
+
+const idealCandidateSchema = new mongoose.Schema<TCandidate>({
+  experience: { type: Number, required: true },
+  skills: [skillsSchema],
+  education: { type: String, required: true },
+  certifications: [certificationsSchema],
+});
+
+const PostsSchema = new mongoose.Schema<TPost>(
   {
-    title: types.string({ required: true }),
-    description: types.string({ required: true }),
-    role: types.string({ required: true }),
-    idealCandidate: idealCandidate,
-    applicants: types.array(
-      types.objectId({ ref: CurriculumVitae, required: true }),
-    ),
-    userId: types.objectId({ required: true }),
-    isFeatured: types.boolean(),
-    isArchived: types.boolean(),
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    role: { type: String, required: true },
+    idealCandidate: idealCandidateSchema,
+    applicants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CurriculumVitae',
+        required: true,
+      },
+    ],
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    isFeatured: { type: Boolean, default: true },
+    isArchived: { type: Boolean, default: false },
   },
   {
     timestamps: true,
-    defaults: {
-      isFeatured: true,
-      isArchived: false,
-    },
   },
 );
 
-export type TPost = (typeof PostsSchema)[0];
-export default papr.model('Posts', PostsSchema);
+export default mongoose.model('Posts', PostsSchema);

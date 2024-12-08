@@ -1,13 +1,14 @@
 import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
-import Posts, { TPost } from '@/models/Posts';
+import Posts from '@/models/Posts';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
+import { TPost } from '@/validations/posts';
 
 export const createPostService = async (
   post: TPost,
 ): Promise<ApiResponse<TPost>> => {
-  const postCreated = await Posts.insertOne(post);
+  const postCreated = await Posts.create(post);
   if (!postCreated)
     return {
       data: null,

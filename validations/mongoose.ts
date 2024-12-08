@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { z } from 'zod';
 
-const objectIdValidator = z
+export const objectIdValidator = z
   .custom(
     (value) => (
       mongoose.Types.ObjectId.isValid(value),

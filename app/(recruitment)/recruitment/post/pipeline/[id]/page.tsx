@@ -18,8 +18,8 @@ import {
 } from '@dnd-kit/sortable';
 import { toast } from '@/components/ui/use-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createPostHandler, getPostHandler } from '@/handlers/handlePosts';
-import { useParams, useRouter } from 'next/navigation';
+import {  getPostHandler } from '@/handlers/handlePosts';
+import { useParams } from 'next/navigation';
 import {
   createPipelineHandler,
   updatePipelineHandler,

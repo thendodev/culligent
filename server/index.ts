@@ -9,6 +9,9 @@ import { magicLink } from './routes/auth/magic-link/magic-link';
 import { Dbconnect } from '@/lib/database/papr';
 import { logger } from 'hono/logger';
 import { MongoClient } from 'mongodb';
+import mongoose, { Mongoose } from 'mongoose';
+import { envServer } from '@/global/envServer';
+import { connectDatabase } from '@/lib/database/mongoose';
 
 const app = new OpenAPIHono();
 
@@ -51,6 +54,8 @@ app.use('*', async (c, next) => {
     console.log(error);
   }
 });
+
+connectDatabase();
 
 //register middleware
 

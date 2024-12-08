@@ -1,8 +1,9 @@
 import React from 'react';
 import { QueryClient } from '@tanstack/react-query';
-import Posts, { TPost } from '@/models/Posts';
+import Posts from '@/models/Posts';
 import { Dbconnect, Dbdisconnect } from '@/lib/database/papr';
 import { dateFormat, EDateRegions } from '@/global/config';
+import { TPost } from '@/validations/posts';
 interface IPostPageProps {
   params: {
     id: string;
