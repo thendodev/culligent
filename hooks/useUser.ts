@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { TUser } from '@/models/User';
+import { TUser } from '@/validations/auth';
 
 export const useUserClientSide = () => {
   const [currentUser, setCurrentUser] = useState<TUser | null>(null);

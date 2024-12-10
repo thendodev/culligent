@@ -16,9 +16,9 @@ signUp.openapi(signUpRoute, async ({ res, req, json }) => {
     //create a new user
     const { success, data, message, code } = await createUserService({
       email,
-      password,
       surname,
       name,
+      isVerified: false,
     });
     if (!success || !data)
       return json(

@@ -36,9 +36,19 @@ export const signUpSchema = z
     }
   });
 
+const UserSchema = z.object({
+  name: z.string(),
+  surname: z.string(),
+  email: z.string().email(),
+  isVerified: z.boolean().default(false),
+  profile: z.number().default(1).optional(),
+});
+
 export const magicLinkSchema = z.object({
   email: z.string().email('Invalid email address'),
 });
+
+export type TUser = z.infer<typeof UserSchema>;
 
 export type TForgotPassword = z.infer<typeof magicLinkSchema>;
 

@@ -19,11 +19,12 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import penguinProfile from '@/assets/penguin-profile.svg';
 import Image from 'next/image';
-import { TUser } from '@/models/User';
 import { useAxiosInterceptors } from '@/hooks/useInterceptors';
+import { TUser } from '@/validations/auth';
+import { TWithId } from '@/global/types';
 
 type ProfileMenuProps = {
-  user: TUser;
+  user: TWithId<TUser>;
 };
 const ProfileMenu = ({ user }: ProfileMenuProps) => {
   const router = useRouter();

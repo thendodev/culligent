@@ -1,10 +1,10 @@
 import { ApiResponse } from '@/global/response.types';
 import Otp, { MOtp } from '@/models/Otp';
-import User, { TUser } from '@/models/User';
+import User from '@/models/User';
 import { EUserServiceResponse } from './service.types';
 import { EStatusCode } from '@/global/config';
-import { TSignUp } from '@/validations/auth';
-import { ObjectId } from 'mongodb';
+import { TSignUp, TUser } from '@/validations/auth';
+import { ObjectId, WithId } from 'mongodb';
 import { Resend } from 'resend';
 import OtpEmailTemplate from '@/app/templates/otp-email-template';
 import { envServer } from '@/global/envServer';
@@ -14,29 +14,10 @@ const resend = new Resend(envServer.OTP_RESEND);
 
 export const createUserService = async ({
   email,
-  password,
   surname,
   name,
-}: Partial<TSignUp>): Promise<ApiResponse<TUser>> => {
-  if (!email || !password || !name || !surname) {
-    return {
-      success: false,
-      message: 'missing credentials',
-      data: null,
-      code: EStatusCode.BadRequest,
-    };
-  }
-
-  const isUser = await User.findOne({ email });
-
-  if (isUser)
-    return {
-      success: false,
-      message: 'User already exists',
-      data: null,
-      code: EStatusCode.NotModified,
-    };
-  const user = await User.insertOne({
+}: TUser): Promise<ApiResponse<WithId<TUser>>> => {
+  const user = await User.create({
     email,
     name,
     surname,
@@ -52,7 +33,7 @@ export const createUserService = async ({
 
 export const getUserService = async (
   email: string,
-): Promise<ApiResponse<TUser>> => {
+): Promise<ApiResponse<WithId<TUser>>> => {
   const user = await User.findOne({ email });
   if (!user)
     return {

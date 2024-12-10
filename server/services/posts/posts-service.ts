@@ -1,9 +1,9 @@
 import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
-import Posts from '@/models/Posts';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { TPost } from '@/validations/posts';
+import Posts from '@/models/Posts';
 
 export const createPostService = async (
   post: TPost,
@@ -34,6 +34,8 @@ export const getPostsService = async (
       $eq: false,
     },
   });
+
+  console.log(post);
 
   if (!post) {
     return {

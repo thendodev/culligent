@@ -1,12 +1,19 @@
 import { toast } from '@/components/ui/use-toast';
+import { TWithId } from '@/global/types';
 import { publicRequest } from '@/lib/requests';
-import { TUser } from '@/models/User';
-import { TSignUp } from '@/validations/auth';
+import { TSignUp, TUser } from '@/validations/auth';
 
+enum EAccountRoutes {
+  sign_up = '/auth/sign-up',
+  otp_verify = '/auth/otp',
+}
 export const emailSignUpHandler = async (newUser: TSignUp) => {
-  const { data } = await publicRequest.post<TUser>('auth/sign-up/', {
-    ...newUser,
-  });
+  const { data } = await publicRequest.post<TWithId<TUser>>(
+    EAccountRoutes.sign_up,
+    {
+      ...newUser,
+    },
+  );
   toast({
     title: 'OTP verified',
     description: 'OTP verified successfully',
@@ -14,7 +21,7 @@ export const emailSignUpHandler = async (newUser: TSignUp) => {
   return data;
 };
 export const resendOtpHandler = async (user: string) => {
-  await publicRequest.post('auth/otp', {
+  await publicRequest.post(EAccountRoutes.otp_verify, {
     user,
   });
   toast({

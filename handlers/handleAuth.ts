@@ -1,9 +1,8 @@
 import { toast } from '@/components/ui/use-toast';
-import { TAuthResponse } from '@/global/types';
+import { TAuthResponse, TWithId } from '@/global/types';
 import { storeLoginCookiesUtil } from '@/lib/cookiesUtil';
 import { publicRequest } from '@/lib/requests';
-import { TUser } from '@/models/User';
-import { TLogin } from '@/validations/auth';
+import { TLogin, TUser } from '@/validations/auth';
 
 export enum EAuth {
   SIGN_IN = '/auth/login',
@@ -38,7 +37,7 @@ export const createMagicLinkHandler = async (email: string): Promise<void> => {
 export const loginMagicLinkHandler = async (
   id: string,
   otp: string,
-): Promise<TUser | void> => {
+): Promise<TWithId<TUser> | void> => {
   const { data } = await publicRequest.put<TAuthResponse>(
     EAuth.MAGIC_LINK_LOGIN,
     {
