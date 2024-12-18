@@ -15,9 +15,9 @@ import {
 } from '@/server/services/cases/cases-service';
 import { getCookie } from 'hono/cookie';
 import { EStatusCode, EUserCookies } from '@/global/config';
-import { TCase } from '@/models/Cases';
 import { ObjectId } from 'mongodb';
 import { TUser } from '@/server/types';
+import { TCase } from '@/validations/cases';
 
 export const cases = new OpenAPIHono();
 

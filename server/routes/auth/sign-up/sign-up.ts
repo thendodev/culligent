@@ -1,10 +1,9 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { signUpRoute } from './route';
-import { HTTPException } from 'hono/http-exception';
-import { Dbconnect, Dbdisconnect } from '@/lib/database/papr';
 import { EStatusCode } from '@/global/config';
 import { createUserService } from '@/server/services/user/user-service';
 import { createPasswordService } from '@/server/services/passwords/password-service';
+import { HttpStatusCode } from 'axios';
 
 export const signUp = new OpenAPIHono();
 
@@ -12,7 +11,7 @@ signUp.openapi(signUpRoute, async ({ res, req, json }) => {
   try {
     const { email, password, surname, name } = req.valid('json');
     if (!email || !password || !surname || !name)
-      return json({ message: 'invalid request' }, EStatusCode.BadRequest);
+      return json({ message: 'invalid request' }, HttpStatusCode.BadRequest);
     //create a new user
     const { success, data, message, code } = await createUserService({
       email,
@@ -20,6 +19,7 @@ signUp.openapi(signUpRoute, async ({ res, req, json }) => {
       name,
       isVerified: false,
     });
+
     if (!success || !data)
       return json(
         {
@@ -40,6 +40,7 @@ signUp.openapi(signUpRoute, async ({ res, req, json }) => {
 
     return json(data);
   } catch (e) {
+    console.log(e);
     return json(
       { message: 'internal server error' },
       EStatusCode.InternalServerError,

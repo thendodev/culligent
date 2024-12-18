@@ -35,9 +35,9 @@ import {
 import { useLoading } from '@/app/state/loading-state';
 import { ProjectRoutes } from '@/global/routes';
 import { useRouter } from 'next/navigation';
-import { TCase } from '@/models/Cases';
 import { FormLabel } from '@/components/ui/form';
 import { TWithId } from '@/global/types';
+import { TCase } from '@/validations/cases';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger

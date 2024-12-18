@@ -1,29 +1,25 @@
-import { types, schema } from 'papr';
-import papr from '@/lib/database/papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
+import { TTeam } from '@/validations/teams';
 import { ObjectId } from 'mongodb';
+import { Schema } from 'mongoose';
 
-const MembersSchema = types.object({
-  name: types.string({ required: true }),
-  email: types.string({ required: true }),
-});
-
-const TeamsSchema = schema(
+const TeamSchema = new Schema<TTeam>(
   {
-    name: types.string({ required: true }),
-    description: types.string({ required: true }),
-    members: types.array(MembersSchema),
-    userId: types.objectId({ required: true }),
+    name: { type: String, required: true },
+    description: { type: String, default: '' },
+    members: { type: [ObjectId], ref: 'User', default: [] },
+    userId: { type: Schema.Types.ObjectId, required: true },
   },
   {
     timestamps: true,
-    defaults: {
-      description: '',
-      members: [],
-    },
   },
 );
 
-export type MTeam = (typeof TeamsSchema)[0] & {
-  _id: string | ObjectId;
-};
-export default papr.model('Team', TeamsSchema);
+TeamSchema.virtual('user', {
+  ref: 'User',
+  localField: 'userId',
+  foreignField: '_id',
+  justOne: true,
+});
+
+export default mongoDbConnection.model('Team', TeamSchema);

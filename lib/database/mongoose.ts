@@ -1,12 +1,10 @@
 import { envServer } from '@/global/envServer';
-import { Mongoose } from 'mongoose';
+import { Connection, Mongoose } from 'mongoose';
 
 const mongoose = new Mongoose();
 
-const getDbConnection = () => {
+const getDbConnection = (): string => {
   switch (envServer.NEXT_PUBLIC_ENVIRONMENT) {
-    case undefined:
-      return console.log('no environment defined');
     case 'development':
       return envServer.DEV_MONGO_URI;
     case 'production':
@@ -18,15 +16,18 @@ const getDbConnection = () => {
   }
 };
 
-export const connectDatabase = async () => {
-  const dbConnection = getDbConnection();
-  if (!dbConnection) return console.log('no connection');
-  try {
-    await mongoose.connect(dbConnection).then(() => {
-      console.log('successfully connected to database');
-    });
-  } catch (error) {
-    console.log(error);
-    process.exit(1);
+const dbConnection = getDbConnection();
+export const mongoDbConnection = await mongoose
+  .createConnection(dbConnection)
+  .asPromise();
+
+export const isConnectionReady = (connections: Connection[]) => {
+  for (const connection of connections) {
+    if (connection.readyState !== mongoose.ConnectionStates.connected) {
+      console.log({
+        message: `could not connect to db ${connection.name}`,
+      });
+      process.exit(1);
+    }
   }
 };

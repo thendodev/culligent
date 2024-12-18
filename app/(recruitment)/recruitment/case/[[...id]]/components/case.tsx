@@ -11,11 +11,7 @@ import SaveCase from './save-case';
 import { getCaseHandler } from '@/handlers/handleCases';
 import { useQuery } from '@tanstack/react-query';
 import ViewQuestion from './new-question/view-question';
-import {
-  CaseSchema,
-  QuestionSchema,
-  TCaseValidation,
-} from '@/validations/cases';
+import { CaseSchema, QuestionSchema, TCase } from '@/validations/cases';
 import QuestionWrapper from './QuestionWrapper';
 import Answers from './new-question/Answers';
 import Question from './new-question/Question';
@@ -37,7 +33,7 @@ const Case = ({ id, queryKey }: TCaseProps) => {
     enabled: !!id?.length,
   });
 
-  const form = useForm<TCaseValidation>({
+  const form = useForm<TCase>({
     resolver: zodResolver(CaseSchema),
     values: data,
   });

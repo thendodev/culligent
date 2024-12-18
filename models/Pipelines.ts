@@ -1,15 +1,16 @@
+import { mongoDbConnection } from '@/lib/database/mongoose';
 import { TPipeline, TStage } from '@/validations/pipeline';
-import Mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
-const StageSchema = new Mongoose.Schema<TStage>({
+const StageSchema = new Schema<TStage>({
   name: { type: String, required: true },
-  reviewers: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  cases: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'Case' }],
+  reviewers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  cases: [{ type: Schema.Types.ObjectId, ref: 'Case' }],
 });
 
-const PipelineSchema = new Mongoose.Schema<TPipeline>({
-  userId: { type: Mongoose.Schema.Types.ObjectId, ref: 'User' },
+const PipelineSchema = new Schema<TPipeline>({
+  userId: { type: Schema.Types.ObjectId, ref: 'User' },
   stages: [StageSchema],
 });
 
-export default Mongoose.model('Pipeline', PipelineSchema);
+export default mongoDbConnection.model('Pipeline', PipelineSchema);

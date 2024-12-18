@@ -1,28 +1,29 @@
-import mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 import {
-  TCandidate,
-  TCertifications,
+  TIdealCandidate,
+  TPostCertifications,
   TPost,
-  TSkills,
+  TPostSkills,
 } from '@/validations/posts';
+import { mongoDbConnection } from '@/lib/database/mongoose';
 
-const skillsSchema = new mongoose.Schema<TSkills>({
+const skillsSchema = new Schema<TPostSkills>({
   name: { type: String, required: true },
 });
 
-const certificationsSchema = new mongoose.Schema<TCertifications>({
+const certificationsSchema = new Schema<TPostCertifications>({
   name: { type: String, required: true },
   level: { type: String, required: true },
 });
 
-const idealCandidateSchema = new mongoose.Schema<TCandidate>({
+const idealCandidateSchema = new Schema<TIdealCandidate>({
   experience: { type: Number, required: true },
   skills: [skillsSchema],
   education: { type: String, required: true },
   certifications: [certificationsSchema],
 });
 
-const PostsSchema = new mongoose.Schema<TPost>(
+const PostsSchema = new Schema<TPost>(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -30,12 +31,12 @@ const PostsSchema = new mongoose.Schema<TPost>(
     idealCandidate: idealCandidateSchema,
     applicants: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'CurriculumVitae',
         required: true,
       },
     ],
-    userId: { type: mongoose.Schema.Types.ObjectId, required: true },
+    userId: { type: Schema.Types.ObjectId, required: true },
     isFeatured: { type: Boolean, default: true },
     isArchived: { type: Boolean, default: false },
   },
@@ -44,4 +45,4 @@ const PostsSchema = new mongoose.Schema<TPost>(
   },
 );
 
-export default mongoose.model('Posts', PostsSchema);
+export default mongoDbConnection.model('Posts', PostsSchema);

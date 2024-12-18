@@ -6,9 +6,9 @@ import {
 } from '@/server/services/user/user-service';
 import { EStatusCode } from '@/global/config';
 
-export const opt = new OpenAPIHono();
+export const otp = new OpenAPIHono();
 
-opt.openapi(otpPOST, async ({ req, json }) => {
+otp.openapi(otpPOST, async ({ req, json }) => {
   try {
     const { user } = req.valid('json');
 
@@ -24,7 +24,7 @@ opt.openapi(otpPOST, async ({ req, json }) => {
   }
 });
 
-opt.openapi(otpPUT, async ({ req, json }) => {
+otp.openapi(otpPUT, async ({ req, json }) => {
   try {
     const { user, otp } = await req.json();
     console.log(user, otp);

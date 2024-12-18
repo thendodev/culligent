@@ -29,6 +29,8 @@ export const postsValidationSchema = z.object({
 });
 
 export type TPost = z.infer<typeof postsValidationSchema>;
-export type TCandidate = z.infer<typeof idealCandidateValidationSchema>;
-export type TSkills = z.infer<typeof skillsValidationSchema>;
-export type TCertifications = z.infer<typeof certificationsValidationSchema>;
+export type TIdealCandidate = z.infer<typeof idealCandidateValidationSchema>;
+export type TPostSkills = z.infer<typeof skillsValidationSchema>;
+export type TPostCertifications = z.infer<
+  typeof certificationsValidationSchema
+>;

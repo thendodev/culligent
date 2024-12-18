@@ -1,12 +1,13 @@
 import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
-import Cases, { TCase } from '@/models/Cases';
+import Cases from '@/models/Cases';
+import { TCase } from '@/validations/cases';
 import { ObjectId } from 'mongodb';
 
 export const createCaseService = async (
   cases: TCase,
 ): Promise<ApiResponse<null>> => {
-  const caseCreated = await Cases.insertOne(cases);
+  const caseCreated = await Cases.create(cases);
   if (!caseCreated)
     return {
       data: null,

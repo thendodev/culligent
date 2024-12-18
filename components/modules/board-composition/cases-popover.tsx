@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { TWithId } from '@/global/types';
-import { TCase } from '@/models/Cases';
+import { TCase } from '@/validations/cases';
 import { PlusIcon } from 'lucide-react';
 
 interface TeamSwitcherProps {

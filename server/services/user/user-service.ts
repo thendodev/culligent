@@ -1,14 +1,13 @@
 import { ApiResponse } from '@/global/response.types';
-import Otp, { MOtp } from '@/models/Otp';
-import User from '@/models/User';
-import { EUserServiceResponse } from './service.types';
-import { EStatusCode } from '@/global/config';
-import { TSignUp, TUser } from '@/validations/auth';
+import Otp from '@/models/Otp';
+import { TOtp, TUser } from '@/validations/auth';
 import { ObjectId, WithId } from 'mongodb';
 import { Resend } from 'resend';
 import OtpEmailTemplate from '@/app/templates/otp-email-template';
 import { envServer } from '@/global/envServer';
 import { getEmail } from '@/server/helpers/email';
+import User from '@/models/User';
+import { HttpStatusCode } from 'axios';
 
 const resend = new Resend(envServer.OTP_RESEND);
 
@@ -25,9 +24,9 @@ export const createUserService = async ({
 
   return {
     success: true,
-    message: EUserServiceResponse.successCreateUser,
+    message: 'User created successfully',
     data: user,
-    code: EStatusCode.NotFound,
+    code: HttpStatusCode.Created,
   };
 };
 
@@ -38,30 +37,30 @@ export const getUserService = async (
   if (!user)
     return {
       success: false,
-      message: EUserServiceResponse.failedGetUser,
+      message: "User doesn't exist",
       data: null,
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
 
   if (!user.isVerified)
     return {
-      code: EStatusCode.Unauthorized,
+      code: HttpStatusCode.Unauthorized,
       success: true,
-      message: EUserServiceResponse.userNotVerified,
+      message: "User's account is not verified",
       data: user,
     };
 
   return {
     success: true,
-    message: EUserServiceResponse.successGetUser,
+    message: "User's account is successfully verified",
     data: { ...user },
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 
 export const createOtpService = async (
   id: string,
-): Promise<ApiResponse<MOtp>> => {
+): Promise<ApiResponse<TOtp>> => {
   const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
   const user = await User.findById(id);
   if (!user)
@@ -69,17 +68,17 @@ export const createOtpService = async (
       success: false,
       message: "User doesn't exist",
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
 
-  const otp = await Otp.insertOne({ user: user._id, otp: newOtp });
+  const otp = await Otp.create({ user: user._id, otp: newOtp });
 
   if (!otp)
     return {
       success: false,
       message: 'Failed to create otp',
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
 
   const mailTo = getEmail(user.email);
@@ -91,19 +90,20 @@ export const createOtpService = async (
     react: OtpEmailTemplate({ ...otp }),
   });
 
-  if (error)
+  if (error) {
+    console.log(error);
     return {
       success: false,
       message: 'Failed to create otp',
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
-
+  }
   return {
     success: true,
     message: 'Successfully created otp',
     data: null,
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 
@@ -139,7 +139,7 @@ export const verifyOtpService = async (
       success: false,
       message: 'Either the otp is expired or invalid',
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
 
   //TODO: break this off into a seperate service so we can redirect already verified users back to the login page
@@ -166,7 +166,7 @@ export const verifyOtpService = async (
       success: false,
       message: "User doesn't exist",
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
   }
 
@@ -174,6 +174,6 @@ export const verifyOtpService = async (
     success: true,
     message: "User's otp verified",
     data: true,
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };

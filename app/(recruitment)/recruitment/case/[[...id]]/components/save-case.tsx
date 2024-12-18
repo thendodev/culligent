@@ -20,11 +20,9 @@ import { UseFormReturn } from 'react-hook-form';
 import { toast } from '@/components/ui/use-toast';
 import { createCaseHandler, updateCaseHandler } from '@/handlers/handleCases';
 import { Switch } from '@/components/ui/switch';
-import { CaseSchema, TCaseValidation } from '@/validations/cases';
-import { TCase } from '@/models/Cases';
-
+import { CaseSchema, TCase } from '@/validations/cases';
 type TSaveCaseProps = {
-  form: UseFormReturn<TCaseValidation>;
+  form: UseFormReturn<TCase>;
   id?: string | null;
 };
 

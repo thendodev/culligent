@@ -71,7 +71,7 @@ export const createMagicLinkService = async (email: string) => {
 
     const otp = generateRandomString();
 
-    const loginOtp = await MagicLinks.insertOne({ user: email, otp });
+    const loginOtp = await MagicLinks.create({ user: email, otp });
 
     const magicLink =
       getBaseUrl(envServer.NEXT_PUBLIC_ENVIRONMENT) +

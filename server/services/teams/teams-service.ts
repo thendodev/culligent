@@ -1,9 +1,9 @@
-import { TTeam } from '@/validations/teams';
-import Teams, { MTeam } from '@/models/Teams';
+import { TTeam, TTeamInvite } from '@/validations/teams';
+import Teams from '@/models/Teams';
 import { ApiResponse } from '@/global/response.types';
 import { baseUrl, EStatusCode } from '@/global/config';
 import { ObjectId } from 'mongodb';
-import Invites, { MInvite } from '@/models/Invites';
+import Invites from '@/models/Invites';
 import { generateRandomString } from '@/server/helpers/randoms';
 import User from '@/models/User';
 import { Resend } from 'resend';
@@ -17,9 +17,9 @@ export const createTeamsService = async ({
   userId,
   name,
   description,
-}: TCreateTeamsService): Promise<ApiResponse<MTeam>> => {
+}: TCreateTeamsService): Promise<ApiResponse<TTeam>> => {
   //create a team in the database
-  const team = await Teams.insertOne({
+  const team = await Teams.create({
     userId: ObjectId.createFromHexString(userId),
     name,
     description,
@@ -35,7 +35,7 @@ export const createTeamsService = async ({
 
 export const getTeamsService = async (
   userId: string,
-): Promise<ApiResponse<MTeam[]>> => {
+): Promise<ApiResponse<TTeam[]>> => {
   const teams = await Teams.find({
     userId: ObjectId.createFromHexString(userId),
   });
@@ -56,16 +56,16 @@ export const getTeamsService = async (
 };
 
 export const createInviteService = async (
-  teamId: string,
-  userId: string,
-): Promise<ApiResponse<MInvite>> => {
+  teamId: ObjectId,
+  userId: ObjectId,
+): Promise<ApiResponse<TTeamInvite>> => {
   //create an invite in the database
 
   const inviteHash = generateRandomString();
 
-  const invite = await Invites.insertOne({
-    userId: ObjectId.createFromHexString(userId),
-    teamId: ObjectId.createFromHexString(teamId),
+  const invite = await Invites.create({
+    userId,
+    teamId,
     inviteHash,
   });
 
@@ -81,7 +81,7 @@ export const sendInviteService = async ({
   userId,
   teamId,
   inviteHash,
-}: MInvite): Promise<ApiResponse<null>> => {
+}: TTeamInvite): Promise<ApiResponse<null>> => {
   //find user in database
 
   const invitedBy = await User.findById(userId);

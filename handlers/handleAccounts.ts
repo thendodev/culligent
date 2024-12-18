@@ -8,19 +8,21 @@ enum EAccountRoutes {
   otp_verify = '/auth/otp',
 }
 export const emailSignUpHandler = async (newUser: TSignUp) => {
-  const { data } = await publicRequest.post<TWithId<TUser>>(
-    EAccountRoutes.sign_up,
-    {
-      ...newUser,
-    },
-  );
-  toast({
-    title: 'OTP verified',
-    description: 'OTP verified successfully',
-  });
-  return data;
+  try {
+    const { data } = await publicRequest.post<TWithId<TUser>>(
+      EAccountRoutes.sign_up,
+      {
+        ...newUser,
+      },
+    );
+
+    return data;
+  } catch (e) {
+    return;
+  }
 };
 export const resendOtpHandler = async (user: string) => {
+  console.log(user);
   await publicRequest.post(EAccountRoutes.otp_verify, {
     user,
   });

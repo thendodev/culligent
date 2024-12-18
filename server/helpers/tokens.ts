@@ -26,7 +26,7 @@ export const generateTokens = async (user: any) => {
     });
 
     //insert new refresh token
-    await RefreshToken.insertOne({ token: refreshToken, user: user._id });
+    await RefreshToken.create({ token: refreshToken, user: user._id });
 
     return Promise.resolve({ accessToken, refreshToken });
   } catch (err) {

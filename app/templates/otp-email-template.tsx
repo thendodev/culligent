@@ -1,5 +1,5 @@
 import { ProjectRoutes } from '@/global/routes';
-import { MOtp } from '@/models/Otp';
+import { TOtp } from '@/validations/auth';
 import {
   Body,
   Container,
@@ -12,7 +12,7 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-export const PlaidVerifyIdentityEmail = ({ user, otp }: MOtp) => (
+export const PlaidVerifyIdentityEmail = ({ userId, otp }: TOtp) => (
   <Html>
     <Head />
     <Body style={main}>
@@ -26,7 +26,7 @@ export const PlaidVerifyIdentityEmail = ({ user, otp }: MOtp) => (
         <Text style={paragraph}>
           {' '}
           <Link
-            href={`localhost:3000/${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?user=${user}&otp=${otp}`}
+            href={`localhost:3000/${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?userId=${userId}&otp=${otp}`}
             style={link}
           >
             Or click here link to verify.

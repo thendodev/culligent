@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import { TPipeline } from '@/validations/pipeline';
-import { TCase } from '@/models/Cases';
 import CasesPopover from './cases-popover';
 import { useQuery } from '@tanstack/react-query';
 import { EGenericQueryKeys } from '@/global/config';
@@ -15,6 +14,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import { TCase } from '@/validations/cases';
 
 interface ICasesListProps {
   stageIndex: number;

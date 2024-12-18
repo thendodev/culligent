@@ -11,10 +11,10 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Plus } from 'lucide-react';
 import { useFieldArray, UseFormReturn } from 'react-hook-form';
-import { TCaseValidation } from '@/validations/cases';
+import { TCase } from '@/validations/cases';
 
 type TAnswer = {
-  form: UseFormReturn<TCaseValidation>;
+  form: UseFormReturn<TCase>;
   question: number;
 };
 const Answers = ({ form, question }: TAnswer) => {

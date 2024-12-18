@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import culligent from '@/public/logo/logo.svg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -15,9 +15,9 @@ import {
 const OtpPage = () => {
   const router = useRouter();
   const { otp, user } = useParams<{ user: string; otp: string }>();
-  const [resendTimer, setResendTimer] = React.useState(60);
-  const [otpResend, setOtpResend] = React.useState(false);
-  const [enterOtp, setEnterOtp] = React.useState(otp);
+  const [resendTimer, setResendTimer] = useState(60);
+  const [otpResend, setOtpResend] = useState(false);
+  const [enterOtp, setEnterOtp] = useState(otp);
 
   useEffect(() => {
     //set up up timer for otp resend

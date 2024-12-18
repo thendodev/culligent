@@ -1,4 +1,4 @@
-import papr from '@/lib/database/papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
 import { ProfileType } from './User.types';
 import { TUser } from '@/validations/auth';
 import mongoose from 'mongoose';
@@ -16,4 +16,4 @@ const UserSchema = new mongoose.Schema<TUser>(
   },
 );
 
-export default mongoose.model('User', UserSchema);
+export default mongoDbConnection.model('User', UserSchema);

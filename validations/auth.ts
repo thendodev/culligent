@@ -1,4 +1,5 @@
 import z from 'zod';
+import { objectIdValidator } from './mongoose';
 
 export const loginSchema = z.object({
   email: z.string(),
@@ -36,6 +37,23 @@ export const signUpSchema = z
     }
   });
 
+export const SocialAccountSchema = z.object({
+  access_token: z.object({
+    token: z.string(),
+    expires_in: z.number(),
+  }),
+  id_token: z.object({
+    token: z.string(),
+    expires_at: z.number(),
+  }),
+  scope: z.string(),
+  token_type: z.string(),
+  provider: z.string(),
+  providerAccountId: z.string(),
+  type: z.string(),
+  userId: objectIdValidator,
+});
+
 const UserSchema = z.object({
   name: z.string(),
   surname: z.string(),
@@ -46,7 +64,33 @@ const UserSchema = z.object({
 
 export const magicLinkSchema = z.object({
   email: z.string().email('Invalid email address'),
+  userId: objectIdValidator,
+  otp: z.string().min(6).max(6),
+  isExpired: z.boolean().default(false),
+  expiresAt: z.date(),
 });
+
+export const otpSchema = z.object({
+  userId: objectIdValidator,
+  otp: z.string().min(6).max(6),
+  isExpired: z.boolean().superRefine((isExpired, ctx) => {
+    if (isExpired) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'OTP is expired',
+        path: ['isExpired'],
+      });
+    }
+  }),
+  expiresAt: z.date(),
+});
+
+const RefreshTokenSchema = z.object({
+  userId: objectIdValidator,
+  token: z.string(),
+});
+
+export type TRefreshToken = z.infer<typeof RefreshTokenSchema>;
 
 export type TUser = z.infer<typeof UserSchema>;
 
@@ -55,3 +99,7 @@ export type TForgotPassword = z.infer<typeof magicLinkSchema>;
 export type TSignUp = z.infer<typeof signUpSchema>;
 
 export type TLogin = z.infer<typeof loginSchema>;
+
+export type TOtp = z.infer<typeof otpSchema>;
+export type TMagicLink = z.infer<typeof magicLinkSchema>;
+export type TSocialAccount = z.infer<typeof SocialAccountSchema>;

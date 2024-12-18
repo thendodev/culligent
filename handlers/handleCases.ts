@@ -2,7 +2,7 @@ import { toast } from '@/components/ui/use-toast';
 import { dateFormat } from '@/global/config';
 import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
-import { TCase } from '@/models/Cases';
+import { TCase } from '@/validations/cases';
 
 enum ECaseRoutes {
   CASES = '/recruitment/cases',

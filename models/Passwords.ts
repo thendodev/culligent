@@ -1,16 +1,19 @@
-import papr from '@/lib/database/papr';
-import { types, schema } from 'papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
+import { Schema } from 'mongoose';
 
-const PasswordSchema = schema(
+const PasswordSchema = new Schema(
   {
-    user: types.objectId({ required: true }),
-    password: types.string({ required: true }),
-    salt: types.string({ required: true }),
+    user: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      unique: true,
+    },
+    password: { type: String, required: true },
+    salt: { type: String, required: true },
   },
   {
     timestamps: true,
   },
 );
 
-export type MPasswords = (typeof PasswordSchema)[0];
-export default papr.model('Password', PasswordSchema);
+export default mongoDbConnection.model('Password', PasswordSchema);

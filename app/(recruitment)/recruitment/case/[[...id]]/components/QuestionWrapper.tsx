@@ -1,12 +1,10 @@
 'use client';
 import { Form } from '@/components/ui/form';
-import { TQuestionProps } from '../types';
-import Question from './new-question/Question';
 import { UseFormReturn } from 'react-hook-form';
-import { TCaseValidation } from '@/validations/cases';
+import { TCase } from '@/validations/cases';
 
 type TQuestionWrapperProps = {
-  form: UseFormReturn<TCaseValidation>;
+  form: UseFormReturn<TCase>;
   children: React.ReactNode;
 };
 

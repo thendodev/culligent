@@ -4,23 +4,24 @@ import { useState } from 'react';
 import PageWrapper from '../components/page-wrapper';
 import TeamSwitcher from './components/teams-select';
 import { getTeamsHandler } from '@/handlers/handleTeam';
-import { MTeam } from '@/models/Teams';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import InviteTeamMember from './components/add-team-member';
 import { Separator } from '@/components/ui/separator';
 import { useQuery } from '@tanstack/react-query';
+import { TTeam } from '@/validations/teams';
+import { TWithId } from '@/global/types';
 
 type TTeamsProps = {};
 
 const Teams = ({}: TTeamsProps) => {
-  const [selectedTeam, setSelectedTeam] = useState<MTeam>();
+  const [selectedTeam, setSelectedTeam] = useState<TWithId<TTeam>>();
 
   const { data } = useQuery({
     queryKey: ['teams'],
     queryFn: async () => getTeamsHandler(),
   });
 
-  const onTeamSelect = (team: MTeam) => {
+  const onTeamSelect = (team: TWithId<TTeam>) => {
     setSelectedTeam(team);
   };
 
@@ -48,8 +49,8 @@ const Teams = ({}: TTeamsProps) => {
               >
                 <Avatar className="mr-2 h-5 w-5">
                   <AvatarImage
-                    src={`https://avatar.vercel.sh/${team.email}.png`}
-                    alt={team.name}
+                    src={`https://avatar.vercel.sh/${team}.png`}
+                    alt={team}
                     className="grayscale"
                   />
                   <AvatarFallback>SC</AvatarFallback>

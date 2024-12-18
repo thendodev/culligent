@@ -1,21 +1,28 @@
-import papr from '@/lib/database/papr';
-import { types, schema } from 'papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
+import { TMagicLink } from '@/validations/auth';
+import { Schema } from 'mongoose';
 
 const fiveMinutesFromNow = new Date(new Date().getTime() + 15 * 60000);
-const MagicLinkSchema = schema(
-  {
-    user: types.string({ required: true }),
-    otp: types.string({ required: true }),
-    isExpired: types.boolean({ required: true }),
-    expiresAt: types.date({ required: true }),
-  },
-  {
-    defaults: {
-      isExpired: false,
-      expiresAt: fiveMinutesFromNow,
-    },
-  },
-);
 
-export type MMagicLink = (typeof MagicLinkSchema)[0];
-export default papr.model('MagicLink', MagicLinkSchema);
+const MagicLinkSchema = new Schema<TMagicLink>({
+  userId: {
+    type: 'ObjectId',
+    required: true,
+  },
+  otp: {
+    type: String,
+    required: true,
+  },
+  isExpired: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  expiresAt: {
+    type: Date,
+    required: true,
+    default: fiveMinutesFromNow,
+  },
+});
+
+export default mongoDbConnection.model('MagicLink', MagicLinkSchema);
