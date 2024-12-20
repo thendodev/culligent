@@ -5,7 +5,7 @@ import { Schema } from 'mongoose';
 const RefreshTokenSchema = new Schema<TRefreshToken>(
   {
     token: { type: String, required: true },
-    userId: { type: 'ObjectId', required: true },
+    userId: { type: 'ObjectId', required: true, unique: true },
   },
   { timestamps: true },
 );

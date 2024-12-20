@@ -9,6 +9,7 @@ export const createRefreshTokenService = async (
   user: TUser,
 ): Promise<TTokenResponse | null> => {
   try {
+    console.log(user);
     const { refreshToken, accessToken } = await generateTokens(user);
 
     return {

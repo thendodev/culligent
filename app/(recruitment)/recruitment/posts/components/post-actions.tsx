@@ -37,7 +37,7 @@ const PostActions = ({ data }: PostActionProps) => {
   const prefetchCase = async () => {
     await queryClient.prefetchQuery({
       queryKey: ['posts', data._id],
-      queryFn: () => getCaseHandler(data._id.toString()),
+      queryFn: () => getCaseHandler(data._id),
     });
   };
 
@@ -55,7 +55,7 @@ const PostActions = ({ data }: PostActionProps) => {
             <WorkflowIcon className="mr-2 h-4 w-4" /> Actions
           </DropdownMenuLabel>
           <Separator />
-          <DropdownMenuItem onClick={() => onCopy(data._id.toString())}>
+          <DropdownMenuItem onClick={() => onCopy(data._id)}>
             <Copy className="mr-2 h-4 w-4" /> Copy id
           </DropdownMenuItem>
           <DropdownMenuItem

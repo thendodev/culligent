@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { mongooseObjectId, objectIdValidator } from './mongoose';
+import { objectIdValidator } from './mongoose';
 
 const skillsValidationSchema = z.object({
   name: z.string().min(1).max(100),
@@ -22,10 +22,10 @@ export const postsValidationSchema = z.object({
   idealCandidate: idealCandidateValidationSchema,
   applicants: z.array(z.string()).optional(),
   userId: objectIdValidator,
-  isFeatured: z.boolean(),
-  isArchived: z.boolean(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  isFeatured: z.boolean().default(true),
+  isArchived: z.boolean().default(false),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export type TPost = z.infer<typeof postsValidationSchema>;

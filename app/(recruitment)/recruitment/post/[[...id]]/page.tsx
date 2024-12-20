@@ -34,7 +34,7 @@ import Skills from './component/skills';
 import { useParams, useRouter } from 'next/navigation';
 import { setCurrentStage } from '../state/state';
 import { ProjectRoutes } from '@/global/routes';
-import { mongooseObjectIdString } from '@/validations/mongoose';
+import { objectIdValidator } from '@/validations/mongoose';
 
 const Post = () => {
   const router = useRouter();
@@ -49,8 +49,10 @@ const Post = () => {
   });
 
   const form = useForm<TWithId<TPost>>({
-    defaultValues: data ?? {},
-    resolver: zodResolver(postsValidationSchema.extend(mongooseObjectIdString)),
+    values: data,
+    resolver: zodResolver(
+      postsValidationSchema.extend({ _id: objectIdValidator }).optional(),
+    ),
   });
 
   const { mutate } = useMutation({
@@ -65,6 +67,12 @@ const Post = () => {
       router.push(
         `/${ProjectRoutes.recruitment}/${ProjectRoutes.post}/${ProjectRoutes.pipeline}/${id}`,
       );
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong',
+      });
     },
   });
 

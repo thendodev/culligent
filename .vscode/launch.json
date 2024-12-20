@@ -8,7 +8,12 @@
       "type": "firefox",
       "request": "attach",
       "name": "Attach",
-      "port": 3000
+      "pathMappings": [
+        {
+          "url": "webpack://_n_e",
+          "path": "${workspaceFolder}"
+        }
+      ]
     }
   ]
 }

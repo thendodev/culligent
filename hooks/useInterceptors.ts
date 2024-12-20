@@ -29,7 +29,7 @@ export const useAxiosInterceptors = () => {
               success: false,
             };
           }
-          return { status, data, ...others };
+          return Promise.reject({ status, data, ...others });
         },
       );
 

@@ -1,13 +1,13 @@
 import { ApiResponse } from '@/global/response.types';
 import Otp from '@/models/Otp';
 import { TOtp, TUser } from '@/validations/auth';
-import { ObjectId, WithId } from 'mongodb';
 import { Resend } from 'resend';
 import OtpEmailTemplate from '@/app/templates/otp-email-template';
 import { envServer } from '@/global/envServer';
 import { getEmail } from '@/server/helpers/email';
 import User from '@/models/User';
 import { HttpStatusCode } from 'axios';
+import { WithId, ObjectId } from 'mongodb';
 
 const resend = new Resend(envServer.OTP_RESEND);
 
@@ -25,7 +25,7 @@ export const createUserService = async ({
   return {
     success: true,
     message: 'User created successfully',
-    data: user,
+    data: user.toObject(),
     code: HttpStatusCode.Created,
   };
 };
@@ -53,13 +53,13 @@ export const getUserService = async (
   return {
     success: true,
     message: "User's account is successfully verified",
-    data: { ...user },
+    data: user.toObject(),
     code: HttpStatusCode.Ok,
   };
 };
 
 export const createOtpService = async (
-  id: string,
+  id: ObjectId,
 ): Promise<ApiResponse<TOtp>> => {
   const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
   const user = await User.findById(id);
@@ -71,8 +71,7 @@ export const createOtpService = async (
       code: HttpStatusCode.BadRequest,
     };
 
-  const otp = await Otp.create({ user: user._id, otp: newOtp });
-
+  const otp = await Otp.create({ userId: user._id, otp: newOtp });
   if (!otp)
     return {
       success: false,
@@ -83,11 +82,16 @@ export const createOtpService = async (
 
   const mailTo = getEmail(user.email);
 
-  const { error } = await resend.emails.send({
+  const { error, data } = await resend.emails.send({
     from: 'Acme <onboarding@resend.dev>',
     to: [mailTo],
     subject: 'Verify your email',
-    react: OtpEmailTemplate({ ...otp }),
+    react: OtpEmailTemplate({
+      userId: user._id,
+      otp: otp.otp,
+      isExpired: false,
+      expiresAt: otp.expiresAt,
+    }),
   });
 
   if (error) {
@@ -99,6 +103,7 @@ export const createOtpService = async (
       code: HttpStatusCode.BadRequest,
     };
   }
+
   return {
     success: true,
     message: 'Successfully created otp',
@@ -108,7 +113,7 @@ export const createOtpService = async (
 };
 
 export const verifyOtpService = async (
-  user: string,
+  userId: ObjectId,
   otp: string,
 ): Promise<ApiResponse<boolean>> => {
   //find and compare stored otp with incoming otp
@@ -148,7 +153,7 @@ export const verifyOtpService = async (
   const isUserUpdated = await User.findOneAndUpdate(
     {
       _id: {
-        $eq: new ObjectId(user),
+        $eq: userId,
       },
       isVerified: {
         $eq: false,

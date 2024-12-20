@@ -42,10 +42,10 @@ const PostPage = async ({ params: { id } }: IPostPageProps) => {
 
         <div>
           <p className="text-sm text-[var(--cruto-pale-grey)]">
-            Created : {post?.createdAt.toLocaleDateString(region, dateFormat)}
+            Created : {post?.createdAt?.toLocaleDateString(region, dateFormat)}
           </p>
           <p className="text-sm text-[var(--cruto-pale-grey)]">
-            Updated : {post?.updatedAt.toLocaleDateString(region, dateFormat)}
+            Updated : {post?.updatedAt?.toLocaleDateString(region, dateFormat)}
           </p>
         </div>
       </div>

@@ -14,14 +14,15 @@ export enum EAuth {
 }
 
 export const loginHandler = async (userData: TLogin): Promise<TUser | void> => {
-  const { data } = await publicRequest.post<TAuthResponse>(EAuth.SIGN_IN, {
-    ...userData,
-  });
-
-  const { user, accessToken, refreshToken } = data;
-  if (user.isVerified)
-    storeLoginCookiesUtil({ accessToken, user, refreshToken });
-  return user;
+  try {
+    const { data } = await publicRequest.post<TAuthResponse>(EAuth.SIGN_IN, {
+      ...userData,
+    });
+    const { user, accessToken, refreshToken } = data;
+    if (user.isVerified)
+      storeLoginCookiesUtil({ accessToken, user, refreshToken });
+    return user;
+  } catch {}
 };
 
 export const createMagicLinkHandler = async (email: string): Promise<void> => {

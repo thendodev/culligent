@@ -29,7 +29,8 @@ export const getCasesHandler = async (): Promise<TWithId<TCase>[] | null> => {
   }
 };
 
-export const getCaseHandler = async (id: string) => {
+export const getCaseHandler = async (id: string | undefined) => {
+  if (!id) return;
   const { data } = await privateRequest.get(`${ECaseRoutes.CASES}/${id}`);
   return {
     ...data,

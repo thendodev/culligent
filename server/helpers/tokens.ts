@@ -3,14 +3,10 @@ import RefreshToken from '@/models/RefreshToken';
 import jwt from 'jsonwebtoken';
 
 export const generateTokens = async (user: any) => {
+  console.log(user);
   if (!envServer.JWT_SECRET || !envServer.JWT_REFRESH_SECRET)
     return Promise.reject('could not create token');
   try {
-    //delete old refresh tokens
-    await RefreshToken.findOneAndDelete({
-      user: user._id,
-    });
-
     //create payload
     const payload = {
       sub: user._id,
@@ -26,7 +22,17 @@ export const generateTokens = async (user: any) => {
     });
 
     //insert new refresh token
-    await RefreshToken.create({ token: refreshToken, user: user._id });
+    await RefreshToken.findOneAndUpdate(
+      {
+        userId: user._id,
+      },
+      {
+        token: refreshToken,
+      },
+      {
+        upsert: true,
+      },
+    );
 
     return Promise.resolve({ accessToken, refreshToken });
   } catch (err) {

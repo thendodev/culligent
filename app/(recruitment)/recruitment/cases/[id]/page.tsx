@@ -60,7 +60,7 @@ const Case = () => {
           duration={data?.duration}
           createdAt={data?.createdAt}
           updatedAt={data?.updatedAt}
-          id={data?._id.toString()}
+          id={data?._id}
         />
         <Questions questions={data?.questions} />
       </div>

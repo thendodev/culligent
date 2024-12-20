@@ -5,16 +5,19 @@ import culligent from '@/public/logo/logo.svg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handleAccounts';
-import { useRouter, useParams } from 'next/navigation';
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const OtpPage = () => {
   const router = useRouter();
-  const { otp, user } = useParams<{ user: string; otp: string }>();
+  const { get } = useSearchParams();
+
+  const userId = get('userId');
+  const otp = get('otp');
   const [resendTimer, setResendTimer] = useState(60);
   const [otpResend, setOtpResend] = useState(false);
   const [enterOtp, setEnterOtp] = useState(otp);
@@ -35,27 +38,30 @@ const OtpPage = () => {
     };
   }, [otpResend, resendTimer]);
 
-  //send the otp to the user's email on load if we have an email in the url
+  //send the otp to the userId's email on load if we have an email in the url
   useEffect(() => {
-    if (!user || otp) return;
-    resendOtpHandler(user);
-  }, [user, otp]);
+    if (!userId || !otp) return;
+    resendOtpHandler(userId);
+  }, [userId, otp]);
 
   const handleResendOtp = async () => {
-    if (!user) return;
-    await resendOtpHandler(user);
+    if (!userId) return;
+    await resendOtpHandler(userId);
     setOtpResend(true);
   };
 
   useEffect(() => {
-    const handleVerifyOtp = async ({ user, otp }: any) => {
-      const isSuccessful = await verifyOtpHandler(otp, user);
+    const handleVerifyOtp = async ({ userId, otp }: any) => {
+      const isSuccessful = await verifyOtpHandler(otp, userId);
       if (isSuccessful) return router.push('/');
     };
-    if (user && enterOtp?.length === 4) {
-      handleVerifyOtp({ user, otp: enterOtp });
+
+    const userOtp = enterOtp ?? otp;
+
+    if (userId && userOtp) {
+      handleVerifyOtp({ userId, otp: enterOtp });
     }
-  }, [enterOtp, user, router]);
+  }, [enterOtp, userId, otp, router]);
 
   return (
     <div className="w-full h-full flex flex-col-reverse sm:flex-row sm:items-center relative sm:static">
@@ -76,8 +82,7 @@ const OtpPage = () => {
           disabled={otpResend}
         >
           Resend
-          {otpResend &&
-            `(${new Date(resendTimer * 1000).toISOString().substr(14, 5)})`}
+          {otpResend && `(${new Date(resendTimer * 1000).toISOString()})`}
         </Button>
       </div>
       <div className="absolute sm:static top-[0%] z-[-1]  w-full h-[60%] sm:h-full flex justify-center items-center content-center">

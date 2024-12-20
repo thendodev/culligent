@@ -12,33 +12,37 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-export const PlaidVerifyIdentityEmail = ({ userId, otp }: TOtp) => (
-  <Html>
-    <Head />
-    <Body style={main}>
-      <Container style={container}>
-        <Heading style={secondary}>ONE TIME PIN</Heading>
+export const PlaidVerifyIdentityEmail = ({ userId, otp }: TOtp) => {
+  return (
+    <Html>
+      <Head />
+      <Body style={main}>
+        <Container style={container}>
+          <Heading style={secondary}>ONE TIME PIN</Heading>
 
-        <Text style={tertiary}>Verify Your email</Text>
-        <Section style={codeContainer}>
-          <Text style={code}>{otp}</Text>
-        </Section>
-        <Text style={paragraph}>
-          {' '}
-          <Link
-            href={`localhost:3000/${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?userId=${userId}&otp=${otp}`}
-            style={link}
-          >
-            Or click here link to verify.
-          </Link>
-        </Text>
+          <Text style={tertiary}>Verify Your email</Text>
+          <Section style={codeContainer}>
+            <Text style={code}>{otp}</Text>
+          </Section>
+          <Text style={paragraph}>
+            {' '}
+            <Link
+              href={`localhost:3000/${ProjectRoutes.sign_up}/${ProjectRoutes.otp_verify}?userId=${userId}&otp=${otp}`}
+              style={link}
+            >
+              Or click here link to verify.
+            </Link>
+          </Text>
 
-        <Text style={paragraph}>Ignore,if you did not request this code.</Text>
-      </Container>
-      <Text style={footer}>RECRUTO.</Text>
-    </Body>
-  </Html>
-);
+          <Text style={paragraph}>
+            Ignore,if you did not request this code.
+          </Text>
+        </Container>
+        <Text style={footer}>RECRUTO.</Text>
+      </Body>
+    </Html>
+  );
+};
 
 export default PlaidVerifyIdentityEmail;
 

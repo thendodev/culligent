@@ -1,4 +1,3 @@
-import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
@@ -35,14 +34,12 @@ export const getPostsService = async (
     },
   });
 
-  console.log(post);
-
   if (!post) {
     return {
       data: null,
       success: false,
       message: 'Cases not found',
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
   }
 
@@ -50,7 +47,7 @@ export const getPostsService = async (
     data: post,
     success: true,
     message: 'Cases found successfully',
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 
@@ -71,7 +68,7 @@ export const getPostByIdService = async (
       data: null,
       success: false,
       message: 'Post not found',
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
   }
 
@@ -79,7 +76,7 @@ export const getPostByIdService = async (
     data: post,
     success: true,
     message: 'Post found successfully',
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 
@@ -108,7 +105,7 @@ export const updatePostService = async (
     return {
       success: false,
       message: 'Post not found',
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
   }
 
@@ -116,7 +113,7 @@ export const updatePostService = async (
     data: updatedPost,
     success: true,
     message: 'Post updated successfully',
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 export const deletePostService = async (
@@ -145,13 +142,13 @@ export const deletePostService = async (
     return {
       success: false,
       message: 'Sorry, Something went wrong',
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
   }
 
   return {
     success: true,
     message: 'Post deleted successfully',
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };

@@ -29,13 +29,12 @@ const PostsSchema = new Schema<TPost>(
     description: { type: String, required: true },
     role: { type: String, required: true },
     idealCandidate: idealCandidateSchema,
-    applicants: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'CurriculumVitae',
-        required: true,
-      },
-    ],
+    applicants: {
+      type: [Schema.Types.ObjectId],
+      ref: 'CurriculumVitae',
+      required: true,
+    },
+
     userId: { type: Schema.Types.ObjectId, required: true },
     isFeatured: { type: Boolean, default: true },
     isArchived: { type: Boolean, default: false },

@@ -2,30 +2,26 @@ import { dateFormat } from '@/global/config';
 import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
 import { TPost } from '@/validations/posts';
-import { AxiosError } from 'axios';
 
 enum EPostRoutes {
   POSTS = '/recruitment/posts',
 }
 export const getPostsHandler = async () => {
   const { data } = await privateRequest.get(EPostRoutes.POSTS);
-
   //remap data to match the case column schema
-  return data?.map((item: TPost) => ({
+  return data?.map((item: TWithId<TPost>) => ({
     ...item,
     status: item.isFeatured ? 'Featured' : 'Draft',
-    createdAt: new Date(item.createdAt).toLocaleDateString('en-us', dateFormat),
+    createdAt: new Date(item?.createdAt || '').toLocaleDateString(
+      'en-us',
+      dateFormat,
+    ),
   }));
 };
 
-export const getPostHandler = async (id: string): Promise<TPost | null> => {
-  try {
-    const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
-    return data.data;
-  } catch (e) {
-    const error = e as AxiosError;
-    return null;
-  }
+export const getPostHandler = async (id: string): Promise<TWithId<TPost>> => {
+  const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
+  return data;
 };
 
 export const updatePostHandler = async (data: TWithId<TPost>) => {
@@ -38,7 +34,7 @@ export const updatePostHandler = async (data: TWithId<TPost>) => {
 
 export const createPostHandler = async (data: TPost) => {
   const { data: response } = await privateRequest.post(EPostRoutes.POSTS, data);
-  return response;
+  return response.data;
 };
 
 export const deletePostHandler = async (id: string) => {
