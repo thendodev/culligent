@@ -23,7 +23,7 @@ const idealCandidateSchema = new Schema<TIdealCandidate>({
   certifications: [certificationsSchema],
 });
 
-const PostsSchema = new Schema<TPost>(
+const PostSchema = new Schema<TPost>(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
@@ -34,7 +34,6 @@ const PostsSchema = new Schema<TPost>(
       ref: 'CurriculumVitae',
       required: true,
     },
-
     userId: { type: Schema.Types.ObjectId, required: true },
     isFeatured: { type: Boolean, default: true },
     isArchived: { type: Boolean, default: false },
@@ -44,4 +43,4 @@ const PostsSchema = new Schema<TPost>(
   },
 );
 
-export default mongoDbConnection.model('Posts', PostsSchema);
+export default mongoDbConnection.model('Post', PostSchema);

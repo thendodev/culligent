@@ -5,15 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "firefox",
-      "request": "attach",
-      "name": "Attach",
-      "pathMappings": [
-        {
-          "url": "webpack://_n_e",
-          "path": "${workspaceFolder}"
-        }
-      ]
+      "name": "Next.js: debug full stack",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm run dev",
+      "serverReadyAction": {
+        "pattern": "started server on .+, url: (http?://.+)",
+        "uriFormat": "%s"
+      },
+      "autoAttachChildProcesses": true
     }
   ]
 }

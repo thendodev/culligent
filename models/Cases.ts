@@ -7,7 +7,7 @@ const AnswerSchema = new Schema<TAnswer>({
   correct: Boolean,
 });
 
-const QuestionsSchema = new Schema<TQuestion>({
+const QuestionSchema = new Schema<TQuestion>({
   question: String,
   skill: String,
   skill_level: String,
@@ -21,13 +21,13 @@ const SharedWithSchema = new Schema({
   role: { type: String, required: true },
 });
 
-const CasesSchema = new Schema<TCase>(
+const CaseSchema = new Schema<TCase>(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
     duration: { type: Number, required: true },
     userId: { type: Schema.Types.ObjectId, required: true },
-    questions: [QuestionsSchema],
+    questions: [QuestionSchema],
     sharedWith: [SharedWithSchema],
     isFeatured: { type: Boolean, default: true },
     isArchived: { type: Boolean, default: false },
@@ -37,4 +37,4 @@ const CasesSchema = new Schema<TCase>(
   },
 );
 
-export default mongoDbConnection.model('Cases', CasesSchema);
+export default mongoDbConnection.model('Case', CaseSchema);

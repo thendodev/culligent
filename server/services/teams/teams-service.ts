@@ -1,5 +1,5 @@
 import { TTeam, TTeamInvite } from '@/validations/teams';
-import Teams from '@/models/Teams';
+import Teams from '@/models/Team';
 import { ApiResponse } from '@/global/response.types';
 import { baseUrl, EStatusCode } from '@/global/config';
 import { ObjectId } from 'mongodb';

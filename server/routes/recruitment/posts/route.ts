@@ -1,5 +1,7 @@
+import { objectIdValidator } from '@/validations/mongoose';
 import { postsValidationSchema } from '@/validations/posts';
 import { createRoute, z } from '@hono/zod-openapi';
+import { ObjectId } from 'mongodb';
 
 export const createPostRoute = createRoute({
   method: 'post',
@@ -32,9 +34,16 @@ export const getPostRoute = createRoute({
   tags: ['Post'],
   summary: 'Fetch single post',
   request: {
-    params: z.object({
-      id: z.string().openapi('Post ID'),
-    }),
+    params: z
+      .object({
+        id: objectIdValidator,
+      })
+      .openapi({
+        param: {
+          name: 'id',
+          in: 'path',
+        },
+      }),
   },
   responses: {
     200: {
@@ -89,6 +98,23 @@ export const updatePostRoute = createRoute({
   tags: ['Post'],
   summary: 'Update a new post',
   request: {
+    params: z
+      .object({
+        id: z.string().transform((id, ctx) => {
+          if (!ObjectId.isValid(id))
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: 'Invalid id',
+            });
+          return new ObjectId(id);
+        }),
+      })
+      .openapi({
+        param: {
+          name: 'id',
+          in: 'path',
+        },
+      }),
     body: {
       description: 'Request body',
       content: {
@@ -119,6 +145,18 @@ export const deletePostRoute = createRoute({
   path: '/',
   tags: ['Post'],
   summary: 'Delete post',
+  request: {
+    params: z
+      .object({
+        id: objectIdValidator,
+      })
+      .openapi({
+        param: {
+          name: 'id',
+          in: 'path',
+        },
+      }),
+  },
   responses: {
     200: {
       description: 'Success',

@@ -18,27 +18,42 @@ import {
 } from '@dnd-kit/sortable';
 import { toast } from '@/components/ui/use-toast';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {  getPostHandler } from '@/handlers/handlePosts';
 import { useParams } from 'next/navigation';
 import {
   createPipelineHandler,
   updatePipelineHandler,
 } from '@/handlers/handlePipeline';
-import { mongooseObjectIdString } from '@/validations/mongoose';
+import { TWithId } from '@/global/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { getPostHandler } from '@/handlers/handlePosts';
 
 const PipelinePage = () => {
   const { id } = useParams();
-
-  const { data } = useQuery({
+  const { data: post } = useQuery({
     queryKey: ['posts', id],
     queryFn: () => getPostHandler(id as string),
     enabled: !!id,
   });
 
-  const form = useForm<TPipeline>({
-    defaultValues: {
-      stages: [],
-    },
+  const isPipeline = post && !!post?.userId && !!post?.pipeline?._id;
+
+  const pipeline: TPipeline | any = isPipeline
+    ? {
+        postId: post._id,
+        userId: post.userId,
+        stages: post.pipeline.stages,
+        isArchived: false,
+      }
+    : {
+        postId: post?._id,
+        userId: post?.userId,
+        stages: [],
+        isArchived: false,
+      };
+
+  const form = useForm<TWithId<TPipeline>>({
+    values: pipeline,
+    resolver: zodResolver(PipelineValidationSchema),
   });
 
   const { fields, append, remove, move } = useFieldArray({
@@ -47,12 +62,12 @@ const PipelinePage = () => {
   });
 
   const formErrors = Object.keys(form.formState.errors);
-
   useEffect(() => {
     if (!formErrors.length) {
       setCurrentStage(ProjectRoutes.post);
     }
-  }, [formErrors.length]);
+    return;
+  }, [formErrors.length, formErrors]);
 
   const sortId = fields.map((field) => field.id);
 
@@ -61,31 +76,11 @@ const PipelinePage = () => {
   };
 
   const handleAddStage = () => {
-    append(
-      {
-        name: '',
-        cases: [],
-        reviewers: [],
-      },
-      {
-        shouldFocus: true,
-      },
-    );
-  };
-
-  const handleSubmit = async () => {
-    const stages = form.getValues();
-    const { success, error, data } = PipelineValidationSchema.extend(
-      mongooseObjectIdString,
-    ).safeParse(stages);
-    if (!success) {
-      return toast({
-        title: 'Pipeline is not valid',
-        description: error.issues[0].message,
-        variant: 'destructive',
-      });
-    }
-    !id ? await createPipelineHandler(data) : await updatePipelineHandler(data);
+    append({
+      name: '',
+      cases: [],
+      reviewers: [],
+    });
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -108,7 +103,9 @@ const PipelinePage = () => {
   };
 
   const { mutate } = useMutation({
-    mutationFn: handleSubmit,
+    mutationFn: !post?.pipeline?._id
+      ? form.handleSubmit(createPipelineHandler)
+      : form.handleSubmit(updatePipelineHandler),
     onSuccess: () => {
       toast({
         title: 'Pipeline created',
@@ -123,34 +120,40 @@ const PipelinePage = () => {
       onDragEnd={handleDragEnd}
     >
       <div className="w-full flex flex-col gap-2">
-        <div className="space-x-2 border border-[var(--cruto-border)] p-2 h-fit">
-          <Button variant={'outline'} onClick={handleAddStage}>
-            Add Stage
-          </Button>
-          <Button onClick={() => mutate()}>Submit</Button>
-        </div>
-        <div className="w-full h-full flex gap-2 ">
-          <Form {...form}>
-            <form className="flex gap-6 w-[100vw] overflow-x-auto">
-              <SortableContext
-                items={sortId}
-                strategy={horizontalListSortingStrategy}
+        <Form {...form}>
+          <form onSubmit={mutate}>
+            <div className="space-x-2 border border-[var(--cruto-border)] p-2 h-fit">
+              <Button
+                type="button"
+                variant={'outline'}
+                onClick={handleAddStage}
               >
-                {fields.map((pipeline, index) => (
-                  <Board
-                    key={pipeline.id}
-                    handleDelete={() => handleDeleteStage(index)}
-                    boardName={pipeline.name}
-                    stageIndex={index}
-                    id={pipeline.id}
-                  >
-                    <CasesList stageIndex={index} />
-                  </Board>
-                ))}
-              </SortableContext>
-            </form>
-          </Form>
-        </div>
+                Add Stage
+              </Button>
+              <Button>Submit</Button>
+            </div>
+            <div className="w-full h-full flex gap-2 ">
+              <div className="flex gap-6 w-[100vw] overflow-x-auto">
+                <SortableContext
+                  items={sortId}
+                  strategy={horizontalListSortingStrategy}
+                >
+                  {fields.map((pipeline, index) => (
+                    <Board
+                      key={pipeline.id}
+                      handleDelete={() => handleDeleteStage(index)}
+                      boardName={pipeline.name}
+                      stageIndex={index}
+                      id={pipeline.id}
+                    >
+                      <CasesList stageIndex={index} />
+                    </Board>
+                  ))}
+                </SortableContext>
+              </div>
+            </div>
+          </form>
+        </Form>
       </div>
     </DndContext>
   );

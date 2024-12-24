@@ -7,29 +7,46 @@ import { useEffect } from 'react';
 
 export const useAxiosInterceptors = () => {
   useEffect(() => {
+    const controller = new AbortController();
+
     const requestInterceptor = () =>
-      privateRequest.interceptors.request.use((config: any) => {
-        // Do something before request is sent
-        setLoading(true);
-        return config;
-      });
+      privateRequest.interceptors.request.use(
+        (config) => {
+          // Do something before request is sent
+          setLoading(true);
+          config.signal = controller.signal;
+          return config;
+        },
+        (error) => {
+          // Do something with request error
+          return Promise.reject(error);
+        },
+      );
 
     const responseInterceptor = () =>
       privateRequest.interceptors.response.use(
-        ({ status, data, ...others }) => {
+        (response) => {
           // Do something with response data
           setLoading(false);
-          if (status !== 200) {
+          return response;
+        },
+        ({ response }) => {
+          // Do something with response data
+          setLoading(false);
+
+          if (response.status !== 200) {
             toast({
-              title: `Status ${status}`,
-              description: data.message,
+              title: `Status ${response.status}`,
+              description: response.data?.message,
             });
-            data = {
-              ...data,
+            response.data = {
+              ...response.data,
               success: false,
             };
+            return Promise.reject(response);
           }
-          return Promise.reject({ status, data, ...others });
+
+          return Promise.resolve(response);
         },
       );
 
@@ -37,6 +54,7 @@ export const useAxiosInterceptors = () => {
     const responses = responseInterceptor();
 
     return () => {
+      controller.abort();
       privateRequest.interceptors.request.eject(requests);
       privateRequest.interceptors.response.eject(responses);
     };

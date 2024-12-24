@@ -14,6 +14,13 @@ export const createPipelineHandler = async (data: TPipeline) => {
   return response;
 };
 
+export const getPipelineHandler = async (id: string) => {
+  const { data: response } = await privateRequest.get(
+    `${EPipelineRoutes.PIPELINE}/${id}`,
+  );
+  return response;
+};
+
 export const updatePipelineHandler = async (data: TWithId<TPipeline>) => {
   const { data: response } = await privateRequest.put(
     `${EPipelineRoutes.PIPELINE}/${data._id}`,

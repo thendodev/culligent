@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import { z } from 'zod';
+import { objectIdValidator } from './mongoose';
 
 const StageValidationSchema = z.object({
   name: z.string().min(2),
@@ -12,9 +13,10 @@ const StageValidationSchema = z.object({
     .transform((val) => val.map((v) => Types.ObjectId.createFromBase64(v))),
 });
 const PipelineValidationSchema = z.object({
-  userId: z.custom<Types.ObjectId>(),
+  userId: objectIdValidator,
+  postId: objectIdValidator,
   stages: z.array(StageValidationSchema),
-  isArchived: z.boolean(),
+  isArchived: z.boolean().default(false),
 });
 
 export type TPipeline = z.infer<typeof PipelineValidationSchema>;

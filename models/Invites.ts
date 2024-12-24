@@ -22,4 +22,4 @@ InviteSchema.virtual('user', {
   justOne: true,
 });
 
-export default mongoDbConnection.model('Invite', InviteSchema);
+export default mongoDbConnection.model('Invite ', InviteSchema);

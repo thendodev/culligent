@@ -2,7 +2,7 @@ import { ApiResponse } from '@/global/response.types';
 import Pipelines from '@/models/Pipelines';
 import { TPipeline } from '@/validations/pipeline';
 import { HttpStatusCode } from 'axios';
-import { WithId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
 export const createPipelineService = async (
   pipeline: TPipeline,
@@ -21,6 +21,26 @@ export const createPipelineService = async (
     success: true,
     message: 'Pipeline created successfully',
     code: HttpStatusCode.Created,
+  };
+};
+
+export const getPipelineService = async (
+  id: ObjectId,
+): Promise<ApiResponse<WithId<TPipeline>>> => {
+  const pipeline = await Pipelines.findById(id);
+  if (!pipeline)
+    return {
+      data: null,
+      success: false,
+      message: 'Pipeline not found',
+      code: HttpStatusCode.NotFound,
+    };
+
+  return {
+    data: pipeline.toObject(),
+    success: true,
+    message: 'Pipeline found',
+    code: HttpStatusCode.Ok,
   };
 };
 

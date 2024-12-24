@@ -1,6 +1,6 @@
 import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
-import Passwords from '@/models/Passwords';
+import Passwords from '@/models/Password';
 import { HttpStatusCode } from 'axios';
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';

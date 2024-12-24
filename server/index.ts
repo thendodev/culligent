@@ -40,16 +40,6 @@ app.get(
 
 //connect to database
 let dbConnection: any;
-// app.use('*', async (c, next) => {
-//   try {
-//     if (dbConnection) return await next();
-//     dbConnection = await Dbconnect();
-//     console.log('connected to database');
-//     await next();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
 
 app.use('*', async (c, next) => {
   try {

@@ -2,7 +2,8 @@ import { ApiResponse } from '@/global/response.types';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
 import { TPost } from '@/validations/posts';
-import Posts from '@/models/Posts';
+import Posts from '@/models/Post';
+import Pipelines from '@/models/Pipelines';
 
 export const createPostService = async (
   post: TPost,
@@ -25,10 +26,10 @@ export const createPostService = async (
 };
 
 export const getPostsService = async (
-  userId: string,
+  userId: ObjectId,
 ): Promise<ApiResponse<TPost[]>> => {
   const post = await Posts.find({
-    userId: ObjectId.createFromHexString(userId),
+    userId: userId,
     isArchived: {
       $eq: false,
     },
@@ -52,16 +53,32 @@ export const getPostsService = async (
 };
 
 export const getPostByIdService = async (
-  userId: string,
-  postId: string,
+  postId: ObjectId,
 ): Promise<ApiResponse<TPost>> => {
-  const post = await Posts.findOne({
-    userId: new ObjectId(userId),
-    _id: new ObjectId(postId),
-    isArchived: {
-      $eq: false,
+  const postAggregate = await Posts.aggregate([
+    {
+      $match: {
+        _id: new ObjectId(postId),
+        isArchived: false,
+      },
     },
-  });
+    {
+      $lookup: {
+        from: Pipelines.collection.name,
+        localField: '_id',
+        foreignField: 'postId',
+        as: 'pipeline',
+      },
+    },
+    {
+      $unwind: {
+        path: '$pipeline',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ]);
+
+  const post = postAggregate?.[0];
 
   if (!post) {
     return {
@@ -81,8 +98,8 @@ export const getPostByIdService = async (
 };
 
 export const updatePostService = async (
-  userId: string,
-  postId: string,
+  userId: ObjectId,
+  postId: ObjectId,
   data: Partial<TPost>,
 ): Promise<ApiResponse<TPost>> => {
   const updatedPost = await Posts.findOneAndUpdate(
@@ -117,13 +134,11 @@ export const updatePostService = async (
   };
 };
 export const deletePostService = async (
-  userId: string,
-  postId: string,
+  postId: ObjectId,
 ): Promise<ApiResponse<TPost>> => {
   const updatedPost = await Posts.findOneAndUpdate(
     {
-      _id: new ObjectId(postId),
-      userId: new ObjectId(userId),
+      _id: postId,
       isArchived: {
         $eq: false,
       },

@@ -1,6 +1,7 @@
 import { dateFormat } from '@/global/config';
 import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
+import { TPipeline } from '@/validations/pipeline';
 import { TPost } from '@/validations/posts';
 
 enum EPostRoutes {
@@ -8,6 +9,7 @@ enum EPostRoutes {
 }
 export const getPostsHandler = async () => {
   const { data } = await privateRequest.get(EPostRoutes.POSTS);
+
   //remap data to match the case column schema
   return data?.map((item: TWithId<TPost>) => ({
     ...item,
@@ -19,7 +21,9 @@ export const getPostsHandler = async () => {
   }));
 };
 
-export const getPostHandler = async (id: string): Promise<TWithId<TPost>> => {
+export const getPostHandler = async (
+  id: string,
+): Promise<TWithId<TPost> & { pipeline: Partial<TWithId<TPipeline>> }> => {
   const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
   return data;
 };

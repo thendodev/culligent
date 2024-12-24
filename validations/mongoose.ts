@@ -10,9 +10,10 @@ export const objectIdValidator = z
       }
     ),
   )
-  .transform((value, ctx): mongoose.Types.ObjectId => {
+  .transform((value, ctx) => {
     try {
-      return mongoose.Types.ObjectId.createFromTime(value as any);
+      const id = mongoose.Types.ObjectId.createFromHexString(value as string);
+      return id;
     } catch (e) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -23,7 +24,7 @@ export const objectIdValidator = z
     }
   });
 
-const objectIdStringValidator = z
+export const objectIdStringValidator = z
   .string()
   .refine(mongoose.Types.ObjectId.isValid);
 

@@ -1,7 +1,7 @@
 import User from '@/models/User';
 import { TLogin } from '@/validations/auth';
 import { generateTokens } from '@/server/helpers/tokens';
-import MagicLinks from '@/models/MagicLinks';
+import MagicLinks from '@/models/MagicLink';
 import { generateRandomString } from '@/server/helpers/randoms';
 import MagicLinkEmail from '@/app/templates/magic-link-email';
 import { EStatusCode, getBaseUrl } from '@/global/config';
