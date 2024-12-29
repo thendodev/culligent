@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import culligent from '@/public/logo/logo.svg';
-import Image from 'next/image';
+
 import { Button } from '@/components/ui/button';
 import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handleAccounts';
 import {
@@ -18,7 +17,7 @@ interface IOtpProps {
 }
 const Otp = ({ userId, otp }: IOtpProps) => {
   const router = useRouter();
-  console.log(userId, otp);
+
   const [resendTimer, setResendTimer] = useState(60);
   const [otpResend, setOtpResend] = useState(false);
   const [enterOtp, setEnterOtp] = useState(otp);
@@ -65,30 +64,20 @@ const Otp = ({ userId, otp }: IOtpProps) => {
   }, [enterOtp, userId, otp, router]);
 
   return (
-    <div className="w-full h-full flex flex-col-reverse sm:flex-row sm:items-center relative sm:static">
-      <div className="w-full  h-full flex flex-col gap-2 justify-center items-center content-center bg-[var(--cruto-black)] ">
-        <InputOTP maxLength={4} onChange={(value) => setEnterOtp(value)}>
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-          </InputOTPGroup>
-        </InputOTP>
+    <div className="w-full  h-full flex flex-col gap-2 justify-center items-center content-center bg-[var(--cruto-black)] ">
+      <InputOTP maxLength={4} onChange={(value) => setEnterOtp(value)}>
+        <InputOTPGroup>
+          <InputOTPSlot index={0} />
+          <InputOTPSlot index={1} />
+          <InputOTPSlot index={2} />
+          <InputOTPSlot index={3} />
+        </InputOTPGroup>
+      </InputOTP>
 
-        <Button
-          variant="ghost"
-          className="text-sm hover:text-[var(--cruto-green)] text-[var(--cruto-text-light)]"
-          onClick={handleResendOtp}
-          disabled={otpResend}
-        >
-          Resend
-          {otpResend && `(${new Date(resendTimer * 1000).toISOString()})`}
-        </Button>
-      </div>
-      <div className="absolute sm:static top-[0%] z-[-1]  w-full h-[60%] sm:h-full flex justify-center items-center content-center">
-        <Image src={culligent} alt="Enter OTP" objectFit="contain" />
-      </div>
+      <Button variant="ghost" onClick={handleResendOtp} disabled={otpResend}>
+        Resend
+        {otpResend && `(${new Date(resendTimer * 1000).toISOString()})`}
+      </Button>
     </div>
   );
 };
