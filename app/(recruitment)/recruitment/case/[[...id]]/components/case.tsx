@@ -8,13 +8,13 @@ import { ReactNode, useState } from 'react';
 import SaveCase from './save-case';
 import { getCaseHandler } from '@/handlers/handleCases';
 import { useQuery } from '@tanstack/react-query';
-import ViewQuestion from './new-question/view-question';
+import ViewQuestion from './question/view-question';
 import { CaseSchema, TCase } from '@/validations/cases';
 import QuestionWrapper from './question-wrapper';
 
 import { Form } from '@/components/ui/form';
-import Question from './new-question/question';
-import Answers from './new-question/answers';
+import Question from './question/question';
+import Answers from './question/answers';
 
 export enum QuestionType {
   OpenEnded = 'Open Ended',
