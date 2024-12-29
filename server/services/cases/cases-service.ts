@@ -25,10 +25,10 @@ export const createCaseService = async (
 };
 
 export const getCasesService = async (
-  user: string,
+  userId: ObjectId,
 ): Promise<ApiResponse<TCase[]>> => {
   const cases = await Cases.find({
-    user: ObjectId.createFromHexString(user),
+    userId,
     isArchived: {
       $eq: false,
     },
@@ -52,15 +52,11 @@ export const getCasesService = async (
 };
 
 export const getSingleCaseService = async (
-  user: string,
-  caseId: string,
+  caseId: ObjectId,
 ): Promise<ApiResponse<TCase>> => {
   const caseFound = await Cases.findOne({
-    user: new ObjectId(user),
-    _id: new ObjectId(caseId),
-    isArchived: {
-      $eq: false,
-    },
+    _id: caseId,
+    isArchived: false,
   });
 
   if (!caseFound) {
@@ -81,17 +77,13 @@ export const getSingleCaseService = async (
 };
 
 export const updateCaseService = async (
-  user: string,
-  caseId: string,
+  caseId: ObjectId,
   data: Partial<TCase>,
 ): Promise<ApiResponse<TCase>> => {
   const updatedCase = await Cases.findOneAndUpdate(
     {
-      _id: new ObjectId(caseId),
-      user: new ObjectId(user),
-      isArchived: {
-        $eq: false,
-      },
+      _id: caseId,
+      isArchived: false,
     },
     {
       $set: data,
@@ -118,16 +110,12 @@ export const updateCaseService = async (
   };
 };
 export const deleteCaseService = async (
-  user: string,
-  caseId: string,
+  caseId: ObjectId,
 ): Promise<ApiResponse<TCase>> => {
   const updatedCase = await Cases.findOneAndUpdate(
     {
-      _id: new ObjectId(caseId),
-      user: new ObjectId(user),
-      isArchived: {
-        $eq: false,
-      },
+      _id: caseId,
+      isArchived: false,
     },
     {
       $set: {

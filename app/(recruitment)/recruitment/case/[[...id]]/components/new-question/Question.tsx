@@ -8,21 +8,62 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectLabel,
-  SelectItem,
-} from '@radix-ui/react-select';
+
 import React from 'react';
 import { SkillsCombobox } from '../skills-combobox';
-import { TQuestionProps } from '../../types';
 import { Button } from '@/components/ui/button';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import { QuestionSchema, TCase } from '@/validations/cases';
+import { toast } from '@/components/ui/use-toast';
+import { QuestionType } from '../case';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+export type TQuestionProps = {
+  question: number;
+  type: QuestionType;
+};
 
-const Question = ({ form, question, handleSave, type }: TQuestionProps) => {
+const Question = ({ question, type }: TQuestionProps) => {
+  const form = useFormContext<TCase>();
+
+  const { update } = useFieldArray({
+    control: form?.control,
+    name: `questions`,
+  });
+
+  const handleSave = (questionIndex: number) => {
+    const question = {
+      ...form.getValues(`questions.${questionIndex}`),
+      type: type,
+    };
+    const { success, error, data } = QuestionSchema.safeParse(question);
+
+    if (!data || (!success && error > 1)) {
+      return error.errors.map((error) =>
+        toast({
+          title: (error.path[0] as string) ?? 'Nothing to save',
+          description: error.message ?? 'No case found',
+        }),
+      );
+    }
+
+    update(questionIndex, {
+      ...data,
+      type: type,
+    });
+
+    toast({
+      title: 'Saved',
+      description: 'Question saved successfully',
+    });
+  };
   return (
     <Form {...form}>
       <form className="h-full space-y-10 overflow-hidden bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border-[var(--cruto-border)] border">
@@ -44,11 +85,7 @@ const Question = ({ form, question, handleSave, type }: TQuestionProps) => {
                   </FormItem>
                 )}
               />
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => handleSave(question, type)}
-              >
+              <Button type="button" onClick={() => handleSave(question)}>
                 Save
               </Button>
             </div>

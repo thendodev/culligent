@@ -29,8 +29,8 @@ import {
 } from '@/components/modules/forms';
 import { toast } from '@/components/ui/use-toast';
 import { TWithId } from '@/global/types';
-import Certifications from './component/certifications';
-import Skills from './component/skills';
+import Certifications from './components/certifications';
+import Skills from './components/skills';
 import { useParams, useRouter } from 'next/navigation';
 import { setCurrentStage } from '../state/state';
 import { ProjectRoutes } from '@/global/routes';

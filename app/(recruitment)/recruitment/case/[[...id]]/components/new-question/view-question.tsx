@@ -11,20 +11,16 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/components/ui/use-toast';
-import { UseFieldArrayReturn } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 import Questions from '@/app/(recruitment)/recruitment/cases/components/questions';
+import { TCase } from '@/validations/cases';
 
-type IViewQuestionProps = {
-  fieldArray: UseFieldArrayReturn<any>;
-  updateQuestion: (option: string, questionIndex?: number) => void;
-  form: any;
-};
-
-const ViewQuestion = ({
-  fieldArray,
-  updateQuestion,
-  form,
-}: IViewQuestionProps) => {
+const ViewQuestion = () => {
+  const form = useFormContext<TCase>();
+  const { remove, fields } = useFieldArray({
+    name: 'questions',
+    control: form.control,
+  });
   const cannotDeleteFirstQuestion = () =>
     toast({
       title: 'Cannot delete first question',
@@ -32,10 +28,13 @@ const ViewQuestion = ({
     });
 
   const deletQuestion = (questionIndex: number) => {
-    if (questionIndex === 0 && fieldArray.fields.length === 1)
+    if (questionIndex === 0 && fields.length === 1)
       return cannotDeleteFirstQuestion();
-    fieldArray.remove(questionIndex);
+    remove(questionIndex);
   };
+
+  const questions = form.getValues('questions');
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -44,14 +43,13 @@ const ViewQuestion = ({
       <SheetContent size={'half'}>
         <SheetHeader>
           <SheetTitle className="text-2xl">
-            View cases{' '}
-            <sup className="text-sm">({fieldArray.fields.length}) </sup>
+            View cases <sup className="text-sm">({fields.length}) </sup>
           </SheetTitle>
         </SheetHeader>
         <div>
           <div className="ml-auto flex justify-between items-center bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border-[var(--cruto-border)] border"></div>
           <ScrollArea className="w-full h-full">
-            <Questions questions={fieldArray.fields} />
+            <Questions questions={questions} />
           </ScrollArea>
         </div>
       </SheetContent>

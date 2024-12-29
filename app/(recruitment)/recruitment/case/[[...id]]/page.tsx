@@ -7,13 +7,16 @@ import {
   QueryClient,
 } from '@tanstack/react-query';
 import { getCaseHandler } from '@/handlers/handleCases';
+import { EGenericQueryKeys } from '@/global/config';
 
 const CaseBuilder = async ({ params }: { params: { id: string } }) => {
-  const queryKey = 'cases';
   const id = params.id && params.id[0];
+  const queryKey = [EGenericQueryKeys.CASES, id];
+
   const queryClient = new QueryClient();
+
   await queryClient.prefetchQuery({
-    queryKey: ['cases', id],
+    queryKey: queryKey,
     queryFn: () => getCaseHandler(id),
   });
 

@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -16,38 +17,32 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Textarea } from '@/components/ui/textarea';
-import { UseFormReturn } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { toast } from '@/components/ui/use-toast';
 import { createCaseHandler, updateCaseHandler } from '@/handlers/handleCases';
 import { Switch } from '@/components/ui/switch';
 import { CaseSchema, TCase } from '@/validations/cases';
+import { useMutation } from '@tanstack/react-query';
+import { TWithId } from '@/global/types';
 type TSaveCaseProps = {
-  form: UseFormReturn<TCase>;
   id?: string | null;
 };
 
-const SaveCase = ({ form, id }: TSaveCaseProps) => {
-  const onSubmit = async (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => {
-    e.preventDefault();
-    //get form from react forms
-    const newCase = form.getValues() as TCase;
-    //validate form
-    const isValid = CaseSchema.safeParse(newCase);
-    if (!isValid.success) {
-      return isValid.error.errors.map((error) =>
-        toast({
-          title: error.path.join(', ') as string,
-          description: error.message,
-        }),
-      );
-    }
+const SaveCase = ({ id }: TSaveCaseProps) => {
+  const form = useFormContext<TWithId<TCase>>();
 
-    !id
-      ? await createCaseHandler(newCase)
-      : await updateCaseHandler(id, newCase);
-  };
+  const { mutate } = useMutation({
+    mutationFn: id
+      ? form.handleSubmit(updateCaseHandler)
+      : form.handleSubmit(createCaseHandler),
+    onSuccess: () => {
+      toast({
+        title: 'Case saved successfully',
+      });
+    },
+  });
+
+  console.log(form.formState.errors);
 
   return (
     <Sheet>
@@ -74,7 +69,7 @@ const SaveCase = ({ form, id }: TSaveCaseProps) => {
         </SheetHeader>
         <div>
           <Form {...form}>
-            <form className="grid gap-2 py-4">
+            <form onSubmit={mutate} className="grid gap-2 py-4">
               <div>
                 <FormField
                   name="name"
@@ -145,12 +140,11 @@ const SaveCase = ({ form, id }: TSaveCaseProps) => {
                   )}
                 />
               </div>
+              <Button>
+                {!id ? <span>Save Case </span> : <span>Update Case</span>}
+              </Button>
             </form>
           </Form>
-
-          <Button type="submit" onClick={onSubmit}>
-            {!id ? <span>Save Case </span> : <span>Update Case</span>}
-          </Button>
         </div>
       </SheetContent>
     </Sheet>
