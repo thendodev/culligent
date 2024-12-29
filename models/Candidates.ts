@@ -1,22 +1,34 @@
-import papr from '@/lib/database/papr';
-import { schema, types } from 'papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
+import { Schema } from 'mongoose';
 
-const CandidateSchema = schema(
+const CandidateSchema = new Schema(
   {
-    postId: types.objectId({ required: true }),
-    userId: types.objectId({ required: true }),
-    cv: types.string({ required: true }),
-    status: types.string({ required: true }),
-    isValid: types.boolean({ required: true }),
+    postId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
+    cv: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      default: 'pending',
+    },
+    isValid: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
   },
   {
-    defaults: {
-      status: 'pending',
-      isValid: true,
-    },
     timestamps: true,
   },
 );
 
-export type TUserCurriculumVitae = (typeof CandidateSchema)[0];
-export default papr.model('Candidate', CandidateSchema);
+export default mongoDbConnection.model('Candidate', CandidateSchema);

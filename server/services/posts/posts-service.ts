@@ -1,13 +1,14 @@
-import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
-import Posts, { TPost } from '@/models/Posts';
 import { HttpStatusCode } from 'axios';
 import { ObjectId } from 'mongodb';
+import { TPost } from '@/validations/posts';
+import Posts from '@/models/Post';
+import Pipelines from '@/models/Pipelines';
 
 export const createPostService = async (
   post: TPost,
 ): Promise<ApiResponse<TPost>> => {
-  const postCreated = await Posts.insertOne(post);
+  const postCreated = await Posts.create(post);
   if (!postCreated)
     return {
       data: null,
@@ -25,10 +26,10 @@ export const createPostService = async (
 };
 
 export const getPostsService = async (
-  userId: string,
+  userId: ObjectId,
 ): Promise<ApiResponse<TPost[]>> => {
   const post = await Posts.find({
-    userId: ObjectId.createFromHexString(userId),
+    userId: userId,
     isArchived: {
       $eq: false,
     },
@@ -39,7 +40,7 @@ export const getPostsService = async (
       data: null,
       success: false,
       message: 'Cases not found',
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
   }
 
@@ -47,28 +48,44 @@ export const getPostsService = async (
     data: post,
     success: true,
     message: 'Cases found successfully',
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 
 export const getPostByIdService = async (
-  userId: string,
-  postId: string,
+  postId: ObjectId,
 ): Promise<ApiResponse<TPost>> => {
-  const post = await Posts.findOne({
-    userId: new ObjectId(userId),
-    _id: new ObjectId(postId),
-    isArchived: {
-      $eq: false,
+  const postAggregate = await Posts.aggregate([
+    {
+      $match: {
+        _id: new ObjectId(postId),
+        isArchived: false,
+      },
     },
-  });
+    {
+      $lookup: {
+        from: Pipelines.collection.name,
+        localField: '_id',
+        foreignField: 'postId',
+        as: 'pipeline',
+      },
+    },
+    {
+      $unwind: {
+        path: '$pipeline',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+  ]);
+
+  const post = postAggregate?.[0];
 
   if (!post) {
     return {
       data: null,
       success: false,
       message: 'Post not found',
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
   }
 
@@ -76,13 +93,13 @@ export const getPostByIdService = async (
     data: post,
     success: true,
     message: 'Post found successfully',
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 
 export const updatePostService = async (
-  userId: string,
-  postId: string,
+  userId: ObjectId,
+  postId: ObjectId,
   data: Partial<TPost>,
 ): Promise<ApiResponse<TPost>> => {
   const updatedPost = await Posts.findOneAndUpdate(
@@ -105,7 +122,7 @@ export const updatePostService = async (
     return {
       success: false,
       message: 'Post not found',
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
   }
 
@@ -113,17 +130,15 @@ export const updatePostService = async (
     data: updatedPost,
     success: true,
     message: 'Post updated successfully',
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 export const deletePostService = async (
-  userId: string,
-  postId: string,
+  postId: ObjectId,
 ): Promise<ApiResponse<TPost>> => {
   const updatedPost = await Posts.findOneAndUpdate(
     {
-      _id: new ObjectId(postId),
-      userId: new ObjectId(userId),
+      _id: postId,
       isArchived: {
         $eq: false,
       },
@@ -142,13 +157,13 @@ export const deletePostService = async (
     return {
       success: false,
       message: 'Sorry, Something went wrong',
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
   }
 
   return {
     success: true,
     message: 'Post deleted successfully',
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };

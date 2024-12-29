@@ -1,7 +1,7 @@
 import User from '@/models/User';
 import { TLogin } from '@/validations/auth';
 import { generateTokens } from '@/server/helpers/tokens';
-import MagicLinks from '@/models/MagicLinks';
+import MagicLinks from '@/models/MagicLink';
 import { generateRandomString } from '@/server/helpers/randoms';
 import MagicLinkEmail from '@/app/templates/magic-link-email';
 import { EStatusCode, getBaseUrl } from '@/global/config';
@@ -71,7 +71,7 @@ export const createMagicLinkService = async (email: string) => {
 
     const otp = generateRandomString();
 
-    const loginOtp = await MagicLinks.insertOne({ user: email, otp });
+    const loginOtp = await MagicLinks.create({ user: email, otp });
 
     const magicLink =
       getBaseUrl(envServer.NEXT_PUBLIC_ENVIRONMENT) +

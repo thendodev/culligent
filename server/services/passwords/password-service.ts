@@ -1,6 +1,7 @@
 import { EStatusCode } from '@/global/config';
 import { ApiResponse } from '@/global/response.types';
-import Passwords, { MPasswords } from '@/models/Passwords';
+import Passwords from '@/models/Password';
+import { HttpStatusCode } from 'axios';
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 
@@ -16,7 +17,7 @@ export const createPasswordService = async ({
 
   const hashPassword = await bcrypt.hash(password, salt);
 
-  const createdPassword = await Passwords.insertOne({
+  const createdPassword = await Passwords.create({
     user,
     password: hashPassword,
     salt,
@@ -33,7 +34,7 @@ export const createPasswordService = async ({
     success: true,
     message: 'Password created successfully',
     data: true,
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Created,
   };
 };
 
@@ -47,7 +48,7 @@ export const verifyPasswordService = async ({
       success: false,
       message: 'Unauthorized',
       data: null,
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.Unauthorized,
     };
 
   //hash incoming password
@@ -64,6 +65,6 @@ export const verifyPasswordService = async ({
     success: true,
     message: 'Authorized',
     data: true,
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };

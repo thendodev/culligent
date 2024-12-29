@@ -5,9 +5,9 @@ import {
   updatePostHandler,
 } from '@/handlers/handlePosts';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { postsValidationSchema, TPostValidation } from '@/validations/posts';
+import { postsValidationSchema, TPost } from '@/validations/posts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -29,11 +29,15 @@ import {
 } from '@/components/modules/forms';
 import { toast } from '@/components/ui/use-toast';
 import { TWithId } from '@/global/types';
-import Certifications from './component/certifications';
-import Skills from './component/skills';
-import { useParams } from 'next/navigation';
+import Certifications from './components/certifications';
+import Skills from './components/skills';
+import { useParams, useRouter } from 'next/navigation';
+import { setCurrentStage } from '../state/state';
+import { ProjectRoutes } from '@/global/routes';
+import { objectIdValidator } from '@/validations/mongoose';
 
 const Post = () => {
+  const router = useRouter();
   const { id } = useParams();
 
   const queryKey = ['posts', id];
@@ -44,11 +48,11 @@ const Post = () => {
     enabled: !!id,
   });
 
-  console.log(data);
-
-  const form = useForm<TWithId<TPostValidation>>({
+  const form = useForm<TWithId<TPost>>({
     values: data,
-    resolver: zodResolver(postsValidationSchema),
+    resolver: zodResolver(
+      postsValidationSchema.extend({ _id: objectIdValidator }).optional(),
+    ),
   });
 
   const { mutate } = useMutation({
@@ -60,9 +64,24 @@ const Post = () => {
         title: 'Post saved',
         description: 'Post saved successfully',
       });
-      form.reset();
+      router.push(
+        `/${ProjectRoutes.recruitment}/${ProjectRoutes.post}/${ProjectRoutes.pipeline}/${id}`,
+      );
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong',
+      });
     },
   });
+
+  const formErrors = Object.keys(form.formState.errors);
+  useEffect(() => {
+    if (!formErrors.length) {
+      setCurrentStage(ProjectRoutes.post);
+    }
+  }, [formErrors.length]);
 
   return (
     <Form {...form}>

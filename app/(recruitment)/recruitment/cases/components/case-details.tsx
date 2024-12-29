@@ -1,10 +1,10 @@
 import { Switch } from '@/components/ui/switch';
 import { pluralize } from '@/lib/utils';
-import { TQuestion } from '@/models/Cases';
-import { Calendar, Clock, MoreVertical, Pen } from 'lucide-react';
+import { Calendar, Clock, Pen } from 'lucide-react';
 import React from 'react';
 import CaseActions from './case-actions';
 import ShareCase from './share-case';
+import { TQuestion } from '@/validations/cases';
 
 type TCaseDetailsProps = {
   name?: string;

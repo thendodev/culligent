@@ -9,16 +9,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Toast } from '@/components/ui/toast';
-import { toast } from '@/components/ui/use-toast';
 import { useStateReducer } from '@/hooks/useStateReducer';
-import { TPostValidation } from '@/validations/posts';
+import { TPost } from '@/validations/posts';
 import { X } from 'lucide-react';
-import { FocusEventHandler } from 'react';
 import { useFieldArray, useFormContext, UseFormReturn } from 'react-hook-form';
 
 const Certifications = () => {
-  const form = useFormContext<TPostValidation>();
+  const form = useFormContext<TPost>();
   const [state, dispatch] = useStateReducer<{
     certificate: string;
     level: string;

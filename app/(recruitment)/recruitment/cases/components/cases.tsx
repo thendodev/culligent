@@ -14,7 +14,10 @@ const CasesClient = () => {
     _id: item._id,
     questions: item?.questions?.length,
     status: item.isFeatured ? 'Featured' : 'Draft',
-    createdAt: new Date(item.createdAt).toLocaleDateString('en-us', dateFormat),
+    createdAt: new Date(item.createdAt ?? '')?.toLocaleDateString(
+      'en-us',
+      dateFormat,
+    ),
   })) as any;
 
   return (

@@ -1,36 +1,34 @@
 'use client';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { TQuestion } from '@/models/Cases';
+import { TQuestion } from '@/validations/cases';
 import { Check, Search, X } from 'lucide-react';
 import { useState } from 'react';
 
 type TQuestionsProps = {
-  questions: TQuestion[] | Record<string, any>[] | undefined;
+  questions: TQuestion[] | undefined;
 };
 
 const Questions = ({ questions }: TQuestionsProps) => {
   const [filteredQuestions, setFilteredQuestions] = useState<
-    TQuestion[] | undefined
+    TQuestion[] | Record<string, any>[] | undefined
   >(questions);
 
   const deepSearch = (search: string) => {
     const searchTerm = search.toLowerCase();
 
     //i want to destructure the question and answers
-    const filteredList = questions?.filter(
-      (question: TQuestion, index: number) => {
-        const questionText = question?.question?.toLowerCase();
-        const answersText = question?.answers?.some((answer) => {
-          return answer?.answer?.toLowerCase().includes(searchTerm);
-        });
-        const currentQuestion = `question ${index + 1}`.includes(searchTerm);
+    const filteredList = questions?.filter((question, index) => {
+      const questionText = question?.question?.toLowerCase();
+      const answersText = question?.answers?.some((answer) => {
+        return answer?.answer?.toLowerCase().includes(searchTerm);
+      });
+      const currentQuestion = `question ${index + 1}`.includes(searchTerm);
 
-        return (
-          questionText?.includes(searchTerm) || answersText || currentQuestion
-        );
-      },
-    );
+      return (
+        questionText?.includes(searchTerm) || answersText || currentQuestion
+      );
+    });
 
     setFilteredQuestions(filteredList);
   };
@@ -48,7 +46,7 @@ const Questions = ({ questions }: TQuestionsProps) => {
           </div>
         </div>
       </div>
-      {questions?.map((question: TQuestion, index: number) => {
+      {questions?.map((question, index) => {
         if (
           !filteredQuestions?.includes(question) &&
           !filteredQuestions?.length

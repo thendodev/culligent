@@ -1,21 +1,22 @@
+import { Types } from 'mongoose';
 import { z } from 'zod';
-import { ObjectId } from 'mongodb';
+import { objectIdValidator } from './mongoose';
 
 const StageValidationSchema = z.object({
   name: z.string().min(2),
-  color: z.string().min(2),
-  description: z.string().min(2),
   cases: z
     .array(z.string())
-    .transform((val) => val.map((v) => new ObjectId(v)))
+    .transform((val) => val.map((v) => Types.ObjectId.createFromBase64(v)))
     .or(z.array(z.string())),
   reviewers: z
     .array(z.string())
-    .transform((val) => val.map((v) => new ObjectId(v))),
+    .transform((val) => val.map((v) => Types.ObjectId.createFromBase64(v))),
 });
 const PipelineValidationSchema = z.object({
-  userId: z.custom<ObjectId>(),
+  userId: objectIdValidator,
+  postId: objectIdValidator,
   stages: z.array(StageValidationSchema),
+  isArchived: z.boolean().default(false),
 });
 
 export type TPipeline = z.infer<typeof PipelineValidationSchema>;

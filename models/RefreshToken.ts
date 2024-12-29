@@ -1,13 +1,13 @@
-import { types, schema } from 'papr';
-import papr from '@/lib/database/papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
+import { TRefreshToken } from '@/validations/auth';
+import { Schema } from 'mongoose';
 
-const RefreshTokenSchema = schema(
+const RefreshTokenSchema = new Schema<TRefreshToken>(
   {
-    token: types.string({ required: true }),
-    user: types.objectId({ required: true }),
+    token: { type: String, required: true },
+    userId: { type: 'ObjectId', required: true, unique: true },
   },
   { timestamps: true },
 );
 
-export type MRefreshToken = (typeof RefreshTokenSchema)[0];
-export default papr.model('RefreshToken', RefreshTokenSchema);
+export default mongoDbConnection.model('RefreshToken', RefreshTokenSchema);

@@ -1,47 +1,40 @@
-import papr from '@/lib/database/papr';
-import { schema, types } from 'papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
+import { TAnswer, TCase, TQuestion } from '@/validations/cases';
+import { Schema } from 'mongoose';
 
-const AnswerSchema = types.object({
-  answer: types.string(),
-  correct: types.boolean(),
-});
-const QuestionsSchema = types.object({
-  question: types.string(),
-  skill: types.string(),
-  skill_level: types.string(),
-  points: types.number(),
-  answers: types.array(AnswerSchema),
-  type: types.string(),
+const AnswerSchema = new Schema<TAnswer>({
+  answer: String,
+  correct: Boolean,
 });
 
-const SharedWithSchema = types.object({
-  user: types.objectId({ required: true }),
-  role: types.string({ required: true }),
+const QuestionSchema = new Schema<TQuestion>({
+  question: String,
+  skill: String,
+  skill_level: String,
+  points: Number,
+  answers: [AnswerSchema],
+  type: String,
 });
 
-const CasesSchema = schema(
+const SharedWithSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  role: { type: String, required: true },
+});
+
+const CaseSchema = new Schema<TCase>(
   {
-    name: types.string({ required: true }),
-    description: types.string({ required: true }),
-    duration: types.number({ required: true }),
-    user: types.objectId({ required: true }),
-    questions: types.array(QuestionsSchema),
-    sharedWith: types.array(SharedWithSchema),
-    isFeatured: types.boolean(),
-    isArchived: types.boolean(),
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    duration: { type: Number, required: true },
+    userId: { type: Schema.Types.ObjectId, required: true },
+    questions: [QuestionSchema],
+    sharedWith: [SharedWithSchema],
+    isFeatured: { type: Boolean, default: true },
+    isArchived: { type: Boolean, default: false },
   },
   {
     timestamps: true,
-    defaults: {
-      isFeatured: true,
-      isArchived: false,
-    },
   },
 );
 
-export type TCase = (typeof CasesSchema)[0];
-
-export type TQuestion = typeof QuestionsSchema;
-export type TAnswer = typeof AnswerSchema;
-
-export default papr.model('Cases', CasesSchema);
+export default mongoDbConnection.model('Case', CaseSchema);

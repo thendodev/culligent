@@ -7,10 +7,12 @@ import {
 } from '@tanstack/react-query';
 import { getPostsHandler } from '@/handlers/handlePosts';
 import Posts from './components/posts';
+import { EGenericQueryKeys } from '@/global/config';
 
 const PostsPage = async () => {
   const queryClient = new QueryClient();
-  const queryKey = ['posts'];
+  const queryKey = [EGenericQueryKeys.POSTS];
+
   await queryClient.prefetchQuery({
     queryKey: queryKey,
     queryFn: getPostsHandler,

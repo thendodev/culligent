@@ -1,5 +1,5 @@
 import { TWithId } from '@/global/types';
-import { TPost } from '@/models/Posts';
+import { TPost } from '@/validations/posts';
 import React from 'react';
 
 interface IJobCardProps {

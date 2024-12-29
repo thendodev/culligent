@@ -6,10 +6,8 @@ import {
 } from '@tanstack/react-query';
 import React from 'react';
 import PageWrapper from '../components/page-wrapper';
-import Progression from './components/progression';
 import { ProjectRoutes } from '@/global/routes';
-import LinkTabs from '@/components/modules/link-tabs';
-import { Tabs, TabsList } from '@/components/ui/tabs';
+import Progression from './components/progression';
 
 interface IPostLayoutProps {
   params: {
@@ -19,6 +17,7 @@ interface IPostLayoutProps {
 }
 
 const PostLayout = async ({ children, params: { id } }: IPostLayoutProps) => {
+  console.log(id);
   const queryKey = ['posts', id];
 
   const queryClient = new QueryClient();
@@ -31,21 +30,17 @@ const PostLayout = async ({ children, params: { id } }: IPostLayoutProps) => {
   const stages = [
     {
       name: 'Post',
-      href: `/${ProjectRoutes.recruitment}/posts/${id}`,
+      href: `/${ProjectRoutes.recruitment}/posts/`,
     },
     {
       name: 'Pipeline',
-      href: `/${ProjectRoutes.recruitment}/posts/${ProjectRoutes.pipeline}/${id}/`,
+      href: `/${ProjectRoutes.recruitment}/posts/${ProjectRoutes.pipeline}/`,
     },
   ];
 
   return (
     <PageWrapper title="Post" description="Post">
-      <div className="w-fit border-b border-[var(--cruto-border)] space-x-2">
-        <Tabs>
-          <TabsList></TabsList>
-        </Tabs>
-      </div>
+      <Progression stages={stages} />
       <HydrationBoundary state={dehydrate(queryClient)}>
         {children}
       </HydrationBoundary>

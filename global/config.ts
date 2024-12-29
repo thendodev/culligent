@@ -87,4 +87,5 @@ export enum EDateRegions {
 
 export enum EGenericQueryKeys {
   CASES = 'cases',
+  POSTS = 'posts',
 }

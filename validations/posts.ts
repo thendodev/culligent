@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { objectIdValidator } from './mongoose';
 
 const skillsValidationSchema = z.object({
   name: z.string().min(1).max(100),
@@ -19,11 +20,17 @@ export const postsValidationSchema = z.object({
   description: z.string().min(1).max(100),
   role: z.string().min(1).max(1500),
   idealCandidate: idealCandidateValidationSchema,
-  isFeatured: z.boolean(),
-  isArchived: z.boolean(),
+  applicants: z.array(z.string()).optional(),
+  userId: objectIdValidator,
+  isFeatured: z.boolean().default(true),
+  isArchived: z.boolean().default(false),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
-export type TPostValidation = z.infer<typeof postsValidationSchema>;
-export type TCandidateValidation = z.infer<
-  typeof idealCandidateValidationSchema
+export type TPost = z.infer<typeof postsValidationSchema>;
+export type TIdealCandidate = z.infer<typeof idealCandidateValidationSchema>;
+export type TPostSkills = z.infer<typeof skillsValidationSchema>;
+export type TPostCertifications = z.infer<
+  typeof certificationsValidationSchema
 >;

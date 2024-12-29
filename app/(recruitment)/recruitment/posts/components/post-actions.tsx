@@ -16,11 +16,12 @@ import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { ProjectRoutes } from '@/global/routes';
 import { useQueryClient } from '@tanstack/react-query';
-import { getCaseHandler } from '@/handlers/handleCases';
-import { TPost } from '@/models/Posts';
+import { TPost } from '@/validations/posts';
+import { TWithId } from '@/global/types';
+import { getPostHandler } from '@/handlers/handlePosts';
 
 interface PostActionProps {
-  data: TPost;
+  data: TWithId<TPost>;
 }
 
 const PostActions = ({ data }: PostActionProps) => {
@@ -36,7 +37,7 @@ const PostActions = ({ data }: PostActionProps) => {
   const prefetchCase = async () => {
     await queryClient.prefetchQuery({
       queryKey: ['posts', data._id],
-      queryFn: () => getCaseHandler(data._id.toString()),
+      queryFn: () => getPostHandler(data._id),
     });
   };
 
@@ -54,7 +55,7 @@ const PostActions = ({ data }: PostActionProps) => {
             <WorkflowIcon className="mr-2 h-4 w-4" /> Actions
           </DropdownMenuLabel>
           <Separator />
-          <DropdownMenuItem onClick={() => onCopy(data._id.toString())}>
+          <DropdownMenuItem onClick={() => onCopy(data._id)}>
             <Copy className="mr-2 h-4 w-4" /> Copy id
           </DropdownMenuItem>
           <DropdownMenuItem

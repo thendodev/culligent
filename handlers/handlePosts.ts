@@ -1,9 +1,8 @@
 import { dateFormat } from '@/global/config';
 import { TWithId } from '@/global/types';
 import { privateRequest } from '@/lib/requests';
-import { TPost } from '@/models/Posts';
-import { TPostValidation } from '@/validations/posts';
-import { AxiosError } from 'axios';
+import { TPipeline } from '@/validations/pipeline';
+import { TPost } from '@/validations/posts';
 
 enum EPostRoutes {
   POSTS = '/recruitment/posts',
@@ -12,25 +11,24 @@ export const getPostsHandler = async () => {
   const { data } = await privateRequest.get(EPostRoutes.POSTS);
 
   //remap data to match the case column schema
-  return data?.map((item: TPost) => ({
+  return data?.map((item: TWithId<TPost>) => ({
     ...item,
     status: item.isFeatured ? 'Featured' : 'Draft',
-    createdAt: new Date(item.createdAt).toLocaleDateString('en-us', dateFormat),
+    createdAt: new Date(item?.createdAt || '').toLocaleDateString(
+      'en-us',
+      dateFormat,
+    ),
   }));
 };
 
-export const getPostHandler = async (id: string) => {
-  try {
-    const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
-    return data;
-  } catch (e) {
-    const error = e as AxiosError;
-    console.log(error);
-    return null;
-  }
+export const getPostHandler = async (
+  id: string,
+): Promise<TWithId<TPost> & { pipeline: Partial<TWithId<TPipeline>> }> => {
+  const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
+  return data;
 };
 
-export const updatePostHandler = async (data: TWithId<TPostValidation>) => {
+export const updatePostHandler = async (data: TWithId<TPost>) => {
   const { data: response } = await privateRequest.put(
     `${EPostRoutes.POSTS}/${data._id}`,
     data,
@@ -38,9 +36,9 @@ export const updatePostHandler = async (data: TWithId<TPostValidation>) => {
   return response;
 };
 
-export const createPostHandler = async (data: TPostValidation) => {
+export const createPostHandler = async (data: TPost) => {
   const { data: response } = await privateRequest.post(EPostRoutes.POSTS, data);
-  return response;
+  return response.data;
 };
 
 export const deletePostHandler = async (id: string) => {

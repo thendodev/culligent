@@ -34,6 +34,7 @@ const SignIn = () => {
     e?.preventDefault();
     setIsLoading(true);
     const user = await loginHandler(data);
+
     setIsLoading(false);
     if (user && user.isVerified) {
       router.push(`${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`);

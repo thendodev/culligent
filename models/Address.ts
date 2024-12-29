@@ -1,27 +1,22 @@
+import { Schema } from 'mongoose';
 import { Country } from '@/global/country';
-import papr from '@/lib/database/papr';
-import { schema, types } from 'papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
 
-const AddressSchema = schema(
+const AddressSchema = new Schema(
   {
-    phone: types.string(),
-    street: types.string(),
-    secondStreet: types.string(),
-    town: types.string(),
-    city: types.string(),
-    province: types.string(),
-    postalCode: types.string(),
-    country: types.string(),
-    user: types.objectId({ required: true }),
+    phone: String,
+    street: String,
+    secondStreet: String,
+    town: String,
+    city: String,
+    province: String,
+    postalCode: String,
+    country: { type: String, default: Country.SouthAfrica },
+    user: { type: Schema.Types.ObjectId, required: true },
   },
   {
-    defaults: {
-      country: Country.SouthAfrica,
-    },
     timestamps: true,
   },
 );
 
-export type MAddress = (typeof AddressSchema)[0];
-
-export default papr.model('Address', AddressSchema);
+export default mongoDbConnection.model('Address', AddressSchema);

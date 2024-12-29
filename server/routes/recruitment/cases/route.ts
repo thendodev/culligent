@@ -1,5 +1,6 @@
 import { CaseSchema } from '@/validations/cases';
-import { createRoute } from '@hono/zod-openapi';
+import { objectIdValidator } from '@/validations/mongoose';
+import { createRoute, z } from '@hono/zod-openapi';
 
 export const createCaseRoute = createRoute({
   method: 'post',
@@ -31,6 +32,18 @@ export const getCaseRoute = createRoute({
   path: '/:id',
   tags: ['Case'],
   summary: 'Fetch single user cases',
+  request: {
+    params: z
+      .object({
+        id: objectIdValidator,
+      })
+      .openapi({
+        param: {
+          name: 'id',
+          in: 'path',
+        },
+      }),
+  },
   responses: {
     200: {
       description: 'Success',
@@ -84,6 +97,16 @@ export const updateCaseRoute = createRoute({
   tags: ['Case'],
   summary: 'Create a new case',
   request: {
+    params: z
+      .object({
+        id: objectIdValidator,
+      })
+      .openapi({
+        param: {
+          name: 'id',
+          in: 'path',
+        },
+      }),
     body: {
       description: 'Request body',
       content: {
@@ -114,6 +137,18 @@ export const deleteCaseRoute = createRoute({
   path: '/',
   tags: ['Case'],
   summary: 'Delete case',
+  request: {
+    params: z
+      .object({
+        id: objectIdValidator,
+      })
+      .openapi({
+        param: {
+          name: 'id',
+          in: 'path',
+        },
+      }),
+  },
   responses: {
     200: {
       description: 'Success',

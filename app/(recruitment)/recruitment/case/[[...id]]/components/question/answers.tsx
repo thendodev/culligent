@@ -10,15 +10,16 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Plus } from 'lucide-react';
-import { useFieldArray, UseFormReturn } from 'react-hook-form';
-import { TCaseValidation } from '@/validations/cases';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import { TCase } from '@/validations/cases';
 
 type TAnswer = {
-  form: UseFormReturn<TCaseValidation>;
   question: number;
 };
-const Answers = ({ form, question }: TAnswer) => {
-  const { fields, append, replace } = useFieldArray({
+const Answers = ({ question }: TAnswer) => {
+  const form = useFormContext<TCase>();
+
+  const { fields, append } = useFieldArray({
     control: form?.control,
     name: `questions.${question}.answers`,
   });

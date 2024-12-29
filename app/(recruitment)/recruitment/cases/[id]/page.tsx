@@ -1,6 +1,5 @@
 'use client';
 
-import { TCase } from '@/models/Cases';
 import PageWrapper from '../../components/page-wrapper';
 import { getCaseHandler } from '@/handlers/handleCases';
 import { useParams } from 'next/navigation';
@@ -12,13 +11,15 @@ import CaseDetails from '../components/case-details';
 import { toast } from '@/components/ui/use-toast';
 import Questions from '../components/questions';
 import { useQuery } from '@tanstack/react-query';
+import { TCase } from '@/validations/cases';
+import { TWithId } from '@/global/types';
 
 const url = getBaseUrl(envPublic.NEXT_PUBLIC_ENVIRONMENT);
 
 const Case = () => {
   const { id } = useParams();
 
-  const { data } = useQuery<TCase>({
+  const { data } = useQuery<TWithId<TCase>>({
     queryKey: ['cases', id],
     queryFn: () => getCaseHandler(id as string),
     enabled: !!id,
@@ -59,7 +60,7 @@ const Case = () => {
           duration={data?.duration}
           createdAt={data?.createdAt}
           updatedAt={data?.updatedAt}
-          id={data?._id.toString()}
+          id={data?._id}
         />
         <Questions questions={data?.questions} />
       </div>

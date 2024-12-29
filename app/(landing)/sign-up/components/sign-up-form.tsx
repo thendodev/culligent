@@ -140,8 +140,12 @@ const SignUpForm = () => {
           />
 
           <div>
-            <Button className="mt-2">
-              {!isLoading ? <p>Sign Up</p> : <Loader2Icon />}
+            <Button className="mt-2 w-full">
+              {!isLoading ? (
+                <p>Sign Up</p>
+              ) : (
+                <Loader2Icon className="animate-spin" />
+              )}
             </Button>
           </div>
         </form>

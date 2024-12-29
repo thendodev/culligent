@@ -3,14 +3,14 @@ import React from 'react';
 
 type TFormProps = {
   title: string;
-  action?: UseMutateFunction<any, unknown, any, unknown>;
+  action: UseMutateFunction<any, unknown, any, unknown>;
   children: React.ReactNode;
 };
 
 export const FormWrapper = ({ title, action, children }: TFormProps) => {
   return (
     <form
-      onSubmit={action!}
+      onSubmit={action}
       className="w-full border border-[var(--cruto-border)] rounded-[var(--cruto-radius)] bg-[var(--cruto-foreground)]"
     >
       <div className="w-full text-xl font-bold p-4">{title}</div>

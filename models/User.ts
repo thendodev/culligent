@@ -1,24 +1,19 @@
-import papr from '@/lib/database/papr';
-import { types, schema } from 'papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
 import { ProfileType } from './User.types';
+import { TUser } from '@/validations/auth';
+import mongoose from 'mongoose';
 
-const UserSchema = schema(
+const UserSchema = new mongoose.Schema<TUser>(
   {
-    name: types.string({ required: true }),
-    surname: types.string({ required: true }),
-    email: types.string({ required: true }),
-    isVerified: types.boolean(),
-    profile: types.number({ required: false }),
+    name: { type: String, required: true },
+    surname: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    isVerified: { type: Boolean, default: false },
+    profile: { type: Number, default: ProfileType.professional },
   },
   {
-    defaults: {
-      isVerified: false,
-      profile: ProfileType.professional,
-    },
     timestamps: true,
   },
 );
 
-export type TUser = (typeof UserSchema)[0];
-
-export default papr.model('User', UserSchema);
+export default mongoDbConnection.model('User', UserSchema);
