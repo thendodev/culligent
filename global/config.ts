@@ -1,4 +1,13 @@
+import {
+  Home,
+  LayoutDashboard,
+  Library,
+  Luggage,
+  Notebook,
+  NotebookPen,
+} from 'lucide-react';
 import { envPublic } from './envClient';
+import { ProjectRoutes } from './routes';
 
 // export enum ETimeFormat {
 //   dayFirst = 'dd/mm/yyyy',
@@ -89,3 +98,42 @@ export enum EGenericQueryKeys {
   CASES = 'cases',
   POSTS = 'posts',
 }
+
+export const SideBarItems = {
+  user: [
+    {
+      title: 'Home',
+      url: '#',
+      icon: Home,
+    },
+    {
+      title: 'Dashboard',
+      url: `/${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`,
+      icon: LayoutDashboard,
+    },
+  ],
+  cases: [
+    {
+      title: 'Create Case',
+      url: `/${ProjectRoutes.recruitment}/${ProjectRoutes.case_builder}`,
+      icon: Library,
+    },
+    {
+      title: 'Existing Cases',
+      url: `/${ProjectRoutes.recruitment}/${ProjectRoutes.cases}`,
+      icon: Luggage,
+    },
+  ],
+  posts: [
+    {
+      title: 'Create Post',
+      url: `/${ProjectRoutes.recruitment}/${ProjectRoutes.post}`,
+      icon: NotebookPen,
+    },
+    {
+      title: 'Existing Post',
+      url: `/${ProjectRoutes.recruitment}/${ProjectRoutes.posts}`,
+      icon: Notebook,
+    },
+  ],
+};
