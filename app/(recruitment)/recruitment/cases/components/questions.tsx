@@ -20,8 +20,8 @@ import { useState } from 'react';
 
 type TQuestionsProps = {
   questions: TQuestion[] | undefined;
-  onUpdate: (type: string, question: number) => void;
-  onDelete: (question: number) => void;
+  onUpdate?: (type: string, question: number) => void;
+  onDelete?: (question: number) => void;
 };
 
 const Questions = ({ questions, onDelete, onUpdate }: TQuestionsProps) => {
@@ -88,7 +88,7 @@ const Questions = ({ questions, onDelete, onUpdate }: TQuestionsProps) => {
                     <Button
                       variant="ghost"
                       className="hover:bg-[var(--cruto-background)]"
-                      onClick={() => onUpdate(question.type, index)}
+                      onClick={() => onUpdate?.(question.type, index)}
                     >
                       <SquarePen className="mr-1 w-4 h-4" />
                       Update
@@ -96,7 +96,7 @@ const Questions = ({ questions, onDelete, onUpdate }: TQuestionsProps) => {
                     <Button
                       variant="ghost"
                       className="hover:bg-[var(--cruto-background)]"
-                      onClick={() => onDelete(index)}
+                      onClick={() => onDelete?.(index)}
                     >
                       <Trash2Icon className="mr-1 w-4 h-4" />
                       Delete

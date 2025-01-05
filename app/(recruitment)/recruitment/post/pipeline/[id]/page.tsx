@@ -35,25 +35,8 @@ const PipelinePage = () => {
     enabled: !!id,
   });
 
-  const isPipeline = !!post?.userId && !!post?.pipeline?._id;
-
-  const pipeline: TPipeline | TWithId<TPipeline> = isPipeline
-    ? {
-        _id: post.pipeline._id,
-        postId: post._id,
-        userId: post.userId,
-        stages: post.pipeline.stages,
-        isArchived: false,
-      }
-    : {
-        postId: post._id,
-        userId: post.userId,
-        stages: [],
-        isArchived: false,
-      };
-
-  const form = useForm({
-    values: pipeline,
+  const form = useForm<TWithId<TPipeline>>({
+    values: post?.pipeline,
     resolver: zodResolver(PipelineValidationSchema),
   });
 
@@ -104,7 +87,7 @@ const PipelinePage = () => {
   };
 
   const { mutate } = useMutation({
-    mutationFn: !post?.pipeline?._id
+    mutationFn: id
       ? form.handleSubmit(createPipelineHandler)
       : form.handleSubmit(updatePipelineHandler),
     onSuccess: () => {
