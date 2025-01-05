@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
 import React, { useState } from 'react';
-import { DotSquare, MoreVertical, Trash2Icon } from 'lucide-react';
+import { DotSquare, Grab, Grip, MoreVertical, Trash2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -11,8 +11,19 @@ import { Form, useFormContext } from 'react-hook-form';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { TPipeline } from '@/validations/pipeline';
 import { TWithId } from '@/global/types';
-import { useDraggable } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from '@/components/ui/card';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface IBoardProps {
   boardName: string;
@@ -44,14 +55,18 @@ const Board = ({
     : undefined;
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-      className="group min-w-[200px] min-h-[500px] border-t-4  rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] bg-[var(--cruto-foreground)]"
-    >
-      <div className="flex align-middle items-center justify-between p-2 hover:cursor-grab">
+    <Card className="min-h-[500px] group" ref={setNodeRef} style={style}>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Grip className="mr-2" {...listeners} {...attributes} />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Drag to reorder</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <Form {...form}>
           <form>
             <FormField
@@ -62,7 +77,7 @@ const Board = ({
                   <FormControl>
                     <Input
                       {...field}
-                      className="w-fit border-none rounded-none font-bold text-xl hover:cursor-pointer hover:bg-[var(--cruto-background)] focus:bg-[var(--cruto-background)]"
+                      className="w-fit border-none rounded-none font-bold text-xl hover:cursor-text hover:bg-[var(--cruto-background)] focus:bg-[var(--cruto-background)]"
                       defaultValue={boardName}
                     />
                   </FormControl>
@@ -71,7 +86,6 @@ const Board = ({
             />
           </form>
         </Form>
-
         <div className="flex items-center gap-2 hover:cursor-default">
           <Popover>
             <PopoverTrigger asChild>
@@ -89,9 +103,10 @@ const Board = ({
             </PopoverContent>
           </Popover>
         </div>
-      </div>
-      <div>{children}</div>
-    </div>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+      <CardFooter></CardFooter>
+    </Card>
   );
 };
 

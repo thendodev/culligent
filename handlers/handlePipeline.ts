@@ -22,6 +22,7 @@ export const getPipelineHandler = async (id: string) => {
 };
 
 export const updatePipelineHandler = async (data: TWithId<TPipeline>) => {
+  console.log(data);
   const { data: response } = await privateRequest.put(
     `${EPipelineRoutes.PIPELINE}/${data._id}`,
     data,

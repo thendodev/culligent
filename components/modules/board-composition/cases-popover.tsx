@@ -43,7 +43,7 @@ export const CasesPopover = ({ cases, onCaseSelect }: TeamSwitcherProps) => {
           <Command className="w-full">
             <CommandList className="w-full">
               <CommandInput className="w-full" placeholder="Search..." />
-              {isLoading && <CommandItem>Loading teams</CommandItem>}
+              {isLoading && <CommandItem>Loading cases</CommandItem>}
               {cases?.map((selectCase) => (
                 <CommandItem
                   key={selectCase.name}

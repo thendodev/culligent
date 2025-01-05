@@ -35,23 +35,24 @@ const PipelinePage = () => {
     enabled: !!id,
   });
 
-  const isPipeline = post && !!post?.userId && !!post?.pipeline?._id;
+  const isPipeline = !!post?.userId && !!post?.pipeline?._id;
 
-  const pipeline: TPipeline | any = isPipeline
+  const pipeline: TPipeline | TWithId<TPipeline> = isPipeline
     ? {
+        _id: post.pipeline._id,
         postId: post._id,
         userId: post.userId,
         stages: post.pipeline.stages,
         isArchived: false,
       }
     : {
-        postId: post?._id,
-        userId: post?.userId,
+        postId: post._id,
+        userId: post.userId,
         stages: [],
         isArchived: false,
       };
 
-  const form = useForm<TWithId<TPipeline>>({
+  const form = useForm({
     values: pipeline,
     resolver: zodResolver(PipelineValidationSchema),
   });
@@ -119,42 +120,36 @@ const PipelinePage = () => {
       collisionDetection={closestCorners}
       onDragEnd={handleDragEnd}
     >
-      <div className="w-full flex flex-col gap-2">
-        <Form {...form}>
-          <form onSubmit={mutate}>
-            <div className="space-x-2 border border-[var(--cruto-border)] p-2 h-fit">
-              <Button
-                type="button"
-                variant={'outline'}
-                onClick={handleAddStage}
+      <Form {...form}>
+        <form onSubmit={mutate}>
+          <div className="space-x-2 space-y-2  p-2 h-fit">
+            <Button type="button" variant={'outline'} onClick={handleAddStage}>
+              Add Stage
+            </Button>
+            <Button>Submit</Button>
+          </div>
+          <div className="w-full h-full flex gap-2 ">
+            <div className="flex gap-6 w-full overflow-x-auto">
+              <SortableContext
+                items={sortId}
+                strategy={horizontalListSortingStrategy}
               >
-                Add Stage
-              </Button>
-              <Button>Submit</Button>
+                {fields.map((pipeline, index) => (
+                  <Board
+                    key={pipeline.id}
+                    handleDelete={() => handleDeleteStage(index)}
+                    boardName={pipeline.name}
+                    stageIndex={index}
+                    id={pipeline.id}
+                  >
+                    <CasesList stageIndex={index} />
+                  </Board>
+                ))}
+              </SortableContext>
             </div>
-            <div className="w-full h-full flex gap-2 ">
-              <div className="flex gap-6 w-[100vw] overflow-x-auto">
-                <SortableContext
-                  items={sortId}
-                  strategy={horizontalListSortingStrategy}
-                >
-                  {fields.map((pipeline, index) => (
-                    <Board
-                      key={pipeline.id}
-                      handleDelete={() => handleDeleteStage(index)}
-                      boardName={pipeline.name}
-                      stageIndex={index}
-                      id={pipeline.id}
-                    >
-                      <CasesList stageIndex={index} />
-                    </Board>
-                  ))}
-                </SortableContext>
-              </div>
-            </div>
-          </form>
-        </Form>
-      </div>
+          </div>
+        </form>
+      </Form>
     </DndContext>
   );
 };

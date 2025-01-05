@@ -21,7 +21,7 @@ const CaseBuilder = async ({ params }: { params: { id: string } }) => {
   });
 
   return (
-    <PageWrapper title="new-case" description="create a new case from scratch">
+    <PageWrapper>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Case id={id} queryKey={queryKey} />
       </HydrationBoundary>

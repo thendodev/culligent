@@ -6,11 +6,25 @@ const StageValidationSchema = z.object({
   name: z.string().min(2),
   cases: z
     .array(z.string())
-    .transform((val) => val.map((v) => Types.ObjectId.createFromBase64(v)))
+    .transform((val) =>
+      val.map((v) => {
+        try {
+          return Types.ObjectId.createFromHexString(v);
+        } catch (e) {
+          throw new Error('Invalid ObjectId');
+        }
+      }),
+    )
     .or(z.array(z.string())),
-  reviewers: z
-    .array(z.string())
-    .transform((val) => val.map((v) => Types.ObjectId.createFromBase64(v))),
+  reviewers: z.array(z.string()).transform((val) =>
+    val.map((v) => {
+      try {
+        return Types.ObjectId.createFromHexString(v);
+      } catch (e) {
+        throw new Error('Invalid ObjectId');
+      }
+    }),
+  ),
 });
 const PipelineValidationSchema = z.object({
   userId: objectIdValidator,
