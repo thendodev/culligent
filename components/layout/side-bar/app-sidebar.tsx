@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Sidebar,
   SidebarContent,
@@ -15,10 +13,12 @@ import {
 import { SideBarItems } from '@/global/config';
 import React from 'react';
 import SideBarFooter from './sidebar-footer';
-import { useUser } from '@/lib/useClientUser';
+import { useUserServer } from '@/lib/useUserServer';
 
-const AppSideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
-  const user = useUser();
+const AppSideBar = async ({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) => {
+  const user = await useUserServer();
   if (!user) return <></>;
   return (
     <Sidebar variant="floating" collapsible={'icon'} {...props}>

@@ -97,6 +97,7 @@ export enum EDateRegions {
 export enum EGenericQueryKeys {
   CASES = 'cases',
   POSTS = 'posts',
+  SUGGESTIONS = 'suggestions',
 }
 
 export const SideBarItems = {

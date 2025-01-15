@@ -24,11 +24,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useAxiosInterceptors } from '@/hooks/useInterceptors';
-type SideBarProps = {
+type TSideBarProps = {
   user: TUser;
 };
 
-const SideBarFooter = ({ user }: SideBarProps) => {
+const SideBarFooter = ({ user }: TSideBarProps) => {
   const router = useRouter();
   const { isMobile } = useSidebar();
   useAxiosInterceptors();

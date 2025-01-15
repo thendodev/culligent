@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input';
-import React, { useState } from 'react';
-import { DotSquare, Grab, Grip, MoreVertical, Trash2Icon } from 'lucide-react';
+import React from 'react';
+import { Grip, MoreVertical, Trash2Icon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,

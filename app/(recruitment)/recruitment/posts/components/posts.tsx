@@ -2,7 +2,7 @@
 
 import { DataTable } from '@/components/modules/data-table';
 import { getPostsHandler } from '@/handlers/handlePosts';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import React from 'react';
 import { PostTableColumns } from './posts-column';
 
@@ -11,7 +11,7 @@ type PostsProps = {
 };
 
 const Posts = ({ queryKey }: PostsProps) => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useSuspenseQuery({
     queryKey: queryKey,
     queryFn: getPostsHandler,
   });
