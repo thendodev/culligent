@@ -43,8 +43,7 @@ const SideBarFooter = ({ user }: IUser) => {
             <DropdownMenuTrigger asChild>
               <SidebarMenuButton size="lg">
                 <Avatar className="w-fit h-fit max-w-8 max-h-8 rounded-lg">
-                  <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback className="bg-[var(--cruto-black)] text-[var(--cruto-white)] w-8 h-8 rounded-lg">
+                  <AvatarFallback className="border border-[var(--cruto-border)] text-[var(--cruto-black)] w-8 h-8 rounded-lg">
                     {user?.name.slice(0, 1)}
                   </AvatarFallback>
                 </Avatar>
@@ -61,11 +60,10 @@ const SideBarFooter = ({ user }: IUser) => {
               <DropdownMenuLabel className="p-0 font-normal">
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt={user?.name}
-                    />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                    <AvatarFallback className="rounded-lg">
+                      {' '}
+                      {user?.name.slice(0, 1)}
+                    </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">{user?.name}</span>
