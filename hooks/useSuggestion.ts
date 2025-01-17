@@ -17,8 +17,8 @@ export const useSuggestive = (type: ESuggestionType, query: string) => {
         });
       },
       getNextPageParam: (lastPage, pages) => {
-        const totalPages = Math.ceil(lastPage.metadata.total / 10);
-        return totalPages > pages.length ? pages.length + 1 : undefined;
+        const totalPages = Math.ceil(lastPage?.metadata?.total / 10);
+        return totalPages > pages?.length ? pages?.length + 1 : undefined;
       },
 
       initialPageParam: 1,

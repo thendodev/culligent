@@ -1,5 +1,4 @@
 'use client';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,18 +16,17 @@ import {
 } from '@/components/ui/sidebar';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import React from 'react';
-import penguinProfile from '@/assets/penguin-profile.svg';
-import Image from 'next/image';
-import { TUser } from '@/validations/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useAxiosInterceptors } from '@/hooks/useInterceptors';
-type TSideBarProps = {
-  user: TUser;
-};
+import { TUser } from '@/validations/auth';
 
-const SideBarFooter = ({ user }: TSideBarProps) => {
+interface IUser {
+  user: TUser;
+}
+
+const SideBarFooter = ({ user }: IUser) => {
   const router = useRouter();
   const { isMobile } = useSidebar();
   useAxiosInterceptors();
@@ -46,11 +44,11 @@ const SideBarFooter = ({ user }: TSideBarProps) => {
               <SidebarMenuButton size="lg">
                 <Avatar className="w-fit h-fit max-w-8 max-h-8 rounded-lg">
                   <AvatarImage src="https://github.com/shadcn.png" />
-                  <AvatarFallback>
-                    {user.name.slice(0, 1)} {user.surname.slice(0, 1)}
+                  <AvatarFallback className="bg-[var(--cruto-black)] text-[var(--cruto-white)] w-8 h-8 rounded-lg">
+                    {user?.name.slice(0, 1)}
                   </AvatarFallback>
                 </Avatar>
-                {user.email}
+                {user?.email}
                 <ChevronsUpDown className="ml-auto w-4 h-4" />
               </SidebarMenuButton>
             </DropdownMenuTrigger>
@@ -65,13 +63,13 @@ const SideBarFooter = ({ user }: TSideBarProps) => {
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
                       src="https://github.com/shadcn.png"
-                      alt={user.name}
+                      alt={user?.name}
                     />
                     <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">{user.name}</span>
-                    <span className="truncate text-xs">{user.email}</span>
+                    <span className="truncate font-semibold">{user?.name}</span>
+                    <span className="truncate text-xs">{user?.email}</span>
                   </div>
                 </div>
               </DropdownMenuLabel>

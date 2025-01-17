@@ -14,18 +14,21 @@ import { SideBarItems } from '@/global/config';
 import React from 'react';
 import SideBarFooter from './sidebar-footer';
 import { useUserServer } from '@/lib/useUserServer';
+import { redirect } from 'next/navigation';
 
 const AppSideBar = async ({
   ...props
 }: React.ComponentProps<typeof Sidebar>) => {
   const user = await useUserServer();
-  if (!user) return <></>;
+
+  if (!user) return redirect('/');
+
   return (
     <Sidebar variant="floating" collapsible={'icon'} {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Toggle" className="w-fit">
+            <SidebarMenuButton tooltip="Toggle" className="w-fit" asChild>
               <SidebarTrigger />
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -37,7 +40,7 @@ const AppSideBar = async ({
           <SidebarGroupContent>
             <SidebarMenu>
               {SideBarItems.user.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton tooltip={item.title} asChild>
                     <a href={item.url}>
                       <item.icon />
@@ -67,11 +70,11 @@ const AppSideBar = async ({
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Cases</SidebarGroupLabel>
+          <SidebarGroupLabel>Posts</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {SideBarItems.posts.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton tooltip={item.title} asChild>
                     <a href={item.url}>
                       <item.icon />

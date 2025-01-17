@@ -19,7 +19,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
   const defaultOpen = cookieStore.get('sidebar:state')?.value === 'true';
 
   return (
@@ -35,12 +35,10 @@ export default async function RootLayout({
             <div className="w-full h-full flex flex-col">
               <Toaster />
               <AlertModal />
-              <SidebarInset>
-                <Providers>
-                  {children}
-                  <ReactQueryDevtools initialIsOpen={false} />
-                </Providers>
-              </SidebarInset>
+              <Providers>
+                {children}
+                <ReactQueryDevtools initialIsOpen={false} />
+              </Providers>
             </div>
           </div>
         </SidebarProvider>
