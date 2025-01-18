@@ -11,6 +11,7 @@ const CasesClient = () => {
     queryFn: getCasesHandler,
   });
   const cases = data?.map((item) => ({
+    ...item,
     _id: item._id,
     questions: item?.questions?.length,
     status: item.isFeatured ? 'Featured' : 'Draft',
@@ -18,7 +19,7 @@ const CasesClient = () => {
       'en-us',
       dateFormat,
     ),
-  })) as any;
+  }));
 
   return (
     <DataTable

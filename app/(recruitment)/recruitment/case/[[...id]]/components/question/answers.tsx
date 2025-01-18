@@ -1,4 +1,5 @@
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -19,10 +20,24 @@ type TAnswer = {
 const Answers = ({ question }: TAnswer) => {
   const form = useFormContext<TCase>();
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, replace } = useFieldArray({
     control: form?.control,
     name: `questions.${question}.answers`,
   });
+
+  const handleCorrectAnswer = (id: string) => {
+    const updatedAnswers = fields.map((answer, i) => {
+      if (id === answer.id) {
+        return {
+          ...answer,
+          correct: true,
+        };
+      }
+      return { ...answer, correct: false };
+    });
+    replace(updatedAnswers);
+  };
+
   return (
     <div>
       {' '}
@@ -37,7 +52,7 @@ const Answers = ({ question }: TAnswer) => {
         </Button>
       </div>
       <div className="w-full">
-        <RadioGroup>
+        <RadioGroup onValueChange={handleCorrectAnswer}>
           {fields.map(({ id }, index) => {
             return (
               <div
@@ -52,6 +67,7 @@ const Answers = ({ question }: TAnswer) => {
                       <FormControl>
                         <RadioGroupItem
                           checked={field.value}
+                          {...field}
                           value={id}
                           id={id}
                         />

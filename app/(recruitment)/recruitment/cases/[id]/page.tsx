@@ -19,7 +19,7 @@ const url = getBaseUrl(envPublic.NEXT_PUBLIC_ENVIRONMENT);
 const Case = () => {
   const { id } = useParams();
 
-  const { data } = useQuery<TWithId<TCase>>({
+  const { data } = useQuery({
     queryKey: ['cases', id],
     queryFn: () => getCaseHandler(id as string),
     enabled: !!id,
@@ -31,7 +31,7 @@ const Case = () => {
   };
 
   return (
-    <PageWrapper title={data?.name ?? ''} description={''}>
+    <PageWrapper>
       <div className="flex flex-col gap-4 relative">
         <div
           id="header"

@@ -12,8 +12,8 @@ type TCaseDetailsProps = {
   status?: boolean;
   questions?: TQuestion[];
   duration?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
   id?: string;
 };
 
