@@ -4,15 +4,13 @@ import PageWrapper from '../../components/page-wrapper';
 import { getCaseHandler } from '@/handlers/handleCases';
 import { useParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
-import { getBaseUrl } from '@/global/config';
+import { dateFormat, getBaseUrl } from '@/global/config';
 import { envPublic } from '@/global/envClient';
 import { Copy } from 'lucide-react';
 import CaseDetails from '../components/case-details';
 import { toast } from '@/components/ui/use-toast';
 import Questions from '../components/questions';
 import { useQuery } from '@tanstack/react-query';
-import { TCase } from '@/validations/cases';
-import { TWithId } from '@/global/types';
 
 const url = getBaseUrl(envPublic.NEXT_PUBLIC_ENVIRONMENT);
 
@@ -29,6 +27,16 @@ const Case = () => {
     navigator.clipboard.writeText(`${url}showroom/${data?._id}`);
     toast({ title: 'Copy case link', description: 'case link copied' });
   };
+
+  const caseData = !!data
+    ? {
+        ...data,
+        createdAt: new Date(data.createdAt!).toLocaleDateString(
+          'en-us',
+          dateFormat,
+        ),
+      }
+    : null;
 
   return (
     <PageWrapper>
@@ -53,14 +61,14 @@ const Case = () => {
           </div>
         </div>
         <CaseDetails
-          name={data?.name}
-          description={data?.description}
-          status={data?.isFeatured}
-          questions={data?.questions}
-          duration={data?.duration}
-          createdAt={data?.createdAt}
-          updatedAt={data?.updatedAt}
-          id={data?._id}
+          name={caseData?.name}
+          description={caseData?.description}
+          status={caseData?.isFeatured}
+          questions={caseData?.questions}
+          duration={caseData?.duration}
+          createdAt={caseData?.createdAt}
+          updatedAt={caseData?.updatedAt}
+          id={caseData?._id}
         />
         <Questions questions={data?.questions} />
       </div>

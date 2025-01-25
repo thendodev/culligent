@@ -23,13 +23,7 @@ export const getCaseHandler = async (id: string) => {
   const { data } = await privateRequest.get<TWithId<TCase>>(
     `${ECaseRoutes.CASES}/${id}`,
   );
-  return {
-    ...data,
-    createdAt: new Date(data.createdAt!).toLocaleDateString(
-      'en-us',
-      dateFormat,
-    ),
-  };
+  return data;
 };
 
 export const updateCaseHandler = async (data: TWithId<TCase>) => {
