@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { z } from 'zod';
 
 export const objectIdValidator = z
-  .custom(
+  .custom<any>(
     (value) => (
       mongoose.Types.ObjectId.isValid(value),
       {

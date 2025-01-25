@@ -20,11 +20,10 @@ export const getCasesHandler = async (): Promise<TWithId<TCase>[] | null> => {
 };
 
 export const getCaseHandler = async (id: string) => {
-  const { data } = await privateRequest.get(`${ECaseRoutes.CASES}/${id}`);
-  return {
-    ...data,
-    createdAt: new Date(data.createdAt).toLocaleDateString('en-us', dateFormat),
-  };
+  const { data } = await privateRequest.get<TWithId<TCase>>(
+    `${ECaseRoutes.CASES}/${id}`,
+  );
+  return data;
 };
 
 export const updateCaseHandler = async (data: TWithId<TCase>) => {

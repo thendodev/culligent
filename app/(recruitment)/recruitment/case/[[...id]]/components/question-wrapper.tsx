@@ -1,14 +1,14 @@
 'use client';
 import { Form } from '@/components/ui/form';
-import { UseFormReturn } from 'react-hook-form';
+import { useFormContext, UseFormReturn } from 'react-hook-form';
 import { TCase } from '@/validations/cases';
 
 type TQuestionWrapperProps = {
-  form: UseFormReturn<TCase>;
   children: React.ReactNode;
 };
 
-const QuestionWrapper = ({ children, form }: TQuestionWrapperProps) => {
+const QuestionWrapper = ({ children }: TQuestionWrapperProps) => {
+  const form = useFormContext<TCase>();
   return (
     <Form {...form}>
       <form className="h-full space-y-10 overflow-hidden bg-[var(--cruto-foreground)] rounded-[var(--cruto-radius)] border-[var(--cruto-border)] border">

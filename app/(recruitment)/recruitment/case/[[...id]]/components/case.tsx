@@ -15,6 +15,8 @@ import QuestionWrapper from './question-wrapper';
 import { Form } from '@/components/ui/form';
 import Question from './question/question';
 import Answers from './question/answers';
+import Questions from '../../../cases/components/questions';
+import { toast } from '@/components/ui/use-toast';
 
 export enum QuestionType {
   OpenEnded = 'Open Ended',
@@ -44,13 +46,15 @@ const Case = ({ id, queryKey }: TCaseProps) => {
 
   const [option, setOption] = useState<ReactNode>();
 
+  const questions = form.getValues('questions') ?? [];
+
   const onNewOption = (option: string, questionIndex?: number) => {
     questionIndex = questionIndex ?? fieldArray.fields.length;
 
     switch (option) {
       case QuestionType.MultiChoice:
         setOption(
-          <QuestionWrapper form={form}>
+          <QuestionWrapper>
             <Question
               question={questionIndex}
               type={QuestionType.MultiChoice}
@@ -61,7 +65,7 @@ const Case = ({ id, queryKey }: TCaseProps) => {
         break;
       case QuestionType.OpenEnded:
         setOption(
-          <QuestionWrapper form={form}>
+          <QuestionWrapper>
             <Question question={questionIndex} type={QuestionType.OpenEnded} />
           </QuestionWrapper>,
         );
@@ -69,7 +73,7 @@ const Case = ({ id, queryKey }: TCaseProps) => {
 
       default:
         setOption(
-          <QuestionWrapper form={form}>
+          <QuestionWrapper>
             <Question
               question={questionIndex}
               type={QuestionType.MultiChoice}
@@ -80,12 +84,30 @@ const Case = ({ id, queryKey }: TCaseProps) => {
     }
   };
 
+  const cannotDeleteFirstQuestion = () =>
+    toast({
+      title: 'Cannot delete first question',
+      description: 'Please add a new question before deleting this one',
+    });
+
+  const deleteQuestion = (questionIndex: number) => {
+    if (questionIndex === 0 && fieldArray.fields.length === 1)
+      return cannotDeleteFirstQuestion();
+    fieldArray.remove(questionIndex);
+  };
+
   return (
     <Form {...form}>
       <form className="w-full h-full flex flex-col gap-2">
         <div className="flex flex-col gap-5 w-full h-full">
           <div className="space-x-2 ml-auto">
-            <ViewQuestion />
+            <ViewQuestion questions={questions.length} isOpen={!!data}>
+              <Questions
+                onUpdate={onNewOption}
+                onDelete={deleteQuestion}
+                questions={questions}
+              />
+            </ViewQuestion>
             <SaveCase id={id} />
           </div>
         </div>

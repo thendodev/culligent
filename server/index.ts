@@ -8,6 +8,7 @@ import { recruitment } from './routes/recruitment';
 import { magicLink } from './routes/auth/magic-link/magic-link';
 import { logger } from 'hono/logger';
 import { isConnectionReady, mongoDbConnection } from '@/lib/database/mongoose';
+import { search } from './routes/search';
 
 const app = new OpenAPIHono();
 
@@ -67,5 +68,6 @@ app.route('/', magicLink);
 
 //recruitment
 app.route('/api/recruitment', recruitment);
+app.route('/api/search', search);
 
 export { app };

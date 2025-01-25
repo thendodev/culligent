@@ -23,7 +23,7 @@ export const getPostsHandler = async () => {
 
 export const getPostHandler = async (
   id: string,
-): Promise<TWithId<TPost> & { pipeline: Partial<TWithId<TPipeline>> }> => {
+): Promise<TWithId<TPost> & { pipeline: TWithId<TPipeline> }> => {
   const { data } = await privateRequest.get(`${EPostRoutes.POSTS}/${id}`);
   return data;
 };

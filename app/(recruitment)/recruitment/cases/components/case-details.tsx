@@ -1,10 +1,10 @@
 import { Switch } from '@/components/ui/switch';
-import { pluralize } from '@/lib/utils';
 import { Calendar, Clock, Pen } from 'lucide-react';
 import React from 'react';
 import CaseActions from './case-actions';
 import ShareCase from './share-case';
 import { TQuestion } from '@/validations/cases';
+import { pluralize } from '@/lib/stringsUtil';
 
 type TCaseDetailsProps = {
   name?: string;
@@ -12,8 +12,8 @@ type TCaseDetailsProps = {
   status?: boolean;
   questions?: TQuestion[];
   duration?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
   id?: string;
 };
 

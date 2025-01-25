@@ -1,15 +1,30 @@
 'use client';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Separator } from '@/components/ui/separator';
 import { TQuestion } from '@/validations/cases';
-import { Check, Search, X } from 'lucide-react';
+import {
+  Check,
+  MoreVertical,
+  Search,
+  SquarePen,
+  Trash2Icon,
+  X,
+} from 'lucide-react';
 import { useState } from 'react';
 
 type TQuestionsProps = {
   questions: TQuestion[] | undefined;
+  onUpdate?: (type: string, question: number) => void;
+  onDelete?: (question: number) => void;
 };
 
-const Questions = ({ questions }: TQuestionsProps) => {
+const Questions = ({ questions, onDelete, onUpdate }: TQuestionsProps) => {
   const [filteredQuestions, setFilteredQuestions] = useState<
     TQuestion[] | Record<string, any>[] | undefined
   >(questions);
@@ -51,7 +66,7 @@ const Questions = ({ questions }: TQuestionsProps) => {
           !filteredQuestions?.includes(question) &&
           !filteredQuestions?.length
         )
-          return;
+          return <></>;
         return (
           <div
             className="w-full h-full flex bg-[var(--cruto-foreground)] border border-[var(--cruto-border)] rounded-[var(--cruto-radius)]"
@@ -64,6 +79,31 @@ const Questions = ({ questions }: TQuestionsProps) => {
               <span className="mx-auto">{question?.question}</span>
             </div>
             <div className="w-full flex flex-col gap-4 p-6">
+              <div className="w-full p-2 flex justify-end gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <MoreVertical />
+                  </PopoverTrigger>
+                  <PopoverContent className="flex flex-col w-fit p-1">
+                    <Button
+                      variant="ghost"
+                      className="hover:bg-[var(--cruto-background)]"
+                      onClick={() => onUpdate?.(question.type, index)}
+                    >
+                      <SquarePen className="mr-1 w-4 h-4" />
+                      Update
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="hover:bg-[var(--cruto-background)]"
+                      onClick={() => onDelete?.(index)}
+                    >
+                      <Trash2Icon className="mr-1 w-4 h-4" />
+                      Delete
+                    </Button>
+                  </PopoverContent>
+                </Popover>
+              </div>
               <div className="mx-auto space-x-2 flex">
                 <span className="text-2xl font-semibold">
                   {question?.skill}
