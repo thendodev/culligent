@@ -39,6 +39,8 @@ app.get(
   }),
 );
 
+app.use('*', logger());
+
 //connect to database
 let dbConnection: any;
 

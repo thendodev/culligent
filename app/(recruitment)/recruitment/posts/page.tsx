@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import PageWrapper from '../components/page-wrapper';
 import {
   dehydrate,
@@ -8,12 +8,13 @@ import {
 import { getPostsHandler } from '@/handlers/handlePosts';
 import Posts from './components/posts';
 import { EGenericQueryKeys } from '@/global/config';
+import getQueryClient from '@/app/providers/query-client';
 
 const PostsPage = async () => {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
   const queryKey = [EGenericQueryKeys.POSTS];
 
-  queryClient.prefetchQuery({
+  await queryClient.prefetchQuery({
     queryKey: queryKey,
     queryFn: getPostsHandler,
   });
@@ -24,9 +25,7 @@ const PostsPage = async () => {
       description={'A library of all existing posts.'}
     >
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Posts queryKey={queryKey} />
-        </Suspense>
+        <Posts queryKey={queryKey} />
       </HydrationBoundary>
     </PageWrapper>
   );

@@ -18,9 +18,7 @@ const Cases = async () => {
       description={'A library of all existing cases.'}
     >
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <CasesClient />
-        </Suspense>
+        <CasesClient />
       </HydrationBoundary>
     </PageWrapper>
   );

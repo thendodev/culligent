@@ -53,9 +53,9 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <>
-      <div className="rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] ">
-        <div className="flex items-center py-4 hover:shadow-sm bg-[var(--cruto-foreground)]">
+    <div className=" rounded-[var(--cruto-radius)] border border-[var(--cruto-border)] ">
+      <>
+        <div className="flex items-center py-4 hover:shadow-sm rounded-t-[var(--cruto-radius)] bg-[var(--cruto-foreground)]">
           <Input
             placeholder="Search..."
             value={
@@ -118,8 +118,8 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4 w-fit">
+      </>
+      <div className="flex items-center justify-end space-x-2 px-1 py-4 w-fit">
         <Button
           variant="outline"
           size="sm"
@@ -137,6 +137,6 @@ export function DataTable<TData, TValue>({
           Next
         </Button>
       </div>
-    </>
+    </div>
   );
 }

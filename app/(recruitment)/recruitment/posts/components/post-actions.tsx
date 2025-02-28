@@ -10,7 +10,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { Button } from '@/components/ui/button';
-import { Copy, Edit, Eye, MoreHorizontal, WorkflowIcon } from 'lucide-react';
+import {
+  Copy,
+  Edit,
+  Eye,
+  MoreHorizontal,
+  MoreVertical,
+  WorkflowIcon,
+} from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
@@ -47,10 +54,10 @@ const PostActions = ({ data }: PostActionProps) => {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
             <span className="sr-only">Open Menu</span>
-            <MoreHorizontal className=" h-4 w-4" />
+            <MoreVertical className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent side="bottom" sideOffset={4}>
           <DropdownMenuLabel className="flex row-auto align-middle content-center">
             <WorkflowIcon className="mr-2 h-4 w-4" /> Actions
           </DropdownMenuLabel>
