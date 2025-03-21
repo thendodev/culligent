@@ -25,7 +25,7 @@ import { ProjectRoutes } from '@/global/routes';
 import { useQueryClient } from '@tanstack/react-query';
 import { TPost } from '@/validations/posts';
 import { TWithId } from '@/global/types';
-import { getPostHandler } from '@/handlers/handlePosts';
+import { getPostHandler } from '@/handlers/handle-posts';
 
 interface PostActionProps {
   data: TWithId<TPost>;

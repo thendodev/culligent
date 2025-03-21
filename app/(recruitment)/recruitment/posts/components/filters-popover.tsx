@@ -19,13 +19,10 @@ export const FiltersPopover = ({
   currentFilters,
   handleFilters,
 }: IFiltersPopoverProps) => {
-
-
-  
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button>
+        <Button className="w-fit">
           <Sliders /> Filters
         </Button>
       </PopoverTrigger>

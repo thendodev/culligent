@@ -39,7 +39,7 @@ import {
   FormLabel,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { createTeamHandler } from '@/handlers/handleTeam';
+import { createTeamHandler } from '@/handlers/handle-team';
 import { useLoading } from '@/app/state/loading-state';
 import { TWithId } from '@/global/types';
 

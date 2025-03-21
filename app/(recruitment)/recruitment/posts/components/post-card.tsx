@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/card';
 import PostActions from './post-actions';
 import { CalendarDays, PersonStanding } from 'lucide-react';
-import { getPostsHandler } from '@/handlers/handlePosts';
+import { getPostsHandler } from '@/handlers/handle-posts';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { usePostContext } from '../state/state';
 import { motion } from 'framer-motion';
@@ -26,9 +26,9 @@ const PostCard = () => {
   });
 
   return (
-    <>
+    <div className="flex flex-wrap gap-1">
       {data.map((item) => (
-        <motion.div key={item._id} variants={containerChild}>
+        <motion.div key={item._id} variants={containerChild} className="flex">
           <Card className="w-[20rem] shadow-none">
             <CardHeader>
               <CardTitle className="flex justify-between align-middle items-center">
@@ -56,7 +56,7 @@ const PostCard = () => {
           </Card>
         </motion.div>
       ))}
-    </>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import PageWrapper from '../components/page-wrapper';
-import { getCasesHandler } from '@/handlers/handleCases';
+import { getCasesHandler } from '@/handlers/handle-cases';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import CasesClient from './components/cases';
 import { Suspense } from 'react';

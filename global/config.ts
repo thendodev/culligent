@@ -98,6 +98,7 @@ export enum EGenericQueryKeys {
   CASES = 'cases',
   POSTS = 'posts',
   SUGGESTIONS = 'suggestions',
+  USER_SETTINGS = 'user-settings',
 }
 
 export const SideBarItems = {

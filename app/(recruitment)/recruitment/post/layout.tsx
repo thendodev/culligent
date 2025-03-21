@@ -1,4 +1,4 @@
-import { getPostHandler } from '@/handlers/handlePosts';
+import { getPostHandler } from '@/handlers/handle-posts';
 import {
   dehydrate,
   HydrationBoundary,

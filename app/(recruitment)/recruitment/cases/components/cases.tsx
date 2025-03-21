@@ -1,5 +1,5 @@
 'use client';
-import { getCasesHandler } from '@/handlers/handleCases';
+import { getCasesHandler } from '@/handlers/handle-cases';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { caseTableColumns } from './cases-column';
 import { DataTable } from '@/components/modules/data-table';

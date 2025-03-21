@@ -22,10 +22,10 @@ import { useParams } from 'next/navigation';
 import {
   createPipelineHandler,
   updatePipelineHandler,
-} from '@/handlers/handlePipeline';
+} from '@/handlers/handle-pipeline';
 import { TWithId } from '@/global/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getPostHandler } from '@/handlers/handlePosts';
+import { getPostHandler } from '@/handlers/handle-posts';
 
 const PipelinePage = () => {
   const { id } = useParams();

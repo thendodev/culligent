@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { LinkedinIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { ProjectRoutes } from '@/global/routes';
-import { linkedinHandler } from '@/handlers/handleAuth';
+import { linkedinHandler } from '@/handlers/handle-auth';
 
 const DASHBOARD = `${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`;
 

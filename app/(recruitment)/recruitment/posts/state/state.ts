@@ -1,23 +1,15 @@
 import { EGenericQueryKeys } from '@/global/config';
-import { create, createStore } from 'zustand';
+import { EPostView, TPostFilters } from '@/validations/user-settings';
+import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-export enum EPostView {
-  CARDS = 'cards',
-  TABLE = 'table',
-}
+
 interface IPostViewContext {
   currentStoredView: EPostView;
   setCurrentStoredView: (view: EPostView) => void;
 }
 
 interface IPostContext {
-  filters: {
-    dateRange: Date;
-    minApplicants: number;
-    maxApplicants: number;
-    includeArchived: boolean;
-    includeUnpublished: boolean;
-  };
+  filters: TPostFilters;
   state: {
     queryKey: string[];
   };
@@ -28,7 +20,7 @@ interface IPostContext {
 export const usePostViewStore = create<IPostViewContext>()(
   persist(
     (set) => ({
-      currentStoredView: EPostView.TABLE,
+      currentStoredView: EPostView.CARDS,
       setCurrentStoredView: (view) => set({ currentStoredView: view }),
     }),
     {

@@ -3,7 +3,7 @@ import {
   createPostHandler,
   getPostHandler,
   updatePostHandler,
-} from '@/handlers/handlePosts';
+} from '@/handlers/handle-posts';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';

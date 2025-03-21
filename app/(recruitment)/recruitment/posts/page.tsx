@@ -5,12 +5,15 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-import { getPostsHandler } from '@/handlers/handlePosts';
+import { getPostsHandler } from '@/handlers/handle-posts';
 import Posts from './components/posts';
 import { EGenericQueryKeys } from '@/global/config';
 import getQueryClient from '@/app/providers/query-client';
+import { handleGetUserSettingsByUserId } from '@/handlers/handle-user';
+import { useUserServer } from '@/lib/useUserServer';
 
 const PostsPage = async () => {
+  const user = await useUserServer();
   const queryClient = getQueryClient();
   const queryKey = [EGenericQueryKeys.POSTS];
 
@@ -18,6 +21,11 @@ const PostsPage = async () => {
     queryKey: queryKey,
     queryFn: getPostsHandler,
   });
+
+  // const data = await queryClient.fetchQuery({
+  //   queryFn: handleGetUserSettingsByUserId,
+  //   queryKey: [EGenericQueryKeys.USER_SETTINGS, user?._id],
+  // });
 
   return (
     <PageWrapper

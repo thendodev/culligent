@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePostContext } from '../state/state';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { getPostsHandler } from '@/handlers/handlePosts';
+import { getPostsHandler } from '@/handlers/handle-posts';
 import { dateFormat } from '@/global/config';
 import { DataTable } from '@/components/modules/data-table';
 import { PostTableColumns } from './posts-column';

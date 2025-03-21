@@ -4,7 +4,7 @@ import { TPipeline } from '@/validations/pipeline';
 import CasesPopover from './cases-popover';
 import { useQuery } from '@tanstack/react-query';
 import { EGenericQueryKeys } from '@/global/config';
-import { getCasesHandler } from '@/handlers/handleCases';
+import { getCasesHandler } from '@/handlers/handle-cases';
 import { TWithId } from '@/global/types';
 import { Briefcase, MoreVertical, Trash2Icon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

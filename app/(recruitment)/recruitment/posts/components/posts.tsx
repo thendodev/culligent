@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, useCallback, useEffect } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import PostCard from './post-card';
 import { Button } from '@/components/ui/button';
 import { ProjectRoutes } from '@/global/routes';
@@ -8,14 +8,14 @@ import { PenBox } from 'lucide-react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { FiltersPopover } from './filters-popover';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { EPostView, usePostContext, usePostViewStore } from '../state/state';
+import { usePostContext, usePostViewStore } from '../state/state';
 import PostCardLoader from './post-card-loader';
 import TableWrapper from './table-wrapper';
 import DataTableSkeleton from './table-loader';
 import { AnimatePresence } from 'framer-motion';
 import { motion } from 'framer-motion';
-import { container, containerChild } from '../animation';
+import { container, containerChild, searchContainer } from '../animation';
+import { EPostView, TUserSettings } from '@/validations/user-settings';
 
 interface IPostsProps {
   queryKey: string[];
@@ -36,7 +36,8 @@ const Posts = ({ queryKey }: IPostsProps) => {
   const currentFilters = usePostContext((state) => state.filters);
   const setFilters = usePostContext((state) => state.setFilters);
 
-  const currentView = usePostViewStore((state) => state.currentStoredView);
+  const currentView = EPostView.CARDS;
+
   const setCurrentStoredView = usePostViewStore(
     (state) => state.setCurrentStoredView,
   );
@@ -49,6 +50,14 @@ const Posts = ({ queryKey }: IPostsProps) => {
   );
 
   useEffect(() => {
+    const reHydrate = async () => {
+      await usePostViewStore.persist.rehydrate();
+    };
+
+    reHydrate();
+  }, []);
+
+  useEffect(() => {
     if (queryKey !== queryKeyContext) {
       setContext({
         queryKey: queryKey,
@@ -56,20 +65,18 @@ const Posts = ({ queryKey }: IPostsProps) => {
     }
   });
 
-  console.log(currentView);
-
   return (
-    <div className="flex flex-col gap-4">
-      <header className="flex justify-end">
+    <div className="flex flex-col gap-4 justify-center align-middle">
+      <div className="w-full flex justify-end">
         <Button asChild variant={'default'}>
           <Link href={ProjectRoutes.post}>
             <PenBox />
             Create Post
           </Link>
         </Button>
-      </header>
+      </div>
 
-      <div className="flex justify-between align-middle mb-4">
+      <div className="w-full flex justify-between align-middle mb-4">
         <div className="flex gap-2 align-middle">
           <Button onClick={() => setCurrentStoredView(EPostView.CARDS)}>
             Card view
@@ -85,8 +92,7 @@ const Posts = ({ queryKey }: IPostsProps) => {
       </div>
       <AnimatePresence>
         <motion.div
-          className="container"
-          variants={container}
+          variants={searchContainer}
           initial="hidden"
           animate="visible"
         >
@@ -110,7 +116,7 @@ const Posts = ({ queryKey }: IPostsProps) => {
         ) : (
           <Suspense fallback={<DataTableSkeleton />}>
             <motion.div
-              className="container"
+              className="w-full"
               variants={container}
               initial="hidden"
               animate="visible"

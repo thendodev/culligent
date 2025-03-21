@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ProjectRoutes } from '@/global/routes';
 import { useRouter } from 'next/navigation';
-import { loginHandler } from '@/handlers/handleAuth';
+import { loginHandler } from '@/handlers/handle-auth';
 import { loginSchema, TLogin } from '@/validations/auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

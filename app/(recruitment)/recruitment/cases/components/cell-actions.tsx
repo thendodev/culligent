@@ -16,7 +16,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import { ProjectRoutes } from '@/global/routes';
 import { useQueryClient } from '@tanstack/react-query';
-import { getCaseHandler } from '@/handlers/handleCases';
+import { getCaseHandler } from '@/handlers/handle-cases';
 import { CaseTableProps } from './cases-column';
 
 interface CellActionProps {

@@ -33,8 +33,6 @@ suggestions.openapi(createSuggestionRoute, async (c) => {
       userId: user._id,
     });
 
-    console.log(data);
-
     if (!success) return c.json({ message }, code);
 
     return c.json(data, code);
