@@ -1,4 +1,9 @@
-import { BookOpenText, LayoutDashboard, Library } from 'lucide-react';
+import {
+  BookOpenText,
+  LayoutDashboard,
+  Library,
+  LucideBriefcase,
+} from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 import './sidebar.css';
@@ -10,7 +15,7 @@ const SideBar = () => {
       <ul id="nav-link" className="nav-links close">
         <li>
           <div id="icon-link" className="icon-link">
-            <LayoutDashboard className="text-[color:var(--cruto-white)] m-auto w-[40px] h-[30px]" />
+            <LayoutDashboard className="text-[color:var(--cruto-white)] m-auto w-[25px] h-[30px]" />
           </div>
           <ul id="sub-menu" className="sub-menu">
             <li>
@@ -52,7 +57,7 @@ const SideBar = () => {
         </li>
         <li>
           <div id="icon-link-2" className="icon-link">
-            <Library className="text-[color:var(--cruto-white)] m-auto w-[40px] h-[30px]" />
+            <Library className="text-[color:var(--cruto-white)] m-auto w-[25px] h-[30px]" />
           </div>
           <ul id="sub-menu" className="sub-menu">
             <li>
@@ -66,17 +71,35 @@ const SideBar = () => {
               <Link
                 href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.cases}`}
               >
-                Case library
+                Cases
+              </Link>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <div id="icon-link-2" className="icon-link">
+            <LucideBriefcase className="text-[color:var(--cruto-white)] m-auto w-[25px] h-[30px]" />
+          </div>
+          <ul id="sub-menu" className="sub-menu">
+            <li>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.post}`}
+              >
+                Create Post
               </Link>
             </li>
             <li>
-              <Link href="">Shared cases</Link>
+              <Link
+                href={`/${ProjectRoutes.recruitment}/${ProjectRoutes.posts}`}
+              >
+                Posts
+              </Link>
             </li>
           </ul>
         </li>
         <li>
           <div id="link-icon-3" className="icon-link">
-            <BookOpenText className="text-[color:var(--cruto-white)] m-auto w-[40px] h-[30px]" />
+            <BookOpenText className="text-[color:var(--cruto-white)] m-auto w-[25px] h-[30px]" />
           </div>
           <ul id="sub-menu-2" className="sub-menu">
             <li>

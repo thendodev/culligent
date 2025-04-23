@@ -6,7 +6,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-import { handleUserAccount } from '@/handlers/handleUser';
+import { handleUserAccount } from '@/handlers/handle-user';
 
 const Account = async () => {
   const queryClient = new QueryClient();

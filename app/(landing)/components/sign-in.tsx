@@ -10,15 +10,16 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ProjectRoutes } from '@/global/routes';
 import { useRouter } from 'next/navigation';
-import { loginHandler } from '@/handlers/handleAuth';
+import { loginHandler } from '@/handlers/handle-auth';
 import { loginSchema, TLogin } from '@/validations/auth';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye } from 'lucide-react';
+import { Eye, Loader2Icon } from 'lucide-react';
 import { useState } from 'react';
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<TLogin>({
     defaultValues: {
@@ -31,7 +32,10 @@ const SignIn = () => {
   const onSubmit = async (data: TLogin, e: any) => {
     if (!data.email || !data.password) return;
     e?.preventDefault();
+    setIsLoading(true);
     const user = await loginHandler(data);
+
+    setIsLoading(false);
     if (user && user.isVerified) {
       router.push(`${ProjectRoutes.recruitment}/${ProjectRoutes.dashboard}`);
     }
@@ -92,7 +96,11 @@ const SignIn = () => {
         />
         <div className="mt-5">
           <Button type="submit" className="w-full" disabled={!isFormErrors}>
-            Log in
+            {!isLoading ? (
+              <p>Log in </p>
+            ) : (
+              <Loader2Icon className="animate-spin" />
+            )}
           </Button>
         </div>
       </form>

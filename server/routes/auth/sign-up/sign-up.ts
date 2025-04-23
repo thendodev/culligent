@@ -1,25 +1,29 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { signUpRoute } from './route';
-import { HTTPException } from 'hono/http-exception';
-import { Dbconnect, Dbdisconnect } from '@/lib/database/papr';
 import { EStatusCode } from '@/global/config';
-import { createUserService } from '@/server/services/user/user-service';
+import {
+  createOtpService,
+  createUserService,
+} from '@/server/services/user/user-service';
 import { createPasswordService } from '@/server/services/passwords/password-service';
+import { HttpStatusCode } from 'axios';
 
 export const signUp = new OpenAPIHono();
 
 signUp.openapi(signUpRoute, async ({ res, req, json }) => {
   try {
     const { email, password, surname, name } = req.valid('json');
+
     if (!email || !password || !surname || !name)
-      return json({ message: 'invalid request' }, EStatusCode.BadRequest);
+      return json({ message: 'invalid request' }, HttpStatusCode.BadRequest);
     //create a new user
     const { success, data, message, code } = await createUserService({
       email,
-      password,
       surname,
       name,
+      isVerified: false,
     });
+
     if (!success || !data)
       return json(
         {
@@ -38,8 +42,18 @@ signUp.openapi(signUpRoute, async ({ res, req, json }) => {
     if (!isPassword.success)
       json({ message: isPassword.message }, isPassword.code);
 
+    //send otp to user
+    const {
+      success: isOtpCreated,
+      message: otpMessage,
+      code: otpCode,
+    } = await createOtpService(data._id);
+
+    if (!isOtpCreated) return json({ message: otpMessage }, otpCode);
+
     return json(data);
   } catch (e) {
+    console.log(e);
     return json(
       { message: 'internal server error' },
       EStatusCode.InternalServerError,

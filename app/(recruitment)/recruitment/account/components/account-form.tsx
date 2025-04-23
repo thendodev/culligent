@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { handleUserAccount } from '@/handlers/handleUser';
+import { handleUserAccount } from '@/handlers/handle-user';
 import { UserProps } from '@/models/User.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';

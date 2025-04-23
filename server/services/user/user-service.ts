@@ -1,42 +1,24 @@
 import { ApiResponse } from '@/global/response.types';
-import Otp, { MOtp } from '@/models/Otp';
-import User, { MUser } from '@/models/User';
-import { EUserServiceResponse } from './service.types';
-import { EStatusCode } from '@/global/config';
-import { TSignUp } from '@/validations/auth';
-import { ObjectId } from 'mongodb';
+import Otp from '@/models/Otp';
+import { TOtp, TUser } from '@/validations/auth';
 import { Resend } from 'resend';
 import OtpEmailTemplate from '@/app/templates/otp-email-template';
 import { envServer } from '@/global/envServer';
 import { getEmail } from '@/server/helpers/email';
+import User from '@/models/User';
+import { HttpStatusCode } from 'axios';
+import { WithId, ObjectId } from 'mongodb';
+import UserSettings from '@/models/UserSettings';
+import { TUserSettings } from '@/validations/user-settings';
 
 const resend = new Resend(envServer.OTP_RESEND);
 
 export const createUserService = async ({
   email,
-  password,
   surname,
   name,
-}: Partial<TSignUp>): Promise<ApiResponse<MUser>> => {
-  if (!email || !password || !name || !surname) {
-    return {
-      success: false,
-      message: 'missing credentials',
-      data: null,
-      code: EStatusCode.BadRequest,
-    };
-  }
-
-  const isUser = await User.findOne({ email });
-
-  if (isUser)
-    return {
-      success: false,
-      message: 'User already exists',
-      data: null,
-      code: EStatusCode.NotModified,
-    };
-  const user = await User.insertOne({
+}: TUser): Promise<ApiResponse<WithId<TUser>>> => {
+  const user = await User.create({
     email,
     name,
     surname,
@@ -44,43 +26,43 @@ export const createUserService = async ({
 
   return {
     success: true,
-    message: EUserServiceResponse.successCreateUser,
-    data: user,
-    code: EStatusCode.NotFound,
+    message: 'User created successfully',
+    data: user.toObject(),
+    code: HttpStatusCode.Created,
   };
 };
 
 export const getUserService = async (
   email: string,
-): Promise<ApiResponse<MUser>> => {
+): Promise<ApiResponse<WithId<TUser>>> => {
   const user = await User.findOne({ email });
   if (!user)
     return {
       success: false,
-      message: EUserServiceResponse.failedGetUser,
+      message: "User doesn't exist",
       data: null,
-      code: EStatusCode.NotFound,
+      code: HttpStatusCode.NotFound,
     };
 
   if (!user.isVerified)
     return {
-      code: EStatusCode.Unauthorized,
+      code: HttpStatusCode.Unauthorized,
       success: true,
-      message: EUserServiceResponse.userNotVerified,
+      message: "User's account is not verified",
       data: user,
     };
 
   return {
     success: true,
-    message: EUserServiceResponse.successGetUser,
-    data: { ...user },
-    code: EStatusCode.Ok,
+    message: "User's account is successfully verified",
+    data: user.toObject(),
+    code: HttpStatusCode.Ok,
   };
 };
 
 export const createOtpService = async (
-  id: string,
-): Promise<ApiResponse<MOtp>> => {
+  id: ObjectId,
+): Promise<ApiResponse<TOtp>> => {
   const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
   const user = await User.findById(id);
   if (!user)
@@ -88,46 +70,52 @@ export const createOtpService = async (
       success: false,
       message: "User doesn't exist",
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
 
-  const otp = await Otp.insertOne({ user: user._id, otp: newOtp });
-
+  const otp = await Otp.create({ userId: user._id, otp: newOtp });
   if (!otp)
     return {
       success: false,
       message: 'Failed to create otp',
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
 
   const mailTo = getEmail(user.email);
 
-  const { error } = await resend.emails.send({
+  const { error, data } = await resend.emails.send({
     from: 'Acme <onboarding@resend.dev>',
     to: [mailTo],
     subject: 'Verify your email',
-    react: OtpEmailTemplate({ ...otp }),
+    react: OtpEmailTemplate({
+      userId: user._id,
+      otp: otp.otp,
+      isExpired: false,
+      expiresAt: otp.expiresAt,
+    }),
   });
 
-  if (error)
+  if (error) {
+    console.log(error);
     return {
       success: false,
       message: 'Failed to create otp',
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
+  }
 
   return {
     success: true,
     message: 'Successfully created otp',
     data: null,
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
   };
 };
 
 export const verifyOtpService = async (
-  user: string,
+  userId: ObjectId,
   otp: string,
 ): Promise<ApiResponse<boolean>> => {
   //find and compare stored otp with incoming otp
@@ -158,7 +146,7 @@ export const verifyOtpService = async (
       success: false,
       message: 'Either the otp is expired or invalid',
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
 
   //TODO: break this off into a seperate service so we can redirect already verified users back to the login page
@@ -167,7 +155,7 @@ export const verifyOtpService = async (
   const isUserUpdated = await User.findOneAndUpdate(
     {
       _id: {
-        $eq: new ObjectId(user),
+        $eq: userId,
       },
       isVerified: {
         $eq: false,
@@ -185,7 +173,7 @@ export const verifyOtpService = async (
       success: false,
       message: "User doesn't exist",
       data: null,
-      code: EStatusCode.BadRequest,
+      code: HttpStatusCode.BadRequest,
     };
   }
 
@@ -193,6 +181,50 @@ export const verifyOtpService = async (
     success: true,
     message: "User's otp verified",
     data: true,
-    code: EStatusCode.Ok,
+    code: HttpStatusCode.Ok,
+  };
+};
+
+export const createUserSettingsService = async (
+  userId: ObjectId,
+  data: Partial<TUserSettings>,
+): Promise<ApiResponse<WithId<TUserSettings>>> => {
+  const user = await UserSettings.create({
+    ...data,
+    userId,
+  });
+
+  if (!user) {
+    return {
+      success: false,
+      message: "User doesn't exist",
+      code: HttpStatusCode.BadRequest,
+    };
+  }
+
+  return {
+    success: true,
+    message: "User's settings created successfully",
+    data: user,
+    code: HttpStatusCode.Ok,
+  };
+};
+
+export const getUserSettings = async (
+  userId: ObjectId,
+): Promise<ApiResponse<WithId<TUserSettings>>> => {
+  const user = await UserSettings.findById(userId).lean();
+  if (!user)
+    return {
+      success: false,
+      message: "User doesn't exist",
+      code: HttpStatusCode.BadRequest,
+    };
+
+  return {
+    success: true,
+    message: "User's settings fetched successfully",
+    data: user,
+    code: HttpStatusCode.Ok,
   };
 };

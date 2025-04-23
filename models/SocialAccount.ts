@@ -1,25 +1,29 @@
-import { types, schema } from 'papr';
-import papr from '@/lib/database/papr';
+import { mongoDbConnection } from '@/lib/database/mongoose';
+import { TSocialAccount } from '@/validations/auth';
+import { Schema } from 'mongoose';
 
-const SocialAccountSchema = schema(
+const SocialAccountSchema = new Schema<TSocialAccount>(
   {
-    access_token: types.object({
-      token: types.string(),
-      expires_in: types.number(),
-    }),
-    id_token: types.object({
-      token: types.string(),
-      expires_at: types.number(),
-    }),
-    scope: types.string(),
-    token_type: types.string(),
-    provider: types.string(),
-    providerAccountId: types.string(),
-    type: types.string(),
-    user: types.objectId(),
+    access_token: {
+      token: { type: String, required: true },
+      expires_in: { type: Number, required: true },
+    },
+    id_token: {
+      token: { type: String, required: true },
+      expires_at: { type: Number, required: true },
+    },
+    scope: { type: String, required: true },
+    token_type: { type: String, required: true },
+    provider: { type: String, required: true },
+    providerAccountId: { type: String, required: true },
+    type: { type: String, required: true },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   { timestamps: true },
 );
 
-export type MSocialAccount = (typeof SocialAccountSchema)[0];
-export default papr.model('SocialAccount', SocialAccountSchema);
+export default mongoDbConnection.model('SocialAccount', SocialAccountSchema);

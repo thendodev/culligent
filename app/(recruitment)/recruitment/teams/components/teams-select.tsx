@@ -39,19 +39,18 @@ import {
   FormLabel,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { createTeamHandler } from '@/handlers/handleTeam';
-import { MTeam } from '@/models/Teams';
-import { useState } from 'react';
+import { createTeamHandler } from '@/handlers/handle-team';
 import { useLoading } from '@/app/state/loading-state';
+import { TWithId } from '@/global/types';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<
   typeof PopoverTrigger
 >;
 
 interface TeamSwitcherProps extends PopoverTriggerProps {
-  teams: MTeam[] | null | undefined;
-  onTeamSelect: (team: MTeam) => void;
-  selectedTeam: MTeam | null | undefined;
+  teams: TWithId<TTeam>[] | null | undefined;
+  onTeamSelect: (team: TWithId<TTeam>) => void;
+  selectedTeam: TWithId<TTeam> | null | undefined;
 }
 
 export default function TeamSwitcher({
@@ -99,7 +98,7 @@ export default function TeamSwitcher({
             <CommandList>
               <CommandInput placeholder="Search team..." />
               <CommandEmpty>No team found.</CommandEmpty>
-              {isLoading && <CommandItem>Laoding teams</CommandItem>}
+              {isLoading && <CommandItem>Loading teams</CommandItem>}
               {teams?.map((team) => (
                 <CommandItem
                   key={team.name}

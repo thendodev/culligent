@@ -1,4 +1,8 @@
-import { isServer, QueryClient } from '@tanstack/react-query';
+import {
+  defaultShouldDehydrateQuery,
+  isServer,
+  QueryClient,
+} from '@tanstack/react-query';
 
 function makeQueryClient(staleTime: number) {
   return new QueryClient({
@@ -7,8 +11,14 @@ function makeQueryClient(staleTime: number) {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
         refetchOnMount: false,
-        refetchOnWindowFocus: false,
+        refetchOnWindowFocus: true,
         staleTime,
+      },
+      dehydrate: {
+        // include pending queries in dehydration
+        shouldDehydrateQuery: (query) =>
+          defaultShouldDehydrateQuery(query) ||
+          query.state.status === 'pending',
       },
     },
   });

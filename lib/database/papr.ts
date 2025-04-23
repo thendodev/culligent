@@ -1,14 +1,12 @@
 import { envServer } from '@/global/envServer';
 import { MongoClient } from 'mongodb';
-import Papr from 'papr';
 
-const papr = new Papr();
 export let client: MongoClient;
 
 const getDbConnection = () => {
   switch (envServer.NEXT_PUBLIC_ENVIRONMENT) {
     case undefined:
-      return console.log('no enviroment defined');
+      return console.log('no environment defined');
     case 'development':
       return envServer.DEV_MONGO_URI;
     case 'production':
@@ -22,16 +20,6 @@ const getDbConnection = () => {
 
 //
 
-export async function Dbconnect(): Promise<MongoClient | void> {
-  const dbConnection = getDbConnection();
-  if (!dbConnection) return console.log('no connection');
-  client = await MongoClient.connect(dbConnection);
-
-  papr.initialize(client.db(envServer.DATABASE_NAME));
-
-  await papr.updateSchemas();
-}
-
 export async function Dbdisconnect() {
   const dbConnection = getDbConnection();
 
@@ -39,5 +27,3 @@ export async function Dbdisconnect() {
   client = await MongoClient.connect(dbConnection);
   await client.close();
 }
-
-export default papr;

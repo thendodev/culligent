@@ -1,10 +1,8 @@
 import { EStatusCode } from '@/global/config';
-import { Dbconnect, Dbdisconnect } from '@/lib/database/papr';
 import { verifyPasswordService } from '@/server/services/passwords/password-service';
 import { createRefreshTokenService } from '@/server/services/refreshTokens/token-service';
 import { getUserService } from '@/server/services/user/user-service';
 import { OpenAPIHono } from '@hono/zod-openapi';
-import { HTTPException } from 'hono/http-exception';
 import { loginRoute } from './route';
 
 export const login = new OpenAPIHono();
@@ -20,19 +18,22 @@ login.openapi(loginRoute, async ({ req, res, json }) => {
 
     if (!data.isVerified)
       return json({ message: 'not verified', user: data }, code);
-
     //validate password
-    const validatePassword = await verifyPasswordService({
+    const {
+      success: isVerifySuccess,
+      message: verifyMessage,
+      code: verifyCode,
+    } = await verifyPasswordService({
       user: data._id,
       password,
     });
 
-    if (!validatePassword.success)
+    if (!isVerifySuccess)
       return json(
         {
-          message: validatePassword.message,
+          message: verifyMessage,
         },
-        validatePassword.code,
+        verifyCode,
       );
 
     //create a refresh and access tokens for the user

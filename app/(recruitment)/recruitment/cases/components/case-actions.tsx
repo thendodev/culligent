@@ -19,7 +19,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from '@/components/ui/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { ProjectRoutes } from '@/global/routes';
-import { deleteCaseHandler } from '@/handlers/handleCases';
+import { deleteCaseHandler } from '@/handlers/handle-cases';
 import { alert } from '@/app/state/alert-state';
 
 type TCaseActionsProps = {

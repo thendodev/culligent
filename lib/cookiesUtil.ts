@@ -1,10 +1,10 @@
 import { USER_COOKIE_EXPIRY_DAYS, EUserCookies } from '@/global/config';
-import { MUser } from '@/models/User';
+import { TUser } from '@/validations/auth';
 import Cookies from 'js-cookie';
 
 type UserCookies = {
   accessToken: string;
-  user: MUser;
+  user: TUser;
   refreshToken: string;
 };
 /**
