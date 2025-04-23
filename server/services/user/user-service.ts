@@ -8,6 +8,8 @@ import { getEmail } from '@/server/helpers/email';
 import User from '@/models/User';
 import { HttpStatusCode } from 'axios';
 import { WithId, ObjectId } from 'mongodb';
+import UserSettings from '@/models/UserSettings';
+import { TUserSettings } from '@/validations/user-settings';
 
 const resend = new Resend(envServer.OTP_RESEND);
 
@@ -179,6 +181,50 @@ export const verifyOtpService = async (
     success: true,
     message: "User's otp verified",
     data: true,
+    code: HttpStatusCode.Ok,
+  };
+};
+
+export const createUserSettingsService = async (
+  userId: ObjectId,
+  data: Partial<TUserSettings>,
+): Promise<ApiResponse<WithId<TUserSettings>>> => {
+  const user = await UserSettings.create({
+    ...data,
+    userId,
+  });
+
+  if (!user) {
+    return {
+      success: false,
+      message: "User doesn't exist",
+      code: HttpStatusCode.BadRequest,
+    };
+  }
+
+  return {
+    success: true,
+    message: "User's settings created successfully",
+    data: user,
+    code: HttpStatusCode.Ok,
+  };
+};
+
+export const getUserSettings = async (
+  userId: ObjectId,
+): Promise<ApiResponse<WithId<TUserSettings>>> => {
+  const user = await UserSettings.findById(userId).lean();
+  if (!user)
+    return {
+      success: false,
+      message: "User doesn't exist",
+      code: HttpStatusCode.BadRequest,
+    };
+
+  return {
+    success: true,
+    message: "User's settings fetched successfully",
+    data: user,
     code: HttpStatusCode.Ok,
   };
 };

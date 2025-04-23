@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/form';
 
 import { Input } from '@/components/ui/input';
-import { createMagicLinkHandler } from '@/handlers/handleAuth';
+import { createMagicLinkHandler } from '@/handlers/handle-auth';
 import { magicLinkSchema, TForgotPassword } from '@/validations/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';

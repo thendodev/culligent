@@ -19,7 +19,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useFormContext } from 'react-hook-form';
 import { toast } from '@/components/ui/use-toast';
-import { createCaseHandler, updateCaseHandler } from '@/handlers/handleCases';
+import { createCaseHandler, updateCaseHandler } from '@/handlers/handle-cases';
 import { Switch } from '@/components/ui/switch';
 import { CaseSchema, TCase } from '@/validations/cases';
 import { useMutation } from '@tanstack/react-query';

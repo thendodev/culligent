@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handleAccounts';
+import { resendOtpHandler, verifyOtpHandler } from '@/handlers/handle-accounts';
 import {
   InputOTP,
   InputOTPGroup,

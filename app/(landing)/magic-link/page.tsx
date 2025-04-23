@@ -4,7 +4,7 @@ import React, { Suspense, useEffect } from 'react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import culligent from '@/public/logo/logo.svg';
-import { loginMagicLinkHandler } from '@/handlers/handleAuth';
+import { loginMagicLinkHandler } from '@/handlers/handle-auth';
 import { ProjectRoutes } from '@/global/routes';
 
 const OtpPage = () => {

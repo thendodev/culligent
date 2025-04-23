@@ -1,4 +1,4 @@
-import { ESuggestionType, SuggestionSchema } from '@/validations/suggestions';
+import { SuggestionSchema } from '@/validations/suggestions';
 import { createRoute, z } from '@hono/zod-openapi';
 
 export const createSuggestionRoute = createRoute({

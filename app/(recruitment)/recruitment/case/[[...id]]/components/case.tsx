@@ -6,7 +6,7 @@ import { AlignLeft, ListChecks } from 'lucide-react';
 import OptionCard from './option-card';
 import { ReactNode, useState } from 'react';
 import SaveCase from './save-case';
-import { getCaseHandler } from '@/handlers/handleCases';
+import { getCaseHandler } from '@/handlers/handle-cases';
 import { useQuery } from '@tanstack/react-query';
 import ViewQuestion from './question/view-question';
 import { CaseSchema, TCase } from '@/validations/cases';

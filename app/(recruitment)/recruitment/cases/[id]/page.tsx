@@ -1,7 +1,7 @@
 'use client';
 
 import PageWrapper from '../../components/page-wrapper';
-import { getCaseHandler } from '@/handlers/handleCases';
+import { getCaseHandler } from '@/handlers/handle-cases';
 import { useParams } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { dateFormat, getBaseUrl } from '@/global/config';

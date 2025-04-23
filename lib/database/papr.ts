@@ -1,8 +1,6 @@
 import { envServer } from '@/global/envServer';
 import { MongoClient } from 'mongodb';
-import Papr from 'papr';
 
-const papr = new Papr();
 export let client: MongoClient;
 
 const getDbConnection = () => {
@@ -22,17 +20,6 @@ const getDbConnection = () => {
 
 //
 
-export async function Dbconnect(): Promise<MongoClient | void> {
-  const dbConnection = getDbConnection();
-  if (!dbConnection) return console.log('no connection');
-  client = await MongoClient.connect(dbConnection);
-
-  papr.initialize(client.db(envServer.DATABASE_NAME));
-
-  await papr.updateSchemas();
-  return client;
-}
-
 export async function Dbdisconnect() {
   const dbConnection = getDbConnection();
 
@@ -40,5 +27,3 @@ export async function Dbdisconnect() {
   client = await MongoClient.connect(dbConnection);
   await client.close();
 }
-
-export default papr;

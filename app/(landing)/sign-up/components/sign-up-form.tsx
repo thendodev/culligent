@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { emailSignUpHandler } from '@/handlers/handleAccounts';
+import { emailSignUpHandler } from '@/handlers/handle-accounts';
 import Link from 'next/link';
 import { ProjectRoutes } from '@/global/routes';
 import { TSignUp, signUpSchema } from '@/validations/auth';

@@ -6,7 +6,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from '@tanstack/react-query';
-import { getCaseHandler } from '@/handlers/handleCases';
+import { getCaseHandler } from '@/handlers/handle-cases';
 import { EGenericQueryKeys } from '@/global/config';
 
 const CaseBuilder = async ({ params }: { params: { id: string } }) => {

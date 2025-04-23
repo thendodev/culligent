@@ -2,8 +2,9 @@ import { envServer } from '@/global/envServer';
 import RefreshToken from '@/models/RefreshToken';
 import jwt from 'jsonwebtoken';
 
+//if you get the urge to change this code in the future, please do not... dont use hono jwt library it sucks
+//and isnt worth the hassle, love. - @thendodev 2025
 export const generateTokens = async (user: any) => {
-  console.log(user);
   if (!envServer.JWT_SECRET || !envServer.JWT_REFRESH_SECRET)
     return Promise.reject('could not create token');
   try {
@@ -36,7 +37,6 @@ export const generateTokens = async (user: any) => {
 
     return Promise.resolve({ accessToken, refreshToken });
   } catch (err) {
-    console.log(err);
     return Promise.reject(err);
   }
 };

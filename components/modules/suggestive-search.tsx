@@ -5,7 +5,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { handleCreateSuggestion } from '@/handlers/handleSuggestions';
+import { handleCreateSuggestion } from '@/handlers/handle-suggestions';
 import { ESuggestionType } from '@/validations/suggestions';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';

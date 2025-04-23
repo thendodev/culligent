@@ -1,5 +1,5 @@
 import { EGenericQueryKeys } from '@/global/config';
-import { handleGetSuggestions } from '@/handlers/handleSuggestions';
+import { handleGetSuggestions } from '@/handlers/handle-suggestions';
 import { ESuggestionType } from '@/validations/suggestions';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
